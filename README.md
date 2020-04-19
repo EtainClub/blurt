@@ -15,9 +15,11 @@ Welcome to the official repository for Blurt.
 * Currency symbol BLURT
 * Delegated Proof-of-Stake Consensus (DPOS)
 * 10% APR inflation narrowing to 1% APR over 20 years
-    * 75% of inflation to "Proof of Brain" social consensus algorithm.
+    * 65% of inflation to authors/curators. 
     * 15% of inflation to stakeholders.
     * 10% of inflation to block producers.
+    * 10% of inflation to Blurt DAO Fund. 
+    
 
 # Installation
 
