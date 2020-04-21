@@ -10,18 +10,18 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 ## Launch Plans
 
-Blurt is a fork of the Steem blockchain to be executed on July 4th, 2020. 
+* Blurt is a fork of the Steem blockchain to be executed on July 4th, 2020. 
 
 
 ## Centralization
 
-A @regent account with a controlling stake or special weighted vote will be added to the blockchain at the time of the fork. 
+* A @regent account with a controlling stake or special weighted vote will be added to the blockchain at the time of the fork. 
 
-The @regent account will only vote for top witnesses and vote in DAO proposals. 
+* The @regent account will only vote for top witnesses and vote in DAO proposals. 
 
-The @regent account will not impact the circulating supply, it will not impact new inflation aka organic supply, and it will not impact the rewards pool. 
+* The @regent account will not impact the circulating supply, it will not impact new inflation aka organic supply, and it will not impact the rewards pool. 
 
-Program @regent stake to decay to zero after two years. 
+* Program @regent stake to decay to zero after two years. 
 
 
 ## Initial Technical Details
