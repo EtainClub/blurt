@@ -26,7 +26,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 ## Initial Technical Details
 
-* Currency symbol BLURT
+* Ticker symbol BLURT
 * Initally, Blurt uses Graphene Delegated Proof-of-Stake Consensus (DPOS)
 * 10% APR inflation narrowing to 1% APR over 20 years
     * 65% of inflation to authors/curators. 
