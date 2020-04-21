@@ -29,5 +29,5 @@ Blurt is [social money for enemies](https://steemit.com/steem/@jacobgadikian/soc
 
 # Software Status
 
-This repository contains a fork of the Steem blockchain code, from which Blurt will initally launch.  Over time, that's going to change.  If you compiled this software today, you'd just be compiling Steem, so we've removed compile and deploy instructions for the time being.  
+This repository contains a fork of the Steem blockchain code, from which Blurt will initally launch.  Over time, that's going to change.  If you compiled this software today, you'd just be compiling Steem, so we've removed compile and deploy instructions for now.  
 
