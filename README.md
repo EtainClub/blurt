@@ -1,6 +1,6 @@
 # Blurt 
 
-Blurt is [social money for enemies](https://steemit.com/steem/@jacobgadikian/social-money-for-enemies).
+Blurt is a public social blockchain that upholds [property rights](https://twitter.com/cz_binance/status/1236373815447506945?s=20).
 
 ## Initial Features
 
