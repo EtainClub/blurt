@@ -1,17 +1,20 @@
 # Blurt 
 
-https://steemit.com/steem/@jacobgadikian/social-money-for-enemies)."
+Blurt is [social money for enemies](https://steemit.com/steem/@jacobgadikian/social-money-for-enemies).
 
 ## Initial Features
 
 * Free Transactions 
 * 3 second Block Confirmations
 * Social and Financial Keys
+* Absolute Respect for Property Rights
 
 ## Planned Features
 
-* Low Fee Transactions
-* 
+* Low Cost Transactions
+* Decentralized Messaging
+* Standardized Software Interfaces
+* 100+ Validators To Improve Security
 
 ## Initial Technical Details
 
@@ -26,5 +29,5 @@ https://steemit.com/steem/@jacobgadikian/social-money-for-enemies)."
 
 # Software Status
 
-This repository contains a fork of the Steem blockchain code, from which Blurt will initally launch.  Over time, that's going to change.  
+This repository contains a fork of the Steem blockchain code, from which Blurt will initally launch.  Over time, that's going to change.  If you compiled this software today, you'd just be compiling Steem, so we've removed compile and deploy instructions for the time being.  
 
