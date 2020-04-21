@@ -2,19 +2,27 @@
 
 Blurt is a public social blockchain with a diverse and vibrant community that strictly upholds [property rights](https://twitter.com/cz_binance/status/1236373815447506945?s=20).
 
-## Initial Features
+## Features
 
-* Free Transactions 
-* 3 second Block Confirmations
-* Social and Financial Keys
-* Absolute Respect for Property Rights
+* Remove the downvote function. 
+* Reset inflation to 10% APR inflation narrowing to 1% APR over 20 years. 
 
-## Planned Features
 
-* Low Cost Transactions
-* Decentralized Messaging
-* Standardized Software Interfaces
-* [New Software Stack that Enhances Property Rights](https://steemit.com/steem/@jacobgadikian/social-money-for-enemies)
+## Launch Plans
+
+Blurt is a fork of the Steem blockchain to be executed on July 4th, 2020. 
+
+
+## Centralization
+
+A @regent account with a controlling stake or special weighted vote will be added to the blockchain at the time of the fork. 
+
+The @regent account will only vote for top witnesses and vote in DAO proposals. 
+
+The @regent account will not impact the circulating supply, it will not impact new inflation aka organic supply, and it will not impact the rewards pool. 
+
+Program @regent stake to decay to zero after two years. 
+
 
 ## Initial Technical Details
 
