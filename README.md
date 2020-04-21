@@ -14,7 +14,7 @@ Blurt is [social money for enemies](https://steemit.com/steem/@jacobgadikian/soc
 * Low Cost Transactions
 * Decentralized Messaging
 * Standardized Software Interfaces
-* 100+ Validators To Improve Security
+* Adopt a New Software Stack that Enhances Property Rights
 
 ## Initial Technical Details
 
