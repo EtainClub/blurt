@@ -14,7 +14,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 * Low Cost Transactions
 * Decentralized Messaging
 * Standardized Software Interfaces
-* Adopt a New Software Stack that Enhances Property Rights
+* [New Software Stack that Enhances Property Rights](https://steemit.com/steem/@jacobgadikian/social-money-for-enemies)
 
 ## Initial Technical Details
 
