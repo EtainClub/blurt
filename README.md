@@ -43,3 +43,5 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 # Software Status
 
 This repository currently contains a fork of the Steem blockchain code.  Blurt will launch as a fork of the state of Steem on July 4, 2020.  If you compiled this software today, you would just be compiling Steem code, so we've removed the compile and deploy instructions for now, but they'll return soon.  
+
+
