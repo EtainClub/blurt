@@ -26,8 +26,9 @@ THE SOFTWARE.
 
 
 ## Blurt is a fork of Steem
-Steem was developed largely by Steemit, inc. They've licensed under the MIT
-license, which asks that 
+Steem was developed largely by Steemit, inc.  We are very grateful for Steemit's
+contributions and the contributions of the Steem community and their choice to 
+release code under the MIT license, which asks that 
 
 "The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software."
