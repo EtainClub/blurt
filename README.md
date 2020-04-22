@@ -1,5 +1,7 @@
 # Blurt 
 
+**NOTE**: We've moved our repository to [GitLab](https://gitlab.com/blurt/blurt)  
+
 Blurt is a public social blockchain with a diverse and vibrant community that strictly upholds [property rights](https://twitter.com/cz_binance/status/1236373815447506945?s=20).
 
 ## Features
