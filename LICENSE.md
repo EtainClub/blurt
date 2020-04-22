@@ -36,6 +36,8 @@ all copies or substantial portions of the Software."
 To comply with their wishes with respect to licensing, we've preserved their
 original copyright notice below:
 
+----
+
 
 Copyright (c) 2019 Steemit, Inc., and contributors.
 
