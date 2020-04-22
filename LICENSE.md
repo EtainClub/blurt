@@ -25,9 +25,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-Blurt is a fork of Steem, developed by Steemit, inc. They've licensed 
-under the MIT license, which asks that 
-
+## Blurt is a fork of Steem
+Steem was developed largely by Steemit, inc. They've licensed under the MIT
+license, which asks that 
 
 "The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software."
