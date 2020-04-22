@@ -8,7 +8,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 ## Launch Plans
 
-* Blurt is a fork of the Steem blockchain to be executed on July 4th, 2020. 
+* Blurt is a fork of the Steem blockchain that begins operating on July 4th, 2020. 
 
 ## Centralization
 
