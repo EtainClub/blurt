@@ -23,8 +23,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 ## Decentralization
 
-* The regent account is programmed to decay to zero or cease to exist after two years.
-
+* The regent account is programmed to decay to zero and cease to exist after two years.
 
 ## Economy
 
