@@ -5,8 +5,6 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 ## Features
 
 * Remove the downvote function. 
-* Reset inflation to 10% APR inflation narrowing to 1% APR over 20 years. 
-
 
 ## Launch Plans
 
