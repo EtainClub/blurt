@@ -28,11 +28,11 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 * The regent account is programmed to decay to zero or cease to exist after two years.
 
 
-## Initial Technical Details
+## Economy
 
 * Ticker symbol BLURT
-* Staked BLURT will be called BLURT POWER
-* There will be no stable coin on the Blurt Blockchain. SBD balances will be converted to the STEEM equivalent when the snapshot is taken.
+* Staked BLURT is called BLURT POWER
+* There is no stable coin on the Blurt Blockchain. SBD balances are converted to their STEEM equivalent when the snapshot is taken.
 * Initally, Blurt uses Graphene Delegated Proof-of-Stake Consensus (DPOS)
 * 10% APR inflation narrowing to 1% APR over 20 years
     * 65% of inflation to Authors/Curators. 
