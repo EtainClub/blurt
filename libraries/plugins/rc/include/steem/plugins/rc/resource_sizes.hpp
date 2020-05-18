@@ -30,6 +30,8 @@ namespace steem { namespace plugins { namespace rc {
 
 struct state_object_size_info
 {
+   state_object_size_info() {}
+
    // authority
    int64_t authority_base_size                =   4    *STATE_BYTES_SCALE;
    int64_t authority_account_member_size      =  18    *STATE_BYTES_SCALE;
@@ -97,6 +99,8 @@ struct state_object_size_info
 
 struct operation_exec_info
 {
+   operation_exec_info() {}
+
    int64_t account_create_operation_exec_time                  =  57700;
    int64_t account_create_with_delegation_operation_exec_time  =  57700;
    int64_t account_update_operation_exec_time                  =  14000;

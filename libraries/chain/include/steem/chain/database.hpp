@@ -67,7 +67,9 @@ namespace steem { namespace chain {
 
    struct reindex_notification;
 
-   struct generate_optional_actions_notification {};
+   struct generate_optional_actions_notification {
+     generate_optional_actions_notification() {}
+   };
 
    /**
     *   @class database

@@ -1007,6 +1007,8 @@ struct action_validate_visitor
 {
    typedef void result_type;
 
+   action_validate_visitor() {}
+
    template< typename Action >
    void operator()( const Action& a )const
    {
