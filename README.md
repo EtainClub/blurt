@@ -15,7 +15,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 ## Launch Plans
 
-* Blurt is a fork of the Steem blockchain that begins operating on or before July 4th, 2020 with Steem balances taken in a snapshot at block 4352**6969**.  Giggity. 
+* Blurt is a fork of the Steem blockchain that begins operating on or before July 4th, 2020 with Steem balances taken in a snapshot at block 43526969.  
 
 ## Centralization
 
@@ -49,7 +49,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 ## Software Status
 
-Blurt will launch with steem balances from block 4352**6969**  (Giggity) on  July 4, 2020.   Work is ongoing in the `dev` branch.  
+Blurt will launch with steem balances from block 43526969  on  July 4, 2020.   Work is ongoing in the `dev` branch.  
 
 ## Build
 
