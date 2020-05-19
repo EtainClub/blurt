@@ -270,7 +270,6 @@ void initialize_account_object( account_object& acc, const account_name_type& na
    acc.memo_key = key;
    acc.created = props.time;
    acc.voting_manabar.last_update_time = props.time.sec_since_epoch();
-   acc.downvote_manabar.last_update_time = props.time.sec_since_epoch();
    acc.mined = mined;
 
    FC_TODO( "If after HF 20, there are no temp account creations, the HF check can be removed." )
@@ -1435,6 +1434,7 @@ void hf20_vote_evaluator( const vote_operation& o, database& _db )
    const auto& dgpo    = _db.get_dynamic_global_properties();
 
    FC_ASSERT( voter.can_vote, "Voter has declined their voting rights." );
+   FC_ASSERT( o.weight > 0, "Downvote is not allowed" ); /// TODO: move this to validate?
 
    if( o.weight > 0 ) FC_ASSERT( comment.allow_votes, "Votes are not allowed on the comment." );
 
@@ -1489,33 +1489,14 @@ void hf20_vote_evaluator( const vote_operation& o, database& _db )
 
    FC_ASSERT( voter.voting_manabar.current_mana >= 0, "Account does not have enough mana to vote." );
 
-   int16_t abs_weight = abs( o.weight );
    uint128_t used_mana = 0;
-
-   if( dgpo.downvote_pool_percent && o.weight < 0 )
-   {
-         used_mana = ( std::max( ( ( uint128_t( voter.downvote_manabar.current_mana ) * STEEM_100_PERCENT ) / dgpo.downvote_pool_percent ),
-                                uint128_t( voter.voting_manabar.current_mana ) )
-                  * abs_weight * 60 * 60 * 24 ) / STEEM_100_PERCENT;
-
-   }
-
    int64_t max_vote_denom = dgpo.vote_power_reserve_rate * STEEM_VOTING_MANA_REGENERATION_SECONDS;
    FC_ASSERT( max_vote_denom > 0 );
 
    used_mana = ( used_mana + max_vote_denom - 1 ) / max_vote_denom;
-   if( dgpo.downvote_pool_percent && o.weight < 0 )
-   {
-      FC_ASSERT( voter.voting_manabar.current_mana + voter.downvote_manabar.current_mana > used_mana.to_int64(),
-         "Account does not have enough mana to downvote. voting_mana: ${v} downvote_mana: ${d} required_mana: ${r}",
-         ("v", voter.voting_manabar.current_mana)("d", voter.downvote_manabar.current_mana)("r", used_mana.to_int64()) );
-   }
-
    int64_t abs_rshares = used_mana.to_int64();
-
    abs_rshares -= STEEM_VOTE_DUST_THRESHOLD;
    abs_rshares = std::max( int64_t(0), abs_rshares );
-
    uint32_t cashout_delta = ( comment.cashout_time - _db.head_block_time() ).to_seconds();
 
    if( cashout_delta < STEEM_UPVOTE_LOCKOUT_SECONDS )
@@ -1532,30 +1513,7 @@ void hf20_vote_evaluator( const vote_operation& o, database& _db )
 
       _db.modify( voter, [&]( account_object& a )
       {
-         if( dgpo.downvote_pool_percent > 0 && o.weight < 0 )
-         {
-            if( used_mana.to_int64() > a.downvote_manabar.current_mana )
-            {
-               /* used mana is always less than downvote_mana + voting_mana because the amount used
-                * is a fraction of max( downvote_mana, voting_mana ). If more mana is consumed than
-                * there is downvote_mana, then it is because voting_mana is greater, and used_mana
-                * is strictly smaller than voting_mana. This is the same reason why a check is not
-                * required when using voting mana on its own as an upvote.
-                */
-               auto remainder = used_mana.to_int64() - a.downvote_manabar.current_mana;
-               a.downvote_manabar.use_mana( a.downvote_manabar.current_mana );
-               a.voting_manabar.use_mana( remainder );
-            }
-            else
-            {
-               a.downvote_manabar.use_mana( used_mana.to_int64() );
-            }
-         }
-         else
-         {
-            a.voting_manabar.use_mana( used_mana.to_int64() );
-         }
-
+         a.voting_manabar.use_mana( used_mana.to_int64() );
          a.last_vote_time = _db.head_block_time();
       });
 
@@ -1673,30 +1631,7 @@ void hf20_vote_evaluator( const vote_operation& o, database& _db )
 
       _db.modify( voter, [&]( account_object& a )
       {
-         if( dgpo.downvote_pool_percent > 0 && o.weight < 0 )
-         {
-            if( used_mana.to_int64() > a.downvote_manabar.current_mana )
-            {
-               /* used mana is always less than downvote_mana + voting_mana because the amount used
-                * is a fraction of max( downvote_mana, voting_mana ). If more mana is consumed than
-                * there is downvote_mana, then it is because voting_mana is greater, and used_mana
-                * is strictly smaller than voting_mana. This is the same reason why a check is not
-                * required when using voting mana on its own as an upvote.
-                */
-               auto remainder = used_mana.to_int64() - a.downvote_manabar.current_mana;
-               a.downvote_manabar.use_mana( a.downvote_manabar.current_mana );
-               a.voting_manabar.use_mana( remainder );
-            }
-            else
-            {
-               a.downvote_manabar.use_mana( used_mana.to_int64() );
-            }
-         }
-         else
-         {
-            a.voting_manabar.use_mana( used_mana.to_int64() );
-         }
-
+         a.voting_manabar.use_mana( used_mana.to_int64() );
          a.last_vote_time = _db.head_block_time();
       });
 
@@ -2415,7 +2350,6 @@ void delegate_vesting_shares_evaluator::do_apply( const delegate_vesting_shares_
    const auto& gpo = _db.get_dynamic_global_properties();
 
    asset available_shares;
-   asset available_downvote_shares;
 
    {
       auto max_mana = util::get_effective_vesting_shares( delegator );
@@ -2426,20 +2360,9 @@ void delegate_vesting_shares_evaluator::do_apply( const delegate_vesting_shares_
       });
 
       available_shares = asset( delegator.voting_manabar.current_mana, VESTS_SYMBOL );
-      if( gpo.downvote_pool_percent )
-      {
-            available_downvote_shares = asset(
-               ( ( uint128_t( delegator.downvote_manabar.current_mana ) * STEEM_100_PERCENT ) / gpo.downvote_pool_percent
-               + ( STEEM_100_PERCENT / gpo.downvote_pool_percent ) - 1 ).to_int64(), VESTS_SYMBOL );
-      }
-      else
-      {
-         available_downvote_shares = available_shares;
-      }
 
       // Assume delegated VESTS are used first when consuming mana. You cannot delegate received vesting shares
       available_shares.amount = std::min( available_shares.amount, max_mana - delegator.received_vesting_shares.amount );
-      available_downvote_shares.amount = std::min( available_downvote_shares.amount, max_mana - delegator.received_vesting_shares.amount );
 
       if( delegator.next_vesting_withdrawal < fc::time_point_sec::maximum()
          && delegator.to_withdraw - delegator.withdrawn > delegator.vesting_withdraw_rate.amount )
@@ -2462,7 +2385,6 @@ void delegate_vesting_shares_evaluator::do_apply( const delegate_vesting_shares_
             ), VESTS_SYMBOL );
 
          available_shares += weekly_withdraw - asset( delegator.to_withdraw - delegator.withdrawn, VESTS_SYMBOL );
-         available_downvote_shares += weekly_withdraw - asset( delegator.to_withdraw - delegator.withdrawn, VESTS_SYMBOL );
       }
    }
 
@@ -2477,8 +2399,6 @@ void delegate_vesting_shares_evaluator::do_apply( const delegate_vesting_shares_
    {
       FC_ASSERT( available_shares >= op.vesting_shares, "Account ${acc} does not have enough mana to delegate. required: ${r} available: ${a}",
          ("acc", op.delegator)("r", op.vesting_shares)("a", available_shares) );
-      FC_ASSERT( available_downvote_shares >= op.vesting_shares, "Account ${acc} does not have enough downvote mana to delegate. required: ${r} available: ${a}",
-         ("acc", op.delegator)("r", op.vesting_shares)("a", available_downvote_shares) );
       FC_ASSERT( op.vesting_shares >= min_delegation, "Account must delegate a minimum of ${v}", ("v", min_delegation) );
 
       _db.create< vesting_delegation_object >( [&]( vesting_delegation_object& obj )
@@ -2493,7 +2413,6 @@ void delegate_vesting_shares_evaluator::do_apply( const delegate_vesting_shares_
       {
          a.delegated_vesting_shares += op.vesting_shares;
          a.voting_manabar.use_mana( op.vesting_shares.amount.value );
-         a.downvote_manabar.use_mana( ( ( uint128_t( op.vesting_shares.amount.value ) * gpo.downvote_pool_percent ) / STEEM_100_PERCENT ).to_int64() );
       });
 
       _db.modify( delegatee, [&]( account_object& a )
@@ -2511,14 +2430,11 @@ void delegate_vesting_shares_evaluator::do_apply( const delegate_vesting_shares_
       FC_ASSERT( delta >= min_update, "Steem Power increase is not enough of a difference. min_update: ${min}", ("min", min_update) );
       FC_ASSERT( available_shares >= delta, "Account ${acc} does not have enough mana to delegate. required: ${r} available: ${a}",
          ("acc", op.delegator)("r", delta)("a", available_shares) );
-      FC_ASSERT( available_downvote_shares >= delta, "Account ${acc} does not have enough downvote mana to delegate. required: ${r} available: ${a}",
-         ("acc", op.delegator)("r", delta)("a", available_downvote_shares) );
 
       _db.modify( delegator, [&]( account_object& a )
       {
          a.delegated_vesting_shares += delta;
          a.voting_manabar.use_mana( delta.amount.value );
-         a.downvote_manabar.use_mana( ( ( uint128_t( delta.amount.value ) * gpo.downvote_pool_percent ) / STEEM_100_PERCENT ).to_int64() );
       });
 
       _db.modify( delegatee, [&]( account_object& a )
@@ -2560,22 +2476,11 @@ void delegate_vesting_shares_evaluator::do_apply( const delegate_vesting_shares_
          util::update_manabar( gpo, a, true, true );
 
          a.received_vesting_shares -= delta;
+         a.voting_manabar.use_mana( delta.amount.value );
 
+         if( a.voting_manabar.current_mana < 0 )
          {
-            a.voting_manabar.use_mana( delta.amount.value );
-
-            if( a.voting_manabar.current_mana < 0 )
-            {
-               a.voting_manabar.current_mana = 0;
-            }
-
-            a.downvote_manabar.use_mana( ( ( uint128_t( delta.amount.value ) * gpo.downvote_pool_percent ) / STEEM_100_PERCENT ).to_int64() );
-
-            if( a.downvote_manabar.current_mana < 0 )
-            {
-               a.downvote_manabar.current_mana = 0;
-            }
-
+            a.voting_manabar.current_mana = 0;
          }
       });
 

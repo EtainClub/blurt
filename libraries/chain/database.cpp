@@ -2938,7 +2938,6 @@ void database::init_genesis( uint64_t init_supply, uint64_t sbd_init_supply )
            {
               gpo.sps_fund_percent = STEEM_PROPOSAL_FUND_PERCENT_HF21;
               gpo.content_reward_percent = STEEM_CONTENT_REWARD_PERCENT_HF21;
-              gpo.downvote_pool_percent = STEEM_DOWNVOTE_POOL_PERCENT_HF21;
               gpo.reverse_auction_seconds = STEEM_REVERSE_AUCTION_WINDOW_SECONDS_HF21;
            });
 

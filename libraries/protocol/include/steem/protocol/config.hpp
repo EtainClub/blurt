@@ -120,7 +120,6 @@
 #define STEEM_REVERSE_AUCTION_WINDOW_SECONDS_HF21 (60*5) /// 5 minutes
 #define STEEM_MIN_VOTE_INTERVAL_SEC           3
 #define STEEM_VOTE_DUST_THRESHOLD             (50000000)
-#define STEEM_DOWNVOTE_POOL_PERCENT_HF21      (25*STEEM_1_PERCENT)
 
 #define STEEM_MIN_ROOT_COMMENT_INTERVAL       (fc::seconds(60*5)) // 5 minutes
 #define STEEM_MIN_REPLY_INTERVAL              (fc::seconds(20)) // 20 seconds
