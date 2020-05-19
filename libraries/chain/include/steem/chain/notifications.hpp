@@ -40,18 +40,4 @@ struct operation_notification
    const steem::protocol::operation&    op;
 };
 
-struct required_action_notification
-{
-   required_action_notification( const steem::protocol::required_automated_action& a ) : action(a) {}
-
-   const steem::protocol::required_automated_action& action;
-};
-
-struct optional_action_notification
-{
-   optional_action_notification( const steem::protocol::optional_automated_action& a ) : action(a) {}
-
-   const steem::protocol::optional_automated_action& action;
-};
-
 } }

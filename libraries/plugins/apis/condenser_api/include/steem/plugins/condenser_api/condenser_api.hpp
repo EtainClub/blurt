@@ -373,7 +373,6 @@ struct extended_dynamic_global_properties
       sbd_interest_rate( o.sbd_interest_rate ),
       sbd_print_rate( o.sbd_print_rate ),
       maximum_block_size( o.maximum_block_size ),
-      required_actions_partition_percent( o.required_actions_partition_percent ),
       current_aslot( o.current_aslot ),
       recent_slots_filled( o.recent_slots_filled ),
       participation_count( o.participation_count ),
@@ -419,7 +418,6 @@ struct extended_dynamic_global_properties
    uint16_t          sbd_print_rate = STEEM_100_PERCENT;
 
    uint32_t          maximum_block_size = 0;
-   uint16_t          required_actions_partition_percent = 0;
    uint64_t          current_aslot = 0;
    fc::uint128_t     recent_slots_filled;
    uint8_t           participation_count = 0;
@@ -1239,7 +1237,7 @@ FC_REFLECT( steem::plugins::condenser_api::extended_dynamic_global_properties,
             (total_vesting_fund_steem)(total_vesting_shares)
             (total_reward_fund_steem)(total_reward_shares2)(pending_rewarded_vesting_shares)(pending_rewarded_vesting_steem)
             (sbd_interest_rate)(sbd_print_rate)
-            (maximum_block_size)(required_actions_partition_percent)(current_aslot)(recent_slots_filled)(participation_count)(last_irreversible_block_num)
+            (maximum_block_size)(current_aslot)(recent_slots_filled)(participation_count)(last_irreversible_block_num)
             (vote_power_reserve_rate)(delegation_return_period)(reverse_auction_seconds)(available_account_subsidies)(sbd_stop_percent)(sbd_start_percent)
             (next_maintenance_time)(last_budget_time)(content_reward_percent)(vesting_reward_percent)(sps_fund_percent)(sps_interval_ledger)(downvote_pool_percent)
           )

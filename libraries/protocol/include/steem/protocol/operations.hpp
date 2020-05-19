@@ -5,7 +5,6 @@
 #include <steem/protocol/operation_util.hpp>
 #include <steem/protocol/steem_operations.hpp>
 #include <steem/protocol/steem_virtual_operations.hpp>
-#include <steem/protocol/smt_operations.hpp>
 #include <steem/protocol/sps_operations.hpp>
 
 namespace steem { namespace protocol {
@@ -70,18 +69,6 @@ namespace steem { namespace protocol {
             create_proposal_operation,
             update_proposal_votes_operation,
             remove_proposal_operation,
-
-#ifdef STEEM_ENABLE_SMT
-            /// SMT operations
-            claim_reward_balance2_operation,
-
-            smt_setup_operation,
-            smt_setup_emissions_operation,
-            smt_set_setup_parameters_operation,
-            smt_set_runtime_parameters_operation,
-            smt_create_operation,
-            smt_contribute_operation,
-#endif
 
             /// virtual operations below this point
             fill_convert_request_operation,

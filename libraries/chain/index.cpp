@@ -5,9 +5,6 @@
 
 #include <steem/chain/block_summary_object.hpp>
 #include <steem/chain/history_object.hpp>
-#include <steem/chain/pending_required_action_object.hpp>
-#include <steem/chain/pending_optional_action_object.hpp>
-#include <steem/chain/smt_objects.hpp>
 #include <steem/chain/steem_objects.hpp>
 #include <steem/chain/sps_objects.hpp>
 #include <steem/chain/transaction_object.hpp>
@@ -46,17 +43,6 @@ void initialize_core_indexes( database& db )
    STEEM_ADD_CORE_INDEX(db, reward_fund_index);
    STEEM_ADD_CORE_INDEX(db, vesting_delegation_index);
    STEEM_ADD_CORE_INDEX(db, vesting_delegation_expiration_index);
-   STEEM_ADD_CORE_INDEX(db, pending_required_action_index);
-   STEEM_ADD_CORE_INDEX(db, pending_optional_action_index);
-#ifdef STEEM_ENABLE_SMT
-   STEEM_ADD_CORE_INDEX(db, smt_token_index);
-   STEEM_ADD_CORE_INDEX(db, account_regular_balance_index);
-   STEEM_ADD_CORE_INDEX(db, account_rewards_balance_index);
-   STEEM_ADD_CORE_INDEX(db, nai_pool_index);
-   STEEM_ADD_CORE_INDEX(db, smt_token_emissions_index);
-   STEEM_ADD_CORE_INDEX(db, smt_contribution_index);
-   STEEM_ADD_CORE_INDEX(db, smt_ico_index);
-#endif
    STEEM_ADD_CORE_INDEX(db, proposal_index);
    STEEM_ADD_CORE_INDEX(db, proposal_vote_index);
 }

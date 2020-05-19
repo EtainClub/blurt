@@ -67,10 +67,6 @@ namespace steem { namespace chain {
 
    struct reindex_notification;
 
-   struct generate_optional_actions_notification {
-     generate_optional_actions_notification() {}
-   };
-
    /**
     *   @class database
     *   @brief tracks the blockchain state in an extensible manner
@@ -260,21 +256,6 @@ namespace steem { namespace chain {
          void pre_push_virtual_operation( const operation& op );
          void post_push_virtual_operation( const operation& op );
 
-         /*
-          * Pushing an action without specifying an execution time will execute at head block.
-          * The execution time must be greater than or equal to head block.
-          */
-         void push_required_action( const required_automated_action& a, time_point_sec execution_time );
-         void push_required_action( const required_automated_action& a );
-
-         void push_optional_action( const optional_automated_action& a, time_point_sec execution_time );
-         void push_optional_action( const optional_automated_action& a );
-
-         void notify_pre_apply_required_action( const required_action_notification& note );
-         void notify_post_apply_required_action( const required_action_notification& note );
-
-         void notify_pre_apply_optional_action( const optional_action_notification& note );
-         void notify_post_apply_optional_action( const optional_action_notification& note );
          /**
           *  This method is used to track applied operations during the evaluation of a block, these
           *  operations should include any operation actually included in a transaction as well
@@ -289,14 +270,11 @@ namespace steem { namespace chain {
          void notify_pre_apply_transaction( const transaction_notification& note );
          void notify_post_apply_transaction( const transaction_notification& note );
 
-         using apply_required_action_handler_t = std::function< void(const required_action_notification&) >;
-         using apply_optional_action_handler_t = std::function< void(const optional_action_notification&) >;
          using apply_operation_handler_t = std::function< void(const operation_notification&) >;
          using apply_transaction_handler_t = std::function< void(const transaction_notification&) >;
          using apply_block_handler_t = std::function< void(const block_notification&) >;
          using irreversible_block_handler_t = std::function< void(uint32_t) >;
          using reindex_handler_t = std::function< void(const reindex_notification&) >;
-         using generate_optional_actions_handler_t = std::function< void(const generate_optional_actions_notification&) >;
 
 
       private:
@@ -310,11 +288,6 @@ namespace steem { namespace chain {
             const abstract_plugin& plugin, int32_t group );
 
       public:
-
-         boost::signals2::connection add_pre_apply_required_action_handler ( const apply_required_action_handler_t&     func, const abstract_plugin& plugin, int32_t group = -1 );
-         boost::signals2::connection add_post_apply_required_action_handler( const apply_required_action_handler_t&     func, const abstract_plugin& plugin, int32_t group = -1 );
-         boost::signals2::connection add_pre_apply_optional_action_handler ( const apply_optional_action_handler_t&     func, const abstract_plugin& plugin, int32_t group = -1 );
-         boost::signals2::connection add_post_apply_optional_action_handler( const apply_optional_action_handler_t&     func, const abstract_plugin& plugin, int32_t group = -1 );
          boost::signals2::connection add_pre_apply_operation_handler       ( const apply_operation_handler_t&           func, const abstract_plugin& plugin, int32_t group = -1 );
          boost::signals2::connection add_post_apply_operation_handler      ( const apply_operation_handler_t&           func, const abstract_plugin& plugin, int32_t group = -1 );
          boost::signals2::connection add_pre_apply_transaction_handler     ( const apply_transaction_handler_t&         func, const abstract_plugin& plugin, int32_t group = -1 );
@@ -324,7 +297,6 @@ namespace steem { namespace chain {
          boost::signals2::connection add_irreversible_block_handler        ( const irreversible_block_handler_t&        func, const abstract_plugin& plugin, int32_t group = -1 );
          boost::signals2::connection add_pre_reindex_handler               ( const reindex_handler_t&                   func, const abstract_plugin& plugin, int32_t group = -1 );
          boost::signals2::connection add_post_reindex_handler              ( const reindex_handler_t&                   func, const abstract_plugin& plugin, int32_t group = -1 );
-         boost::signals2::connection add_generate_optional_actions_handler ( const generate_optional_actions_handler_t& func, const abstract_plugin& plugin, int32_t group = -1 );
 
          //////////////////// db_witness_schedule.cpp ////////////////////
 
@@ -496,8 +468,6 @@ namespace steem { namespace chain {
          void check_free_memory( bool force_print, uint32_t current_block_num );
 
          void apply_transaction( const signed_transaction& trx, uint32_t skip = skip_nothing );
-         void apply_required_action( const required_automated_action& a );
-         void apply_optional_action( const optional_automated_action& a );
 
          optional< chainbase::database::session >& pending_transaction_session();
 
@@ -513,13 +483,6 @@ namespace steem { namespace chain {
          bool disable_low_mem_warning = true;
 #endif
 
-#ifdef STEEM_ENABLE_SMT
-         ///Smart Media Tokens related methods
-         ///@{
-         void validate_smt_invariants()const;
-         ///@}
-#endif
-
    protected:
          //Mark pop_undo() as protected -- we do not want outside calling pop_undo(); it should call pop_block() instead
          //void pop_undo() { object_database::pop_undo(); }
@@ -532,9 +495,6 @@ namespace steem { namespace chain {
          void _apply_block( const signed_block& next_block );
          void _apply_transaction( const signed_transaction& trx );
          void apply_operation( const operation& op );
-
-         void process_required_actions( const required_automated_actions& actions );
-         void process_optional_actions( const optional_automated_actions& actions );
 
          ///Steps involved in applying a new block
          ///@{
@@ -553,21 +513,12 @@ namespace steem { namespace chain {
          void clear_expired_transactions();
          void clear_expired_orders();
          void clear_expired_delegations();
-         void process_header_extensions( const signed_block& next_block, required_automated_actions& req_actions, optional_automated_actions& opt_actions );
-
-         void generate_required_actions();
-         void generate_optional_actions();
+         void process_header_extensions( const signed_block& next_block );
 
          void init_hardforks();
          void process_hardforks();
          void apply_hardfork( uint32_t hardfork );
 
-         ///@}
-#ifdef STEEM_ENABLE_SMT
-         template< typename smt_balance_object_type, class balance_operator_type >
-         void adjust_smt_balance( const account_name_type& name, const asset& delta, bool check_account,
-                                  balance_operator_type balance_operator );
-#endif
          void modify_balance( const account_object& a, const asset& delta, bool check_balance );
          void modify_reward_balance( const account_object& a, const asset& value_delta, const asset& share_delta, bool check_balance );
 
@@ -652,12 +603,6 @@ namespace steem { namespace chain {
          util::advanced_benchmark_dumper  _benchmark_dumper;
          index_delegate_map            _index_delegate_map;
 
-         fc::signal<void(const required_action_notification&)> _pre_apply_required_action_signal;
-         fc::signal<void(const required_action_notification&)> _post_apply_required_action_signal;
-
-         fc::signal<void(const optional_action_notification&)> _pre_apply_optional_action_signal;
-         fc::signal<void(const optional_action_notification&)> _post_apply_optional_action_signal;
-
          fc::signal<void(const operation_notification&)>       _pre_apply_operation_signal;
          /**
           *  This signal is emitted for plugins to process every operation after it has been fully applied.
@@ -706,8 +651,6 @@ namespace steem { namespace chain {
           * Emitted when reindexing finishes
           */
          fc::signal<void(const reindex_notification&)>         _post_reindex_signal;
-
-         fc::signal<void(const generate_optional_actions_notification& )> _generate_optional_actions_signal;
 
          /**
           *  Emitted After a block has been applied and committed.  The callback

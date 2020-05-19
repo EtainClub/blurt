@@ -7,15 +7,10 @@ add_library( steem_chain
              database.cpp
              index.cpp
 
-             smt_evaluator.cpp
              sps_evaluator.cpp
 
-             smt_objects/smt_market_maker.cpp
-             smt_objects/nai_pool.cpp
              steem_evaluator.cpp
              steem_objects.cpp
-             required_action_evaluator.cpp
-             optional_action_evaluator.cpp
 
              witness_schedule.cpp
              fork_database.cpp
@@ -29,7 +24,6 @@ add_library( steem_chain
              util/reward.cpp
              util/impacted.cpp
              util/advanced_benchmark_dumper.cpp
-             util/smt_token.cpp
              util/sps_processor.cpp
              util/sps_helper.cpp
 

@@ -1,8 +1,3 @@
-
-namespace steem { namespace protocol {
-struct votable_asset_info_v1;
-} }
-
 #include <steem/protocol/types_fwd.hpp>
 #include <steem/chain/steem_fwd.hpp>
 

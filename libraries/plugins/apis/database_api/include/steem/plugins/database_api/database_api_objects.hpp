@@ -5,7 +5,6 @@
 #include <steem/chain/global_property_object.hpp>
 #include <steem/chain/history_object.hpp>
 #include <steem/chain/steem_objects.hpp>
-#include <steem/chain/smt_objects.hpp>
 #include <steem/chain/sps_objects.hpp>
 #include <steem/chain/transaction_object.hpp>
 #include <steem/chain/witness_objects.hpp>
@@ -230,11 +229,6 @@ struct api_account_object
       }
 #endif
 
-#ifdef STEEM_ENABLE_SMT
-      const auto& by_control_account_index = db.get_index<smt_token_index>().indices().get<by_control_account>();
-      auto smt_obj_itr = by_control_account_index.find( name );
-      is_smt = smt_obj_itr != by_control_account_index.end();
-#endif
    }
 
 
@@ -540,23 +534,6 @@ struct api_hardfork_property_object
    fc::time_point_sec            next_hardfork_time;
 };
 
-#ifdef STEEM_ENABLE_SMT
-
-struct api_smt_token_object
-{
-   api_smt_token_object( const smt_token_object& token, const database& db ) : token( token )
-   {
-      const smt_ico_object* ico = db.find< chain::smt_ico_object, chain::by_symbol >( token.liquid_symbol );
-      if ( ico != nullptr )
-         this->ico = *ico;
-   }
-
-   smt_token_object                token;
-   fc::optional< smt_ico_object >  ico;
-};
-
-#endif
-
 enum proposal_status
 {
    all,
@@ -749,15 +726,6 @@ FC_REFLECT( steem::plugins::database_api::api_hardfork_property_object,
             (next_hardfork)
             (next_hardfork_time)
           )
-
-#ifdef STEEM_ENABLE_SMT
-
-FC_REFLECT( steem::plugins::database_api::api_smt_token_object,
-   (token)
-   (ico)
-)
-
-#endif
 
 FC_REFLECT_ENUM( steem::plugins::database_api::proposal_status,
                   (all)

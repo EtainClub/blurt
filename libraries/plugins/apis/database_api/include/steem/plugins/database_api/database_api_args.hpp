@@ -564,63 +564,6 @@ struct verify_signatures_return
    bool valid;
 };
 
-#ifdef STEEM_ENABLE_SMT
-
-typedef void_type get_nai_pool_args;
-
-struct get_nai_pool_return
-{
-   vector< asset_symbol_type > nai_pool;
-};
-
-typedef list_object_args_type list_smt_contributions_args;
-
-struct list_smt_contributions_return
-{
-   vector< smt_contribution_object > contributions;
-};
-
-struct find_smt_contributions_args
-{
-   vector< std::pair< asset_symbol_type, account_name_type > > symbol_contributors;
-};
-
-typedef list_smt_contributions_return find_smt_contributions_return;
-
-typedef list_object_args_type list_smt_token_emissions_args;
-
-typedef list_object_args_type list_smt_tokens_args;
-
-struct list_smt_tokens_return
-{
-   vector< api_smt_token_object > tokens;
-};
-
-struct find_smt_tokens_args
-{
-   vector< asset_symbol_type > symbols;
-   bool ignore_precision = false;
-};
-
-typedef list_smt_tokens_return find_smt_tokens_return;
-
-
-typedef list_object_args_type list_smt_token_emissions_args;
-
-struct list_smt_token_emissions_return
-{
-   vector< smt_token_emissions_object > token_emissions;
-};
-
-struct find_smt_token_emissions_args
-{
-   asset_symbol_type asset_symbol;
-};
-
-typedef list_smt_token_emissions_return find_smt_token_emissions_return;
-
-#endif
-
 } } } // steem::database_api
 
 FC_REFLECT( steem::plugins::database_api::get_version_return,
@@ -829,28 +772,3 @@ FC_REFLECT( steem::plugins::database_api::verify_signatures_args,
 
 FC_REFLECT( steem::plugins::database_api::verify_signatures_return,
    (valid) )
-
-#ifdef STEEM_ENABLE_SMT
-
-FC_REFLECT( steem::plugins::database_api::get_nai_pool_return,
-   (nai_pool) )
-
-FC_REFLECT( steem::plugins::database_api::list_smt_contributions_return,
-   (contributions) )
-
-FC_REFLECT( steem::plugins::database_api::find_smt_contributions_args,
-   (symbol_contributors) )
-
-FC_REFLECT( steem::plugins::database_api::list_smt_tokens_return,
-   (tokens) )
-
-FC_REFLECT( steem::plugins::database_api::find_smt_tokens_args,
-   (symbols)(ignore_precision) )
-
-FC_REFLECT( steem::plugins::database_api::list_smt_token_emissions_return,
-   (token_emissions) )
-
-FC_REFLECT( steem::plugins::database_api::find_smt_token_emissions_args,
-   (asset_symbol) )
-
-#endif

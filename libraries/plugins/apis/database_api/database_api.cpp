@@ -9,15 +9,11 @@
 #include <steem/protocol/exceptions.hpp>
 #include <steem/protocol/transaction_util.hpp>
 
-#include <steem/chain/util/smt_token.hpp>
-
 #include <steem/utilities/git_revision.hpp>
 
 #include <fc/git_revision.hpp>
 
 namespace steem { namespace plugins { namespace database_api {
-
-
 
 class database_api_impl
 {
@@ -77,15 +73,6 @@ class database_api_impl
          (verify_authority)
          (verify_account_authority)
          (verify_signatures)
-#ifdef STEEM_ENABLE_SMT
-         (get_nai_pool)
-         (list_smt_contributions)
-         (find_smt_contributions)
-         (list_smt_tokens)
-         (find_smt_tokens)
-         (list_smt_token_emissions)
-         (find_smt_token_emissions)
-#endif
       )
 
       template< typename ResultType >
@@ -1607,7 +1594,7 @@ DEFINE_API_IMPL( database_api_impl, get_required_signatures )
                                                    [&]( string account_name ){ return authority( _db.get< chain::account_authority_object, chain::by_account >( account_name ).owner   ); },
                                                    [&]( string account_name ){ return authority( _db.get< chain::account_authority_object, chain::by_account >( account_name ).posting ); },
                                                    STEEM_MAX_SIG_CHECK_DEPTH,
-                                                   _db.has_hardfork( STEEM_HARDFORK_0_20__1944 ) ? fc::ecc::canonical_signature_type::bip_0062 : fc::ecc::canonical_signature_type::fc_canonical );
+                                                   fc::ecc::canonical_signature_type::bip_0062 );
 
    return result;
 }
@@ -1640,7 +1627,7 @@ DEFINE_API_IMPL( database_api_impl, get_potential_signatures )
          return authority( auth );
       },
       STEEM_MAX_SIG_CHECK_DEPTH,
-      _db.has_hardfork( STEEM_HARDFORK_0_20__1944 ) ? fc::ecc::canonical_signature_type::bip_0062 : fc::ecc::canonical_signature_type::fc_canonical
+      fc::ecc::canonical_signature_type::bip_0062
    );
 
    return result;
@@ -1655,7 +1642,7 @@ DEFINE_API_IMPL( database_api_impl, verify_authority )
                            STEEM_MAX_SIG_CHECK_DEPTH,
                            STEEM_MAX_AUTHORITY_MEMBERSHIP,
                            STEEM_MAX_SIG_CHECK_ACCOUNTS,
-                           _db.has_hardfork( STEEM_HARDFORK_0_20__1944 ) ? fc::ecc::canonical_signature_type::bip_0062 : fc::ecc::canonical_signature_type::fc_canonical );
+                           fc::ecc::canonical_signature_type::bip_0062  );
    return verify_authority_return( { true } );
 }
 
@@ -1705,245 +1692,6 @@ DEFINE_API_IMPL( database_api_impl, verify_signatures )
 
    return result;
 }
-
-#ifdef STEEM_ENABLE_SMT
-//////////////////////////////////////////////////////////////////////
-//                                                                  //
-// SMT                                                              //
-//                                                                  //
-//////////////////////////////////////////////////////////////////////
-
-DEFINE_API_IMPL( database_api_impl, get_nai_pool )
-{
-   get_nai_pool_return result;
-   result.nai_pool = _db.get< nai_pool_object >().pool();
-   return result;
-}
-
-DEFINE_API_IMPL( database_api_impl, list_smt_contributions )
-{
-   FC_ASSERT( args.limit <= DATABASE_API_SINGLE_QUERY_LIMIT );
-
-   list_smt_contributions_return result;
-   result.contributions.reserve( args.limit );
-
-   switch( args.order )
-   {
-      case( by_symbol_contributor ):
-      {
-         auto key = args.start.get_array();
-         FC_ASSERT( key.size() == 0 || key.size() == 3, "The parameter 'start' must be an empty array or consist of asset_symbol_type, contributor and contribution_id" );
-
-         boost::tuple< asset_symbol_type, account_name_type, uint32_t > start;
-         if ( key.size() == 0 )
-            start = boost::make_tuple( asset_symbol_type(), account_name_type(), 0 );
-         else
-            start = boost::make_tuple( key[ 0 ].as< asset_symbol_type >(), key[ 1 ].as< account_name_type >(), key[ 2 ].as< uint32_t >() );
-
-         iterate_results< chain::smt_contribution_index, chain::by_symbol_contributor >(
-            start,
-            result.contributions,
-            args.limit,
-            &database_api_impl::on_push_default< chain::smt_contribution_object >,
-            &database_api_impl::filter_default< chain::smt_contribution_object > );
-         break;
-      }
-      case( by_symbol_id ):
-      {
-         auto key = args.start.get_array();
-         FC_ASSERT( key.size() == 0 || key.size() == 2, "The parameter 'start' must be an empty array or consist of asset_symbol_type and id" );
-
-         boost::tuple< asset_symbol_type, smt_contribution_object_id_type > start;
-         if ( key.size() == 0 )
-            start = boost::make_tuple( asset_symbol_type(), 0 );
-         else
-            start = boost::make_tuple( key[ 0 ].as< asset_symbol_type >(), key[ 1 ].as< smt_contribution_object_id_type >() );
-
-         iterate_results< chain::smt_contribution_index, chain::by_symbol_id >(
-            start,
-            result.contributions,
-            args.limit,
-            &database_api_impl::on_push_default< chain::smt_contribution_object >,
-            &database_api_impl::filter_default< chain::smt_contribution_object > );
-         break;
-      }
-#ifndef IS_LOW_MEM
-      case ( by_contributor ):
-      {
-         auto key = args.start.get_array();
-         FC_ASSERT( key.size() == 0 || key.size() == 3, "The parameter 'start' must be an empty array or consist of contributor, asset_symbol_type and contribution_id" );
-
-         boost::tuple< account_name_type, asset_symbol_type, uint32_t > start;
-         if ( key.size() == 0 )
-            start = boost::make_tuple( account_name_type(), asset_symbol_type(), 0 );
-         else
-            start = boost::make_tuple( key[ 0 ].as< account_name_type >(), key[ 1 ].as< asset_symbol_type >(), key[ 2 ].as< uint32_t >() );
-
-         iterate_results< chain::smt_contribution_index, chain::by_contributor >(
-            start,
-            result.contributions,
-            args.limit,
-            &database_api_impl::on_push_default< chain::smt_contribution_object >,
-            &database_api_impl::filter_default< chain::smt_contribution_object > );
-         break;
-      }
-#endif
-      default:
-         FC_ASSERT( false, "Unknown or unsupported sort order" );
-   }
-
-   return result;
-}
-
-DEFINE_API_IMPL( database_api_impl, find_smt_contributions )
-{
-   find_smt_contributions_return result;
-
-   const auto& idx = _db.get_index< chain::smt_contribution_index, chain::by_symbol_contributor >();
-
-   for( auto& symbol_contributor : args.symbol_contributors )
-   {
-      auto itr = idx.lower_bound( boost::make_tuple( symbol_contributor.first, symbol_contributor.second, 0 ) );
-      while( itr != idx.end() && itr->symbol == symbol_contributor.first && itr->contributor == symbol_contributor.second && result.contributions.size() <= DATABASE_API_SINGLE_QUERY_LIMIT )
-      {
-         result.contributions.push_back( *itr );
-         ++itr;
-      }
-   }
-
-   return result;
-}
-
-DEFINE_API_IMPL( database_api_impl, list_smt_tokens )
-{
-   FC_ASSERT( args.limit <= DATABASE_API_SINGLE_QUERY_LIMIT );
-
-   list_smt_tokens_return result;
-   result.tokens.reserve( args.limit );
-
-   switch( args.order )
-   {
-      case( by_symbol ):
-      {
-         asset_symbol_type start;
-
-         if( args.start.get_object().size() > 0 )
-         {
-            start = args.start.as< asset_symbol_type >();
-         }
-
-         iterate_results< chain::smt_token_index, chain::by_symbol >(
-            start,
-            result.tokens,
-            args.limit,
-            [&]( const smt_token_object& t ) { return api_smt_token_object( t, _db ); },
-            &database_api_impl::filter_default< chain::smt_token_object > );
-
-         break;
-      }
-      case( by_control_account ):
-      {
-         boost::tuple< account_name_type, asset_symbol_type > start;
-
-         if( args.start.is_string() )
-         {
-            start = boost::make_tuple( args.start.as< account_name_type >(), asset_symbol_type() );
-         }
-         else
-         {
-            auto key = args.start.get_array();
-            FC_ASSERT( key.size() == 2, "The parameter 'start' must be an account name or an array containing an account name and an asset symbol" );
-
-            start = boost::make_tuple( key[0].as< account_name_type >(), key[1].as< asset_symbol_type >() );
-         }
-
-         iterate_results< chain::smt_token_index, chain::by_control_account >(
-            start,
-            result.tokens,
-            args.limit,
-            [&]( const smt_token_object& t ) { return api_smt_token_object( t, _db ); },
-            &database_api_impl::filter_default< chain::smt_token_object > );
-
-         break;
-      }
-      default:
-         FC_ASSERT( false, "Unknown or unsupported sort order" );
-   }
-
-   return result;
-}
-
-DEFINE_API_IMPL( database_api_impl, find_smt_tokens )
-{
-   FC_ASSERT( args.symbols.size() <= DATABASE_API_SINGLE_QUERY_LIMIT );
-
-   find_smt_tokens_return result;
-   result.tokens.reserve( args.symbols.size() );
-
-   for( auto& symbol : args.symbols )
-   {
-      const auto token = chain::util::smt::find_token( _db, symbol, args.ignore_precision );
-      if( token != nullptr )
-      {
-         result.tokens.push_back( api_smt_token_object( *token, _db ) );
-      }
-   }
-
-   return result;
-}
-
-DEFINE_API_IMPL( database_api_impl, list_smt_token_emissions )
-{
-   FC_ASSERT( args.limit <= DATABASE_API_SINGLE_QUERY_LIMIT );
-
-   list_smt_token_emissions_return result;
-   result.token_emissions.reserve( args.limit );
-
-   switch( args.order )
-   {
-      case( by_symbol_time ):
-      {
-         auto key = args.start.get_array();
-         FC_ASSERT( key.size() == 0 || key.size() == 2, "The parameter 'start' must be an empty array or consist of asset_symbol_type and time_point_sec" );
-
-         boost::tuple< asset_symbol_type, time_point_sec > start;
-         if ( key.size() == 0 )
-            start = boost::make_tuple( asset_symbol_type(), time_point_sec() );
-         else
-            start = boost::make_tuple( key[ 0 ].as< asset_symbol_type >(), key[ 1 ].as< time_point_sec >() );
-
-         iterate_results< chain::smt_token_emissions_index, chain::by_symbol_time >(
-            start,
-            result.token_emissions,
-            args.limit,
-            &database_api_impl::on_push_default< chain::smt_token_emissions_object >,
-            &database_api_impl::filter_default< chain::smt_token_emissions_object > );
-         break;
-      }
-      default:
-         FC_ASSERT( false, "Unknown or unsupported sort order" );
-   }
-
-   return result;
-}
-
-DEFINE_API_IMPL( database_api_impl, find_smt_token_emissions )
-{
-   find_smt_token_emissions_return result;
-
-   const auto& idx = _db.get_index< chain::smt_token_emissions_index, chain::by_symbol_time >();
-   auto itr = idx.lower_bound( args.asset_symbol );
-
-   while( itr != idx.end() && itr->symbol == args.asset_symbol && result.token_emissions.size() <= DATABASE_API_SINGLE_QUERY_LIMIT )
-   {
-      result.token_emissions.push_back( *itr );
-      ++itr;
-   }
-
-   return result;
-}
-
-#endif
 
 DEFINE_LOCKLESS_APIS( database_api, (get_config)(get_version) )
 
@@ -1996,15 +1744,6 @@ DEFINE_READ_APIS( database_api,
    (verify_authority)
    (verify_account_authority)
    (verify_signatures)
-#ifdef STEEM_ENABLE_SMT
-   (get_nai_pool)
-   (list_smt_contributions)
-   (find_smt_contributions)
-   (list_smt_tokens)
-   (find_smt_tokens)
-   (list_smt_token_emissions)
-   (find_smt_token_emissions)
-#endif
 )
 
 } } } // steem::plugins::database_api

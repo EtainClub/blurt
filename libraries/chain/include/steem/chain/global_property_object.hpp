@@ -96,15 +96,6 @@ namespace steem { namespace chain {
          uint32_t     maximum_block_size = 0;
 
          /**
-          * The size of the block that is partitioned for actions.
-          * Required actions can only be delayed if they take up more than this amount. More can be
-          * included, but are not required. Block generation should only include transactions up
-          * to maximum_block_size - required_actions_parition_size to ensure required actions are
-          * not delayed when they should not be.
-          */
-         uint16_t     required_actions_partition_percent = 0;
-
-         /**
           * The current absolute slot number.  Equal to the total
           * number of slots since genesis.  Also equal to the total
           * number of missed slots plus head_block_number.
@@ -146,10 +137,6 @@ namespace steem { namespace chain {
          asset sps_interval_ledger = asset( 0, SBD_SYMBOL );
 
          uint16_t downvote_pool_percent = 0;
-
-#ifdef STEEM_ENABLE_SMT
-         asset smt_creation_fee = asset( 1000, SBD_SYMBOL );
-#endif
    };
 
    typedef multi_index_container<
@@ -194,7 +181,6 @@ FC_REFLECT( steem::chain::dynamic_global_property_object,
              (sbd_interest_rate)
              (sbd_print_rate)
              (maximum_block_size)
-             (required_actions_partition_percent)
              (current_aslot)
              (recent_slots_filled)
              (participation_count)
@@ -212,8 +198,5 @@ FC_REFLECT( steem::chain::dynamic_global_property_object,
              (sps_fund_percent)
              (sps_interval_ledger)
              (downvote_pool_percent)
-#ifdef STEEM_ENABLE_SMT
-             (smt_creation_fee)
-#endif
           )
 CHAINBASE_SET_INDEX_TYPE( steem::chain::dynamic_global_property_object, steem::chain::dynamic_global_property_index )
