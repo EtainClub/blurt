@@ -11,7 +11,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 * Remove the downvote function.
 * Eliminate SBD
-* Real REST [API}(https://github.com/blurt/cachepi)
+* Real REST [API](https://github.com/blurt/cachepi)
 
 ## Launch Plans
 
