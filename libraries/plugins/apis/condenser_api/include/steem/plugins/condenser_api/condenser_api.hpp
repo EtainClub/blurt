@@ -117,7 +117,6 @@ struct api_account_object
       post_count( a.post_count ),
       can_vote( a.can_vote ),
       voting_manabar( a.voting_manabar ),
-      downvote_manabar( a.downvote_manabar ),
       balance( legacy_asset::from_asset( a.balance ) ),
       savings_balance( legacy_asset::from_asset( a.savings_balance ) ),
       sbd_balance( legacy_asset::from_asset( a.sbd_balance ) ),
@@ -183,7 +182,6 @@ struct api_account_object
 
    bool              can_vote = false;
    util::manabar     voting_manabar;
-   util::manabar     downvote_manabar;
    uint16_t          voting_power = 0;
 
    legacy_asset      balance;
@@ -388,8 +386,7 @@ struct extended_dynamic_global_properties
       content_reward_percent( o.content_reward_percent ),
       vesting_reward_percent( o.vesting_reward_percent ),
       sps_fund_percent( o.sps_fund_percent ),
-      sps_interval_ledger( legacy_asset::from_asset( o.sps_interval_ledger ) ),
-      downvote_pool_percent( o.downvote_pool_percent )
+      sps_interval_ledger( legacy_asset::from_asset( o.sps_interval_ledger ) )
    {}
 
    uint32_t          head_block_number = 0;
@@ -442,8 +439,6 @@ struct extended_dynamic_global_properties
    uint16_t          sps_fund_percent = STEEM_PROPOSAL_FUND_PERCENT_HF0;
 
    legacy_asset      sps_interval_ledger;
-
-   uint16_t          downvote_pool_percent = 0;
 };
 
 struct api_witness_object
@@ -1200,7 +1195,7 @@ FC_REFLECT( steem::plugins::condenser_api::api_account_object,
              (proxy)(last_owner_update)(last_account_update)
              (created)(mined)
              (recovery_account)(last_account_recovery)(reset_account)
-             (comment_count)(lifetime_vote_count)(post_count)(can_vote)(voting_manabar)(downvote_manabar)(voting_power)
+             (comment_count)(lifetime_vote_count)(post_count)(can_vote)(voting_manabar)(voting_power)
              (balance)
              (savings_balance)
              (sbd_balance)(sbd_seconds)(sbd_seconds_last_update)(sbd_last_interest_payment)
@@ -1239,7 +1234,7 @@ FC_REFLECT( steem::plugins::condenser_api::extended_dynamic_global_properties,
             (sbd_interest_rate)(sbd_print_rate)
             (maximum_block_size)(current_aslot)(recent_slots_filled)(participation_count)(last_irreversible_block_num)
             (vote_power_reserve_rate)(delegation_return_period)(reverse_auction_seconds)(available_account_subsidies)(sbd_stop_percent)(sbd_start_percent)
-            (next_maintenance_time)(last_budget_time)(content_reward_percent)(vesting_reward_percent)(sps_fund_percent)(sps_interval_ledger)(downvote_pool_percent)
+            (next_maintenance_time)(last_budget_time)(content_reward_percent)(vesting_reward_percent)(sps_fund_percent)(sps_interval_ledger)
           )
 
 FC_REFLECT( steem::plugins::condenser_api::api_witness_object,
