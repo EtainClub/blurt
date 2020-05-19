@@ -147,7 +147,7 @@ void update_witness_schedule4( database& db )
         itr != widx.end() && selected_voted.size() < wso.max_voted_witnesses;
         ++itr )
    {
-      if( db.has_hardfork( STEEM_HARDFORK_0_14__278 ) && (itr->signing_key == public_key_type()) )
+      if( itr->signing_key == public_key_type() )
          continue;
       selected_voted.insert( itr->id );
       active_witnesses.push_back( itr->owner) ;
@@ -164,17 +164,6 @@ void update_witness_schedule4( database& db )
    auto mitr = pow_idx.upper_bound(0);
    while( mitr != pow_idx.end() && selected_miners.size() < wso.max_miner_witnesses )
    {
-      // Only consider a miner who is not a top voted witness
-      if( selected_voted.find(mitr->id) == selected_voted.end() )
-      {
-         // Only consider a miner who has a valid block signing key
-         if( !( db.has_hardfork( STEEM_HARDFORK_0_14__278 ) && db.get_witness( mitr->owner ).signing_key == public_key_type() ) )
-         {
-            selected_miners.insert(mitr->id);
-            active_witnesses.push_back(mitr->owner);
-            db.modify( *mitr, [&]( witness_object& wo ) { wo.schedule = witness_object::miner; } );
-         }
-      }
       // Remove processed miner from the queue
       auto itr = mitr;
       ++mitr;
@@ -202,7 +191,7 @@ void update_witness_schedule4( database& db )
       new_virtual_time = sitr->virtual_scheduled_time; /// everyone advances to at least this time
       processed_witnesses.push_back(sitr);
 
-      if( db.has_hardfork( STEEM_HARDFORK_0_14__278 ) && sitr->signing_key == public_key_type() )
+      if( sitr->signing_key == public_key_type() )
          continue; /// skip witnesses without a valid block signing key
 
       if( selected_miners.find(sitr->id) == selected_miners.end()
@@ -245,7 +234,6 @@ void update_witness_schedule4( database& db )
 
    auto majority_version = wso.majority_version;
 
-   if( db.has_hardfork( STEEM_HARDFORK_0_5__54 ) )
    {
       flat_map< version, uint32_t, std::greater< version > > witness_versions;
       flat_map< std::tuple< hardfork_version, time_point_sec >, uint32_t > hardfork_version_votes;
@@ -425,10 +413,7 @@ void update_witness_schedule(database& db)
                    new_virtual_time = fc::uint128();
 
                /// this witness will produce again here
-               if( db.has_hardfork( STEEM_HARDFORK_0_2 ) )
-                  wo.virtual_scheduled_time += STEEM_VIRTUAL_SCHEDULE_LAP_LENGTH2 / (wo.votes.value+1);
-               else
-                  wo.virtual_scheduled_time += STEEM_VIRTUAL_SCHEDULE_LAP_LENGTH / (wo.votes.value+1);
+               wo.virtual_scheduled_time += STEEM_VIRTUAL_SCHEDULE_LAP_LENGTH2 / (wo.votes.value+1);
             } );
          }
       }

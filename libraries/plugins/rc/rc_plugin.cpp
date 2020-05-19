@@ -59,8 +59,6 @@ class rc_plugin_impl
       void on_post_apply_transaction( const transaction_notification& note );
       void on_pre_apply_operation( const operation_notification& note );
       void on_post_apply_operation( const operation_notification& note );
-      void on_pre_apply_optional_action( const optional_action_notification& note );
-      void on_post_apply_optional_action( const optional_action_notification& note );
 
       void on_first_block();
       void validate_database();
@@ -88,8 +86,6 @@ class rc_plugin_impl
       boost::signals2::connection   _post_apply_transaction_conn;
       boost::signals2::connection   _pre_apply_operation_conn;
       boost::signals2::connection   _post_apply_operation_conn;
-      boost::signals2::connection   _pre_apply_optional_action_conn;
-      boost::signals2::connection   _post_apply_optional_action_conn;
 };
 
 inline int64_t get_next_vesting_withdrawal( const account_object& account )
@@ -220,13 +216,6 @@ account_name_type get_resource_user( const signed_transaction& tx )
    return account_name_type();
 }
 
-account_name_type get_resource_user( const optional_automated_action& action )
-{
-   get_resource_user_visitor vtor;
-
-   return action.visit( vtor );
-}
-
 void use_account_rcs(
    database& db,
    const dynamic_global_property_object& gpo,
@@ -271,7 +260,7 @@ void use_account_rcs(
 
       bool has_mana = rca.rc_manabar.has_mana( rc );
 
-      if( (!skip.skip_reject_not_enough_rc) && db.has_hardfork( STEEM_HARDFORK_0_20 ) )
+      if( (!skip.skip_reject_not_enough_rc) )
       {
          if( db.is_producing() )
          {
@@ -370,17 +359,6 @@ struct block_extensions_count_resources_visitor
    count_resources_result& _r;
 
    block_extensions_count_resources_visitor( count_resources_result& r ) : _r( r ) {}
-
-   // Only optional actions need to be counted. We decided in design that
-   // the operation should pay the cost for any required actions created
-   // as a result.
-   void operator()( const optional_automated_actions& opt_actions )
-   {
-      for( const auto& a : opt_actions )
-      {
-         count_resources( a, _r );
-      }
-   }
 
    template< typename T >
    void operator()( const T& ) {}
@@ -561,6 +539,30 @@ void rc_plugin_impl::on_first_block()
       create_rc_account( _db, now.sec_since_epoch(), *it, asset( STEEM_HISTORICAL_ACCOUNT_CREATION_ADJUSTMENT, VESTS_SYMBOL ) );
    }
 
+
+//   if( op.hardfork_id == STEEM_HARDFORK_0_1 )
+//   {
+//      const auto& idx = _db.get_index< account_index >().indices().get< by_id >();
+//      for( auto it=idx.begin(); it!=idx.end(); ++it )
+//      {
+//         _mod_accounts.emplace_back( it->name );
+//      }
+//   }
+
+   {
+      const auto& params = _db.get< rc_resource_param_object, by_id >( rc_resource_param_object::id_type() );
+
+      _db.modify( _db.get< rc_pool_object, by_id >( rc_pool_object::id_type() ), [&]( rc_pool_object& p )
+      {
+         for( size_t i = 0; i < STEEM_NUM_RESOURCE_TYPES; i++ )
+         {
+            p.pool_array[ i ] = int64_t( params.resource_param_array[ i ].resource_dynamics_params.max_pool_size );
+         }
+
+         p.pool_array[ resource_new_accounts ] = 0;
+      });
+   }
+
    return;
 }
 
@@ -720,13 +722,6 @@ struct pre_apply_operation_visitor
       regenerate( op.account );
    }
 
-#ifdef STEEM_ENABLE_SMT
-   void operator()( const claim_reward_balance2_operation& op )const
-   {
-      regenerate( op.account );
-   }
-#endif
-
    void operator()( const hardfork_operation& op )const
    {
       if( op.hardfork_id == STEEM_HARDFORK_0_1 )
@@ -790,8 +785,6 @@ struct pre_apply_operation_visitor
    template< typename Op >
    void operator()( const Op& op )const {}
 };
-
-typedef pre_apply_operation_visitor pre_apply_optional_action_vistor;
 
 struct account_regen_info
 {
@@ -897,38 +890,9 @@ struct post_apply_operation_visitor
       _mod_accounts.emplace_back( op.account );
    }
 
-#ifdef STEEM_ENABLE_SMT
-   void operator()( const claim_reward_balance2_operation& op )const
-   {
-      _mod_accounts.emplace_back( op.account );
-   }
-#endif
-
    void operator()( const hardfork_operation& op )const
    {
-      if( op.hardfork_id == STEEM_HARDFORK_0_1 )
-      {
-         const auto& idx = _db.get_index< account_index >().indices().get< by_id >();
-         for( auto it=idx.begin(); it!=idx.end(); ++it )
-         {
-            _mod_accounts.emplace_back( it->name );
-         }
-      }
 
-      if( op.hardfork_id == STEEM_HARDFORK_0_20 )
-      {
-         const auto& params = _db.get< rc_resource_param_object, by_id >( rc_resource_param_object::id_type() );
-
-         _db.modify( _db.get< rc_pool_object, by_id >( rc_pool_object::id_type() ), [&]( rc_pool_object& p )
-         {
-            for( size_t i = 0; i < STEEM_NUM_RESOURCE_TYPES; i++ )
-            {
-               p.pool_array[ i ] = int64_t( params.resource_param_array[ i ].resource_dynamics_params.max_pool_size );
-            }
-
-            p.pool_array[ resource_new_accounts ] = 0;
-         });
-      }
    }
 
    void operator()( const return_vesting_delegation_operation& op )const
@@ -974,10 +938,6 @@ struct post_apply_operation_visitor
    }
 };
 
-typedef post_apply_operation_visitor post_apply_optional_action_visitor;
-
-
-
 void rc_plugin_impl::on_pre_apply_operation( const operation_notification& note )
 { try {
    if( before_first_block() )
@@ -986,10 +946,7 @@ void rc_plugin_impl::on_pre_apply_operation( const operation_notification& note 
    const dynamic_global_property_object& gpo = _db.get_dynamic_global_properties();
    pre_apply_operation_visitor vtor( _db );
 
-   // TODO: Add issue number to HF constant
-   if( _db.has_hardfork( STEEM_HARDFORK_0_20 ) )
-      vtor._vesting_share_price = gpo.get_vesting_share_price();
-
+   vtor._vesting_share_price = gpo.get_vesting_share_price();
    vtor._current_witness = gpo.current_witness;
    vtor._skip = _skip;
 
@@ -1033,82 +990,6 @@ void rc_plugin_impl::on_post_apply_operation( const operation_notification& note
 
    update_modified_accounts( _db, modified_accounts );
 } FC_CAPTURE_AND_RETHROW( (note.op) ) }
-
-void rc_plugin_impl::on_pre_apply_optional_action( const optional_action_notification& note )
-{
-   if( before_first_block() )
-      return;
-
-   const dynamic_global_property_object& gpo = _db.get_dynamic_global_properties();
-   pre_apply_optional_action_vistor vtor( _db );
-
-   vtor._current_witness = gpo.current_witness;
-   vtor._skip = _skip;
-
-   note.action.visit( vtor );
-}
-
-void rc_plugin_impl::on_post_apply_optional_action( const optional_action_notification& note )
-{
-   if( before_first_block() )
-      return;
-
-   const dynamic_global_property_object& gpo = _db.get_dynamic_global_properties();
-   const uint32_t now = gpo.time.sec_since_epoch();
-
-   vector< account_regen_info > modified_accounts;
-
-   post_apply_optional_action_visitor vtor( modified_accounts, _db, now, gpo.head_block_number, gpo.current_witness );
-   note.action.visit( vtor );
-
-   update_modified_accounts( _db, modified_accounts );
-
-   // There is no transaction equivalent for actions, so post apply transaction logic for actions go here.
-   int64_t rc_regen = (gpo.total_vesting_shares.amount.value / (STEEM_RC_REGEN_TIME / STEEM_BLOCK_INTERVAL));
-
-   rc_optional_action_info opt_action_info;
-
-   // How many resources does the transaction use?
-   count_resources( note.action, opt_action_info.usage );
-
-   // How many RC does this transaction cost?
-   const rc_resource_param_object& params_obj = _db.get< rc_resource_param_object, by_id >( rc_resource_param_object::id_type() );
-   const rc_pool_object& pool_obj = _db.get< rc_pool_object, by_id >( rc_pool_object::id_type() );
-
-   int64_t total_cost = 0;
-
-   // When rc_regen is 0, everything is free
-   if( rc_regen > 0 )
-   {
-      for( size_t i=0; i<STEEM_NUM_RESOURCE_TYPES; i++ )
-      {
-         const rc_resource_params& params = params_obj.resource_param_array[i];
-         int64_t pool = pool_obj.pool_array[i];
-
-         // TODO:  Move this multiplication to resource_count.cpp
-         opt_action_info.usage.resource_count[i] *= int64_t( params.resource_dynamics_params.resource_unit );
-         opt_action_info.cost[i] = compute_rc_cost_of_resource( params.price_curve_params, pool, opt_action_info.usage.resource_count[i], rc_regen );
-         total_cost += opt_action_info.cost[i];
-      }
-   }
-
-   opt_action_info.resource_user = get_resource_user( note.action );
-   use_account_rcs( _db, gpo, opt_action_info.resource_user, total_cost, _skip
-#ifdef IS_TEST_NET
-   ,
-   _whitelist
-#endif
-   );
-
-   std::shared_ptr< exp_rc_data > export_data =
-      steem::plugins::block_data_export::find_export_data< exp_rc_data >( STEEM_RC_PLUGIN_NAME );
-   if( (gpo.head_block_number % 10000) == 0 )
-   {
-      dlog( "${t} : ${i}", ("t", gpo.time)("i", opt_action_info) );
-   }
-   if( export_data )
-      export_data->opt_action_info.push_back( opt_action_info );
-}
 
 void rc_plugin_impl::validate_database()
 {
@@ -1179,10 +1060,6 @@ void rc_plugin::plugin_initialize( const boost::program_options::variables_map& 
          { try { my->on_pre_apply_operation( note ); } FC_LOG_AND_RETHROW() }, *this, 0 );
       my->_post_apply_operation_conn = db.add_post_apply_operation_handler( [&]( const operation_notification& note )
          { try { my->on_post_apply_operation( note ); } FC_LOG_AND_RETHROW() }, *this, 0 );
-      my->_pre_apply_optional_action_conn = db.add_pre_apply_optional_action_handler( [&]( const optional_action_notification& note )
-         { try { my->on_pre_apply_optional_action( note ); } FC_LOG_AND_RETHROW() }, *this, 0 );
-      my->_post_apply_optional_action_conn = db.add_post_apply_optional_action_handler( [&]( const optional_action_notification& note )
-         { try { my->on_post_apply_optional_action( note ); } FC_LOG_AND_RETHROW() }, *this, 0 );
 
       STEEM_ADD_PLUGIN_INDEX(db, rc_resource_param_index);
       STEEM_ADD_PLUGIN_INDEX(db, rc_pool_index);
@@ -1237,8 +1114,6 @@ void rc_plugin::plugin_shutdown()
    chain::util::disconnect_signal( my->_post_apply_transaction_conn );
    chain::util::disconnect_signal( my->_pre_apply_operation_conn );
    chain::util::disconnect_signal( my->_post_apply_operation_conn );
-   chain::util::disconnect_signal( my->_pre_apply_optional_action_conn );
-   chain::util::disconnect_signal( my->_post_apply_optional_action_conn );
 }
 
 void rc_plugin::set_rc_plugin_skip_flags( rc_plugin_skip_flags skip )

@@ -2007,33 +2007,23 @@ namespace detail
          }
       }
 
-      const auto& props = _db.get_dynamic_global_properties();
       const auto& hist  = _db.get_feed_history();
 
       asset pot;
-      if( _db.has_hardfork( STEEM_HARDFORK_0_17__774 ) )
-         pot = _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) ).reward_balance;
-      else
-         pot = props.total_reward_fund_steem;
+      pot = _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) ).reward_balance;
 
       if( !hist.current_median_history.is_null() ) pot = pot * hist.current_median_history;
 
       u256 total_r2 = 0;
-      if( _db.has_hardfork( STEEM_HARDFORK_0_17__774 ) )
-         total_r2 = chain::util::to256( _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) ).recent_claims );
-      else
-         total_r2 = chain::util::to256( props.total_reward_shares2 );
+      total_r2 = chain::util::to256( _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) ).recent_claims );
 
       if( total_r2 > 0 )
       {
          uint128_t vshares;
-         if( _db.has_hardfork( STEEM_HARDFORK_0_17__774 ) )
-         {
-            const auto& rf = _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) );
-            vshares = d.net_rshares.value > 0 ? chain::util::evaluate_reward_curve( d.net_rshares.value, rf.author_reward_curve, rf.content_constant ) : 0;
-         }
-         else
-            vshares = d.net_rshares.value > 0 ? chain::util::evaluate_reward_curve( d.net_rshares.value ) : 0;
+
+         const auto& rf = _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) );
+         vshares = d.net_rshares.value > 0 ? chain::util::evaluate_reward_curve( d.net_rshares.value, rf.author_reward_curve, rf.content_constant ) : 0;
+
 
          u256 r2 = chain::util::to256( vshares ); //to256(abs_net_rshares);
          r2 *= pot.amount.value;
@@ -2112,9 +2102,6 @@ namespace detail
 
 uint16_t api_account_object::_compute_voting_power( const database_api::api_account_object& a )
 {
-   if( a.voting_manabar.last_update_time < STEEM_HARDFORK_0_20_TIME )
-      return (uint16_t) a.voting_manabar.current_mana;
-
    auto vests = chain::util::get_effective_vesting_shares( a );
    if( vests <= 0 )
       return 0;

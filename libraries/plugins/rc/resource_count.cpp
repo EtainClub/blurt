@@ -299,55 +299,6 @@ struct count_operation_visitor
       execution_time_count += _e.witness_set_properties_operation_exec_time;
    }
 
-#ifdef STEEM_ENABLE_SMT
-   void operator()( const claim_reward_balance2_operation& op )const
-   {
-      FC_TODO( "Change RC state bytes computation to take SMT's into account" )
-      execution_time_count += _e.claim_reward_balance2_operation_exec_time;
-   }
-
-   void operator()( const smt_setup_operation& op )const
-   {
-      FC_TODO( "Change RC state bytes computation to take SMT's into account" )
-      execution_time_count += _e.smt_setup_operation_exec_time;
-   }
-
-   void operator()( const smt_setup_emissions_operation& op )const
-   {
-      FC_TODO( "Change RC state bytes computation to take SMT's into account" )
-      execution_time_count += _e.smt_setup_emissions_operation_exec_time;
-   }
-
-   void operator()( const smt_set_setup_parameters_operation& op )const
-   {
-      FC_TODO( "Change RC state bytes computation to take SMT's into account" )
-      execution_time_count += _e.smt_set_setup_parameters_operation_exec_time;
-   }
-
-   void operator()( const smt_set_runtime_parameters_operation& op )const
-   {
-      FC_TODO( "Change RC state bytes computation to take SMT's into account" )
-      execution_time_count += _e.smt_set_runtime_parameters_operation_exec_time;
-   }
-
-   void operator()( const smt_create_operation& op )const
-   {
-      FC_TODO( "Change RC state bytes computation to take SMT's into account" )
-      execution_time_count += _e.smt_create_operation_exec_time;
-   }
-
-   void operator()( const allowed_vote_assets& )const
-   {
-      FC_TODO( "Change RC state bytes computation to take SMT's into account" )
-   }
-
-   void operator()( const smt_contribute_operation& op ) const
-   {
-      FC_TODO( "Change RC state bytes computation to take SMT's into account" )
-      execution_time_count += _e.smt_contribute_operation_exec_time;
-   }
-#endif
-
    void operator()( const create_proposal_operation& op ) const
    {
       state_bytes_count += _w.proposal_object_base_size;
@@ -395,12 +346,6 @@ struct count_operation_visitor
    void operator()( const proposal_pay_operation& ) const {}
    void operator()( const sps_fund_operation& ) const {}
 
-   // Optional Actions
-#ifdef IS_TEST_NET
-   void operator()( const example_optional_action& ) const {}
-#endif
-
-
    // TODO:
    // Should following ops be market ops?
    // withdraw_vesting, convert, set_withdraw_vesting_route, limit_order_create2
@@ -436,27 +381,6 @@ void count_resources(
         size_info.transaction_object_base_size
       + size_info.transaction_object_byte_size * tx_size
       + vtor.state_bytes_count;
-
-   result.resource_count[ resource_execution_time ] += vtor.execution_time_count;
-}
-
-void count_resources(
-   const optional_automated_action& action,
-   count_resources_result& result )
-{
-   static const state_object_size_info size_info;
-   static const operation_exec_info exec_info;
-   const int64_t action_size = int64_t( fc::raw::pack_size( action ) );
-   count_optional_action_visitor vtor( size_info, exec_info );
-
-   result.resource_count[ resource_history_bytes ] += action_size;
-
-   action.visit( vtor );
-
-   // Not expecting actions to create accounts, but better to add it for completeness
-   result.resource_count[ resource_new_accounts ] += vtor.new_account_op_count;
-
-   result.resource_count[ resource_state_bytes ] += vtor.state_bytes_count;
 
    result.resource_count[ resource_execution_time ] += vtor.execution_time_count;
 }
