@@ -2,17 +2,24 @@
 
 Blurt is a public social blockchain with a diverse and vibrant community that strictly upholds [property rights](https://twitter.com/cz_binance/status/1236373815447506945?s=20).
 
+## Social Media
+* [Twitter](https://twitter.com/BlurtOfficial)
+* [Steemit](https://steemit.com/steem/@blurt)
+* [Hive](https://hive.blog/@blurt)
+
 ## Features
 
 * Remove the downvote function.
+* Eliminate SBD
+* Real REST [API}(https://github.com/blurt/cachepi)
 
 ## Launch Plans
 
-* Blurt is a fork of the Steem blockchain that begins operating on July 4th, 2020.
+* Blurt is a fork of the Steem blockchain that begins operating on or before July 4th, 2020 with Steem balances taken in a snapshot at block 4352**6969**.  Giggity. 
 
 ## Centralization
 
-* A regent account with a controlling stake or special weighted vote is added to the blockchain at the time of the fork.
+* A regent account with a controlling stake or special weighted vote has been added to Blurt. 
 
 * The regent account votes on consensus Blurt Producers and DAO proposals.
 
@@ -23,7 +30,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 ## Decentralization
 
-* The regent account will be programmed to decay to zero or just simply cease to exist after two years, the exact methodology is yet to be determined.
+* The regent account will be programmed to decay to zero or cease to exist after two years.
 * Prior to deprecating the regent account, the Blurt blockchain will be updated to feature secure consensus protocols, such as One-Stake-One-Vote, to reduce the risk of centralised consensus attacks from large stake accounts.
 
 
@@ -42,7 +49,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 ## Software Status
 
-This repository currently contains a fork of the Steem blockchain code.  Blurt will launch as a fork of the state of Steem on July 4, 2020.  If you compiled this software today, you would just be compiling Steem code, so we've removed the compile and deploy instructions for now, but they'll return soon.
+Blurt will launch with steem balances from block 4352**6969**  (Giggity) on  July 4, 2020.   Work is ongoing in the `dev` branch.  
 
 ## Build
 
