@@ -724,14 +724,6 @@ struct pre_apply_operation_visitor
 
    void operator()( const hardfork_operation& op )const
    {
-      if( op.hardfork_id == STEEM_HARDFORK_0_1 )
-      {
-         const auto& idx = _db.get_index< account_index >().indices().get< by_id >();
-         for( auto it=idx.begin(); it!=idx.end(); ++it )
-         {
-            regenerate( it->name );
-         }
-      }
    }
 
    void operator()( const return_vesting_delegation_operation& op )const

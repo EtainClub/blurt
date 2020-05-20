@@ -1876,12 +1876,6 @@ share_type database::cashout_comment_helper( util::comment_reward_context& ctx, 
 
 void database::process_comment_cashout()
 {
-   /// don't allow any content to get paid out until the website is ready to launch
-   /// and people have had a week to start posting.  The first cashout will be the biggest because it
-   /// will represent 2+ months of rewards.
-   if( !has_hardfork( STEEM_FIRST_CASHOUT_TIME ) )
-      return;
-
    util::comment_reward_context ctx;
    ctx.current_steem_price = get_feed_history().current_median_history;
    vector< reward_fund_context > funds;
