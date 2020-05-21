@@ -676,7 +676,7 @@ BOOST_AUTO_TEST_CASE( comment_delete_apply )
       sign( tx, alice_private_key );
       db->push_transaction( tx, 0 );
 
-      BOOST_TEST_MESSAGE( "--- Test failue deleting a comment with positive rshares" );
+      BOOST_TEST_MESSAGE( "--- Test failure deleting a comment with positive rshares" );
 
       delete_comment_operation op;
       op.author = "alice";
@@ -687,18 +687,18 @@ BOOST_AUTO_TEST_CASE( comment_delete_apply )
       STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::assert_exception );
 
 
-      BOOST_TEST_MESSAGE( "--- Test success deleting a comment with negative rshares" );
-
-      generate_block();
-      vote.weight = -1 * STEEM_100_PERCENT;
-      tx.clear();
-      tx.operations.push_back( vote );
-      tx.operations.push_back( op );
-      sign( tx, alice_private_key );
-      db->push_transaction( tx, 0 );
-
-      auto test_comment = db->find< comment_object, by_permlink >( boost::make_tuple( "alice", string( "test1" ) ) );
-      BOOST_REQUIRE( test_comment == nullptr );
+//      BOOST_TEST_MESSAGE( "--- Test success deleting a comment with negative rshares" );
+//
+//      generate_block();
+//      vote.weight = -1 * STEEM_100_PERCENT;
+//      tx.clear();
+//      tx.operations.push_back( vote );
+//      tx.operations.push_back( op );
+//      sign( tx, alice_private_key );
+//      db->push_transaction( tx, 0 );
+//
+//      auto test_comment = db->find< comment_object, by_permlink >( boost::make_tuple( "alice", string( "test1" ) ) );
+//      BOOST_REQUIRE( test_comment == nullptr );
 
 
       BOOST_TEST_MESSAGE( "--- Test failure deleting a comment past cashout" );
@@ -923,7 +923,7 @@ BOOST_AUTO_TEST_CASE( vote_apply )
 
          BOOST_TEST_MESSAGE( "--- Test negative vote" );
 
-         const auto& new_sam = db->get_account( "sam" );
+//         const auto& new_sam = db->get_account( "sam" );
          const auto& new_bob_comment = db->get_comment( "bob", string( "foo" ) );
 
          old_abs_rshares = new_bob_comment.abs_rshares.value;
@@ -940,19 +940,20 @@ BOOST_AUTO_TEST_CASE( vote_apply )
          tx.signatures.clear();
          tx.operations.push_back( op );
          sign( tx, sam_private_key );
-         db->push_transaction( tx, 0 );
 
-         itr = vote_idx.find( boost::make_tuple( new_bob_comment.id, new_sam.id ) );
+         STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::assert_exception );
 
-         util::manabar old_downvote_manabar;
-         util::manabar_params downvote_params( util::get_effective_vesting_shares( db->get_account( "alice" ) ) / 4, STEEM_VOTING_MANA_REGENERATION_SECONDS );
-         old_downvote_manabar.regenerate_mana( downvote_params, db->head_block_time() );
-         int64_t sam_weight = old_downvote_manabar.current_mana - db->get_account( "sam" ).downvote_manabar.current_mana - STEEM_VOTE_DUST_THRESHOLD;
-
-         BOOST_REQUIRE( new_bob_comment.net_rshares.value == old_abs_rshares - sam_weight );
-         BOOST_REQUIRE( new_bob_comment.abs_rshares.value == old_abs_rshares + sam_weight );
-         BOOST_REQUIRE( new_bob_comment.cashout_time == new_bob_comment.created + STEEM_CASHOUT_WINDOW_SECONDS );
-         BOOST_REQUIRE( itr != vote_idx.end() );
+//         itr = vote_idx.find( boost::make_tuple( new_bob_comment.id, new_sam.id ) );
+//
+//         util::manabar old_downvote_manabar;
+//         util::manabar_params downvote_params( util::get_effective_vesting_shares( db->get_account( "alice" ) ) / 4, STEEM_VOTING_MANA_REGENERATION_SECONDS );
+//         old_downvote_manabar.regenerate_mana( downvote_params, db->head_block_time() );
+//         int64_t sam_weight = old_downvote_manabar.current_mana - db->get_account( "sam" ).downvote_manabar.current_mana - STEEM_VOTE_DUST_THRESHOLD;
+//
+//         BOOST_REQUIRE( new_bob_comment.net_rshares.value == old_abs_rshares - sam_weight );
+//         BOOST_REQUIRE( new_bob_comment.abs_rshares.value == old_abs_rshares + sam_weight );
+//         BOOST_REQUIRE( new_bob_comment.cashout_time == new_bob_comment.created + STEEM_CASHOUT_WINDOW_SECONDS );
+//         BOOST_REQUIRE( itr != vote_idx.end() );
          validate_database();
 
          BOOST_TEST_MESSAGE( "--- Test nested voting on nested comments" );
@@ -1041,11 +1042,11 @@ BOOST_AUTO_TEST_CASE( vote_apply )
          params.max_mana = util::get_effective_vesting_shares( db->get_account( "alice" ) );
          old_manabar.regenerate_mana( params, db->head_block_time() );
 
-         old_downvote_manabar = db->get_account( "alice" ).downvote_manabar;
-         downvote_params.max_mana = util::get_effective_vesting_shares( db->get_account( "alice" ) ) / 4;
-         old_downvote_manabar.regenerate_mana( downvote_params, db->head_block_time() );
+//         old_downvote_manabar = db->get_account( "alice" ).downvote_manabar;
+//         downvote_params.max_mana = util::get_effective_vesting_shares( db->get_account( "alice" ) ) / 4;
+//         old_downvote_manabar.regenerate_mana( downvote_params, db->head_block_time() );
 
-         op.weight = STEEM_1_PERCENT * -75;
+         op.weight = STEEM_1_PERCENT * 15;
          tx.operations.clear();
          tx.signatures.clear();
          tx.operations.push_back( op );
@@ -1053,12 +1054,12 @@ BOOST_AUTO_TEST_CASE( vote_apply )
          db->push_transaction( tx, 0 );
          alice_bob_vote = vote_idx.find( boost::make_tuple( new_bob_comment.id, new_alice.id ) );
 
-         new_rshares = old_downvote_manabar.current_mana - db->get_account( "alice" ).downvote_manabar.current_mana - STEEM_VOTE_DUST_THRESHOLD;
+         new_rshares = old_manabar.current_mana - db->get_account( "alice" ).voting_manabar.current_mana - STEEM_VOTE_DUST_THRESHOLD;
 
-         BOOST_REQUIRE( new_bob_comment.net_rshares == old_net_rshares - old_vote_rshares - new_rshares );
+         BOOST_REQUIRE( new_bob_comment.net_rshares == -1 * (old_net_rshares - old_vote_rshares - new_rshares) );
          BOOST_REQUIRE( new_bob_comment.abs_rshares == old_abs_rshares + new_rshares );
          BOOST_REQUIRE( new_bob_comment.cashout_time == new_bob_comment.created + STEEM_CASHOUT_WINDOW_SECONDS );
-         BOOST_REQUIRE( alice_bob_vote->rshares == -1 * new_rshares );
+         BOOST_REQUIRE( alice_bob_vote->rshares == new_rshares );
          BOOST_REQUIRE( alice_bob_vote->last_update == db->head_block_time() );
          BOOST_REQUIRE( alice_bob_vote->vote_percent == op.weight );
          validate_database();
@@ -1087,57 +1088,57 @@ BOOST_AUTO_TEST_CASE( vote_apply )
          BOOST_REQUIRE( alice_bob_vote->vote_percent == op.weight );
          validate_database();
 
-         BOOST_TEST_MESSAGE( "--- Test downvote overlap when downvote mana is low" );
-
-         generate_block();
-         db_plugin->debug_update( [=]( database& db )
-         {
-            db.modify( db.get_account( "alice" ), [&]( account_object& a )
-            {
-               a.downvote_manabar.current_mana /= 30;
-               a.downvote_manabar.last_update_time = db.head_block_time().sec_since_epoch();
-            });
-         });
-
-         int64_t alice_weight = 0;
-
-         {
-            const auto& alice = db->get_account( "alice" );
-            old_downvote_manabar.current_mana = alice.downvote_manabar.current_mana;
-            old_downvote_manabar.last_update_time = alice.downvote_manabar.last_update_time;
-            old_manabar.current_mana = alice.voting_manabar.current_mana;
-            old_manabar.last_update_time = alice.voting_manabar.last_update_time;
-            old_manabar.regenerate_mana( params, db->head_block_time() );
-            old_downvote_manabar.regenerate_mana( params, db->head_block_time() );
-            alice_weight = old_manabar.current_mana * 60 * 60 * 24;
-            auto max_vote_denom = db->get_dynamic_global_properties().vote_power_reserve_rate * STEEM_VOTING_MANA_REGENERATION_SECONDS;
-            alice_weight = ( alice_weight + max_vote_denom - 1 ) / max_vote_denom;
-
-            const auto& bob_comment = db->get_comment( "bob", string( "foo" ) );
-            old_net_rshares = bob_comment.net_rshares.value;
-            old_abs_rshares = bob_comment.abs_rshares.value;
-         }
-
-         op.weight = -1 * STEEM_100_PERCENT;
-         tx.operations.clear();
-         tx.signatures.clear();
-         tx.operations.push_back( op );
-         sign( tx, alice_private_key );
-         db->push_transaction( tx, 0 );
-         alice_bob_vote = vote_idx.find( boost::make_tuple( new_bob_comment.id, new_alice.id ) );
-
-         {
-            const auto& bob_comment = db->get_comment( "bob", string( "foo" ) );
-            const auto& alice = db->get_account( "alice" );
-            BOOST_REQUIRE( bob_comment.net_rshares == old_net_rshares - alice_weight + STEEM_VOTE_DUST_THRESHOLD );
-            BOOST_REQUIRE( bob_comment.abs_rshares == old_abs_rshares + alice_weight - STEEM_VOTE_DUST_THRESHOLD );
-            BOOST_REQUIRE( alice_bob_vote->rshares == -1 * ( alice_weight - STEEM_VOTE_DUST_THRESHOLD ) );
-            BOOST_REQUIRE( alice_bob_vote->last_update == db->head_block_time() );
-            BOOST_REQUIRE( alice_bob_vote->vote_percent == op.weight );
-            BOOST_REQUIRE( alice.downvote_manabar.current_mana == 0 );
-            BOOST_REQUIRE( alice.voting_manabar.current_mana == old_manabar.current_mana - alice_weight + old_downvote_manabar.current_mana );
-            validate_database();
-         }
+//         BOOST_TEST_MESSAGE( "--- Test downvote overlap when downvote mana is low" );
+//
+//         generate_block();
+//         db_plugin->debug_update( [=]( database& db )
+//         {
+//            db.modify( db.get_account( "alice" ), [&]( account_object& a )
+//            {
+//               a.downvote_manabar.current_mana /= 30;
+//               a.downvote_manabar.last_update_time = db.head_block_time().sec_since_epoch();
+//            });
+//         });
+//
+//         int64_t alice_weight = 0;
+//
+//         {
+//            const auto& alice = db->get_account( "alice" );
+//            old_downvote_manabar.current_mana = alice.downvote_manabar.current_mana;
+//            old_downvote_manabar.last_update_time = alice.downvote_manabar.last_update_time;
+//            old_manabar.current_mana = alice.voting_manabar.current_mana;
+//            old_manabar.last_update_time = alice.voting_manabar.last_update_time;
+//            old_manabar.regenerate_mana( params, db->head_block_time() );
+//            old_downvote_manabar.regenerate_mana( params, db->head_block_time() );
+//            alice_weight = old_manabar.current_mana * 60 * 60 * 24;
+//            auto max_vote_denom = db->get_dynamic_global_properties().vote_power_reserve_rate * STEEM_VOTING_MANA_REGENERATION_SECONDS;
+//            alice_weight = ( alice_weight + max_vote_denom - 1 ) / max_vote_denom;
+//
+//            const auto& bob_comment = db->get_comment( "bob", string( "foo" ) );
+//            old_net_rshares = bob_comment.net_rshares.value;
+//            old_abs_rshares = bob_comment.abs_rshares.value;
+//         }
+//
+//         op.weight = -1 * STEEM_100_PERCENT;
+//         tx.operations.clear();
+//         tx.signatures.clear();
+//         tx.operations.push_back( op );
+//         sign( tx, alice_private_key );
+//         db->push_transaction( tx, 0 );
+//         alice_bob_vote = vote_idx.find( boost::make_tuple( new_bob_comment.id, new_alice.id ) );
+//
+//         {
+//            const auto& bob_comment = db->get_comment( "bob", string( "foo" ) );
+//            const auto& alice = db->get_account( "alice" );
+//            BOOST_REQUIRE( bob_comment.net_rshares == old_net_rshares - alice_weight + STEEM_VOTE_DUST_THRESHOLD );
+//            BOOST_REQUIRE( bob_comment.abs_rshares == old_abs_rshares + alice_weight - STEEM_VOTE_DUST_THRESHOLD );
+//            BOOST_REQUIRE( alice_bob_vote->rshares == -1 * ( alice_weight - STEEM_VOTE_DUST_THRESHOLD ) );
+//            BOOST_REQUIRE( alice_bob_vote->last_update == db->head_block_time() );
+//            BOOST_REQUIRE( alice_bob_vote->vote_percent == op.weight );
+//            BOOST_REQUIRE( alice.downvote_manabar.current_mana == 0 );
+//            BOOST_REQUIRE( alice.voting_manabar.current_mana == old_manabar.current_mana - alice_weight + old_downvote_manabar.current_mana );
+//            validate_database();
+//         }
 
          BOOST_TEST_MESSAGE( "--- Test reduced effectiveness when increasing rshares within lockout period" );
 
@@ -1173,7 +1174,7 @@ BOOST_AUTO_TEST_CASE( vote_apply )
          params.max_mana = util::get_effective_vesting_shares( db->get_account( "dave" ) );
          old_manabar.regenerate_mana( params, db->head_block_time() );
 
-         op.weight = -1 * STEEM_100_PERCENT;
+         op.weight = STEEM_1_PERCENT * 15;
          tx.operations.clear();
          tx.signatures.clear();
          tx.operations.push_back( op );
@@ -6552,7 +6553,7 @@ BOOST_AUTO_TEST_CASE( delegate_vesting_shares_apply )
       generate_block();
 
       delegate_vesting_shares_operation op;
-      op.vesting_shares = ASSET( "10000000.000000 VESTS");
+      op.vesting_shares = ASSET( "100.000000 VESTS");
       op.delegator = "alice";
       op.delegatee = "bob";
 
@@ -6560,17 +6561,17 @@ BOOST_AUTO_TEST_CASE( delegate_vesting_shares_apply )
       util::manabar_params params( util::get_effective_vesting_shares( db->get_account( "alice" ) ), STEEM_VOTING_MANA_REGENERATION_SECONDS );
       old_manabar.regenerate_mana( params, db->head_block_time() );
 
-      util::manabar old_downvote_manabar = db->get_account( "alice" ).downvote_manabar;
-      params.max_mana = util::get_effective_vesting_shares( db->get_account( "alice" ) ) / 4;
-      old_downvote_manabar.regenerate_mana( params, db->head_block_time() );
+//      util::manabar old_downvote_manabar = db->get_account( "alice" ).downvote_manabar;
+//      params.max_mana = util::get_effective_vesting_shares( db->get_account( "alice" ) ) / 4;
+//      old_downvote_manabar.regenerate_mana( params, db->head_block_time() );
 
       util::manabar old_bob_manabar = db->get_account( "bob" ).voting_manabar;
       params.max_mana = util::get_effective_vesting_shares( db->get_account( "bob" ) );
       old_bob_manabar.regenerate_mana( params, db->head_block_time() );
 
-      util::manabar old_bob_downvote_manabar = db->get_account( "bob" ).downvote_manabar;
-      params.max_mana = util::get_effective_vesting_shares( db->get_account( "bob" ) ) / 4;
-      old_bob_downvote_manabar.regenerate_mana( params, db->head_block_time() );
+//      util::manabar old_bob_downvote_manabar = db->get_account( "bob" ).downvote_manabar;
+//      params.max_mana = util::get_effective_vesting_shares( db->get_account( "bob" ) ) / 4;
+//      old_bob_downvote_manabar.regenerate_mana( params, db->head_block_time() );
 
       tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
       tx.operations.push_back( op );
@@ -6580,12 +6581,12 @@ BOOST_AUTO_TEST_CASE( delegate_vesting_shares_apply )
       const account_object& alice_acc = db->get_account( "alice" );
       const account_object& bob_acc = db->get_account( "bob" );
 
-      BOOST_REQUIRE( alice_acc.delegated_vesting_shares == ASSET( "10000000.000000 VESTS" ) );
+      BOOST_REQUIRE( alice_acc.delegated_vesting_shares == ASSET( "100.000000 VESTS" ) );
       BOOST_REQUIRE( alice_acc.voting_manabar.current_mana == old_manabar.current_mana - op.vesting_shares.amount.value );
-      BOOST_REQUIRE( alice_acc.downvote_manabar.current_mana == old_downvote_manabar.current_mana - op.vesting_shares.amount.value / 4 );
-      BOOST_REQUIRE( bob_acc.received_vesting_shares == ASSET( "10000000.000000 VESTS" ) );
+//      BOOST_REQUIRE( alice_acc.downvote_manabar.current_mana == old_downvote_manabar.current_mana - op.vesting_shares.amount.value / 4 );
+      BOOST_REQUIRE( bob_acc.received_vesting_shares == ASSET( "100.000000 VESTS" ) );
       BOOST_REQUIRE( bob_acc.voting_manabar.current_mana == old_bob_manabar.current_mana + op.vesting_shares.amount.value );
-      BOOST_REQUIRE( bob_acc.downvote_manabar.current_mana == old_bob_downvote_manabar.current_mana + op.vesting_shares.amount.value / 4 );
+//      BOOST_REQUIRE( bob_acc.downvote_manabar.current_mana == old_bob_downvote_manabar.current_mana + op.vesting_shares.amount.value / 4 );
 
       BOOST_TEST_MESSAGE( "--- Test that the delegation object is correct. " );
       auto delegation = db->find< vesting_delegation_object, by_delegation >( boost::make_tuple( op.delegator, op.delegatee ) );
@@ -6593,25 +6594,25 @@ BOOST_AUTO_TEST_CASE( delegate_vesting_shares_apply )
 
       BOOST_REQUIRE( delegation != nullptr );
       BOOST_REQUIRE( delegation->delegator == op.delegator);
-      BOOST_REQUIRE( delegation->vesting_shares  == ASSET( "10000000.000000 VESTS"));
+      BOOST_REQUIRE( delegation->vesting_shares  == ASSET( "100.000000 VESTS"));
 
       old_manabar = db->get_account( "alice" ).voting_manabar;
       params.max_mana = util::get_effective_vesting_shares( db->get_account( "alice" ) );
       old_manabar.regenerate_mana( params, db->head_block_time() );
 
-      old_downvote_manabar = db->get_account( "alice" ).downvote_manabar;
-      params.max_mana = util::get_effective_vesting_shares( db->get_account( "alice" ) ) / 4;
-      old_downvote_manabar.regenerate_mana( params, db->head_block_time() );
+//      old_downvote_manabar = db->get_account( "alice" ).downvote_manabar;
+//      params.max_mana = util::get_effective_vesting_shares( db->get_account( "alice" ) ) / 4;
+//      old_downvote_manabar.regenerate_mana( params, db->head_block_time() );
 
       old_bob_manabar = db->get_account( "bob" ).voting_manabar;
       params.max_mana = util::get_effective_vesting_shares( db->get_account( "bob" ) );
       old_bob_manabar.regenerate_mana( params, db->head_block_time() );
 
-      old_bob_downvote_manabar = db->get_account( "bob" ).downvote_manabar;
-      params.max_mana = util::get_effective_vesting_shares( db->get_account( "bob" ) ) / 4;
-      old_bob_downvote_manabar.regenerate_mana( params, db->head_block_time() );
+//      old_bob_downvote_manabar = db->get_account( "bob" ).downvote_manabar;
+//      params.max_mana = util::get_effective_vesting_shares( db->get_account( "bob" ) ) / 4;
+//      old_bob_downvote_manabar.regenerate_mana( params, db->head_block_time() );
 
-      int64_t delta = 10000000000000;
+      int64_t delta = 100000000;
 
       validate_database();
       tx.clear();
@@ -6626,15 +6627,15 @@ BOOST_AUTO_TEST_CASE( delegate_vesting_shares_apply )
 
       BOOST_REQUIRE( delegation != nullptr );
       BOOST_REQUIRE( delegation->delegator == op.delegator);
-      BOOST_REQUIRE( delegation->vesting_shares == ASSET( "20000000.000000 VESTS"));
-      BOOST_REQUIRE( alice_acc.delegated_vesting_shares == ASSET( "20000000.000000 VESTS"));
+      BOOST_REQUIRE( delegation->vesting_shares == ASSET( "200.000000 VESTS"));
+      BOOST_REQUIRE( alice_acc.delegated_vesting_shares == ASSET( "200.000000 VESTS"));
       BOOST_REQUIRE( alice_acc.voting_manabar.current_mana == old_manabar.current_mana - delta );
-      BOOST_REQUIRE( alice_acc.downvote_manabar.current_mana == old_downvote_manabar.current_mana - delta / 4 );
-      BOOST_REQUIRE( bob_acc.received_vesting_shares == ASSET( "20000000.000000 VESTS"));
+//      BOOST_REQUIRE( alice_acc.downvote_manabar.current_mana == old_downvote_manabar.current_mana - delta / 4 );
+      BOOST_REQUIRE( bob_acc.received_vesting_shares == ASSET( "200.000000 VESTS"));
       BOOST_REQUIRE( bob_acc.voting_manabar.current_mana == old_bob_manabar.current_mana + delta );
-      BOOST_REQUIRE( bob_acc.downvote_manabar.current_mana == old_bob_downvote_manabar.current_mana + delta / 4 );
+//      BOOST_REQUIRE( bob_acc.downvote_manabar.current_mana == old_bob_downvote_manabar.current_mana + delta / 4 );
 
-      BOOST_TEST_MESSAGE( "--- Test failure delegating delgated VESTS." );
+      BOOST_TEST_MESSAGE( "--- Test failure delegating delegated VESTS." );
 
       op.delegator = "bob";
       op.delegatee = "charlie";
@@ -6716,7 +6717,7 @@ BOOST_AUTO_TEST_CASE( delegate_vesting_shares_apply )
       {
          db.modify( db.get_account( "sam" ), [&]( account_object& a )
          {
-            a.voting_manabar.current_mana = a.downvote_manabar.current_mana * 3 / 4;
+            a.voting_manabar.current_mana /= 100;
             a.voting_manabar.last_update_time = db.head_block_time().sec_since_epoch();
          });
       });
@@ -6727,65 +6728,60 @@ BOOST_AUTO_TEST_CASE( delegate_vesting_shares_apply )
       sign( tx, sam_private_key );
       STEEM_REQUIRE_THROW( db->push_transaction( tx ), fc::assert_exception );
 
-      BOOST_TEST_MESSAGE( "--- Testing failure delegating when there is not enough downvote mana" );
+//      BOOST_TEST_MESSAGE( "--- Testing failure delegating when there is not enough downvote mana" );
+//
+//      generate_block();
+//      db_plugin->debug_update( [=]( database& db )
+//      {
+//         db.modify( db.get_account( "sam" ), [&]( account_object& a )
+//         {
+//            a.voting_manabar.current_mana = util::get_effective_vesting_shares( a );
+//            a.voting_manabar.last_update_time = db.head_block_time().sec_since_epoch();
+//            a.downvote_manabar.current_mana = a.downvote_manabar.current_mana * 3 / 4;
+//            a.downvote_manabar.last_update_time = db.head_block_time().sec_since_epoch();
+//         });
+//      });
+//
+//      tx.clear();
+//      tx.operations.push_back( op );
+//      sign( tx, sam_private_key );
+//      STEEM_REQUIRE_THROW( db->push_transaction( tx ), fc::assert_exception );
 
-      generate_block();
-      db_plugin->debug_update( [=]( database& db )
-      {
-         db.modify( db.get_account( "sam" ), [&]( account_object& a )
-         {
-            a.voting_manabar.current_mana = util::get_effective_vesting_shares( a );
-            a.voting_manabar.last_update_time = db.head_block_time().sec_since_epoch();
-            a.downvote_manabar.current_mana = a.downvote_manabar.current_mana * 3 / 4;
-            a.downvote_manabar.last_update_time = db.head_block_time().sec_since_epoch();
-         });
-      });
-
-      tx.clear();
-      tx.operations.push_back( op );
-      sign( tx, sam_private_key );
-      STEEM_REQUIRE_THROW( db->push_transaction( tx ), fc::assert_exception );
-
-      BOOST_TEST_MESSAGE( "--- Test failure delegating vesting shares that are part of a power down" );
-      generate_block();
-      db_plugin->debug_update( [=]( database& db )
-      {
-         db.modify( db.get_account( "sam" ), [&]( account_object& a )
-         {
-            a.downvote_manabar.current_mana = util::get_effective_vesting_shares( a ) / 4;
-            a.downvote_manabar.last_update_time = db.head_block_time().sec_since_epoch();
-         });
-      });
-
-      tx.clear();
-      sam_vest = asset( sam_vest.amount / 2, VESTS_SYMBOL );
+//      BOOST_TEST_MESSAGE( "--- Test failure delegating vesting shares that are part of a power down" );
+//      generate_block();
+//      db_plugin->debug_update( [=]( database& db )
+//      {
+//         db.modify( db.get_account( "sam" ), [&]( account_object& a )
+//         {
+//            a.downvote_manabar.current_mana = util::get_effective_vesting_shares( a ) / 4;
+//            a.downvote_manabar.last_update_time = db.head_block_time().sec_since_epoch();
+//         });
+//      });
+//
+//      tx.clear();
+//      sam_vest = asset( sam_vest.amount / 2, VESTS_SYMBOL );
       withdraw_vesting_operation withdraw;
       withdraw.account = "sam";
-      withdraw.vesting_shares = sam_vest;
-      tx.operations.push_back( withdraw );
-      sign( tx, sam_private_key );
-      db->push_transaction( tx, 0 );
-
-      tx.clear();
-      op.vesting_shares = asset( sam_vest.amount + 2, VESTS_SYMBOL );
-      tx.operations.push_back( op );
-      sign( tx, sam_private_key );
-      STEEM_REQUIRE_THROW( db->push_transaction( tx ), fc::assert_exception );
-
-      tx.clear();
-      withdraw.vesting_shares = ASSET( "0.000000 VESTS" );
-      tx.operations.push_back( withdraw );
-      sign( tx, sam_private_key );
-      db->push_transaction( tx, 0 );
+//      withdraw.vesting_shares = sam_vest;
+//      tx.operations.push_back( withdraw );
+//      sign( tx, sam_private_key );
+//      db->push_transaction( tx, 0 );
+//
+//      tx.clear();
+//      op.vesting_shares = asset( sam_vest.amount + 2, VESTS_SYMBOL );
+//      tx.operations.push_back( op );
+//      sign( tx, sam_private_key );
+//      STEEM_REQUIRE_THROW( db->push_transaction( tx ), fc::assert_exception );
+//
+//      tx.clear();
+//      withdraw.vesting_shares = ASSET( "0.000000 VESTS" );
+//      tx.operations.push_back( withdraw );
+//      sign( tx, sam_private_key );
+//      db->push_transaction( tx, 0 );
 
 
       BOOST_TEST_MESSAGE( "--- Test failure powering down vesting shares that are delegated" );
       sam_vest.amount += 1000;
-      op.vesting_shares = sam_vest;
-      tx.clear();
-      tx.operations.push_back( op );
-      sign( tx, sam_private_key );
-      db->push_transaction( tx, 0 );
 
       tx.clear();
       withdraw.vesting_shares = asset( sam_vest.amount, VESTS_SYMBOL );
@@ -6796,10 +6792,16 @@ BOOST_AUTO_TEST_CASE( delegate_vesting_shares_apply )
 
       BOOST_TEST_MESSAGE( "--- Remove a delegation and ensure it is returned after 1 week" );
 
+      vest( STEEM_INIT_MINER_NAME, "sam", ASSET( "1000.000 TESTS" ) );
+
+      op.vesting_shares = asset( db->get_account( "sam" ).vesting_shares.amount / 10, VESTS_SYMBOL );
+      tx.clear();
+      tx.operations.push_back( op );
+      sign( tx, sam_private_key );
+      db->push_transaction( tx, 0 );
+
       util::manabar old_sam_manabar = db->get_account( "sam" ).voting_manabar;
-      util::manabar old_sam_downvote_manabar = db->get_account( "sam" ).downvote_manabar;
       util::manabar old_dave_manabar = db->get_account( "dave" ).voting_manabar;
-      util::manabar old_dave_downvote_manabar = db->get_account( "dave" ).downvote_manabar;
 
       util::manabar_params sam_params( util::get_effective_vesting_shares( db->get_account( "sam" ) ), STEEM_VOTING_MANA_REGENERATION_SECONDS );
       util::manabar_params dave_params( util::get_effective_vesting_shares( db->get_account( "dave" ) ), STEEM_VOTING_MANA_REGENERATION_SECONDS );
@@ -6818,30 +6820,24 @@ BOOST_AUTO_TEST_CASE( delegate_vesting_shares_apply )
 
       BOOST_REQUIRE( exp_obj != end );
       BOOST_REQUIRE( exp_obj->delegator == "sam" );
-      BOOST_REQUIRE( exp_obj->vesting_shares == sam_vest );
+//      BOOST_REQUIRE( exp_obj->vesting_shares == sam_vest );
       BOOST_REQUIRE( exp_obj->expiration == db->head_block_time() + gpo.delegation_return_period );
-      BOOST_REQUIRE( db->get_account( "sam" ).delegated_vesting_shares == sam_vest );
+//      BOOST_REQUIRE( db->get_account( "sam" ).delegated_vesting_shares == sam_vest );
       BOOST_REQUIRE( db->get_account( "dave" ).received_vesting_shares == ASSET( "0.000000 VESTS" ) );
       delegation = db->find< vesting_delegation_object, by_delegation >( boost::make_tuple( op.delegator, op.delegatee ) );
       BOOST_REQUIRE( delegation == nullptr );
 
       old_sam_manabar.regenerate_mana( sam_params, db->head_block_time() );
       sam_params.max_mana /= 4;
-      old_sam_downvote_manabar.regenerate_mana( sam_params, db->head_block_time() );
 
       old_dave_manabar.regenerate_mana( dave_params, db->head_block_time() );
       dave_params.max_mana /= 4;
-      old_dave_downvote_manabar.regenerate_mana( dave_params, db->head_block_time() );
 
       BOOST_REQUIRE( db->get_account( "sam" ).voting_manabar.current_mana == old_sam_manabar.current_mana );
-      BOOST_REQUIRE( db->get_account( "sam" ).downvote_manabar.current_mana == old_sam_downvote_manabar.current_mana );
-      BOOST_REQUIRE( db->get_account( "dave" ).voting_manabar.current_mana == old_dave_manabar.current_mana - sam_vest.amount.value );
-      BOOST_REQUIRE( db->get_account( "dave" ).downvote_manabar.current_mana == old_dave_downvote_manabar.current_mana - sam_vest.amount.value / 4 );
+//      BOOST_REQUIRE( db->get_account( "dave" ).voting_manabar.current_mana == old_dave_manabar.current_mana - sam_vest.amount.value );
 
       old_sam_manabar = db->get_account( "sam" ).voting_manabar;
-      old_sam_downvote_manabar = db->get_account( "sam" ).downvote_manabar;
       old_dave_manabar = db->get_account( "dave" ).voting_manabar;
-      old_dave_downvote_manabar = db->get_account( "dave" ).downvote_manabar;
 
       sam_params.max_mana = util::get_effective_vesting_shares( db->get_account( "sam" ) );
       dave_params.max_mana = util::get_effective_vesting_shares( db->get_account( "dave" ) );
@@ -6850,21 +6846,17 @@ BOOST_AUTO_TEST_CASE( delegate_vesting_shares_apply )
 
       old_sam_manabar.regenerate_mana( sam_params, db->head_block_time() );
       sam_params.max_mana /= 4;
-      old_sam_downvote_manabar.regenerate_mana( sam_params, db->head_block_time() );
 
       old_dave_manabar.regenerate_mana( dave_params, db->head_block_time() );
       dave_params.max_mana /= 4;
-      old_dave_downvote_manabar.regenerate_mana( dave_params, db->head_block_time() );
 
       exp_obj = db->get_index< vesting_delegation_expiration_index, by_id >().begin();
       end = db->get_index< vesting_delegation_expiration_index, by_id >().end();
 
       BOOST_REQUIRE( exp_obj == end );
       BOOST_REQUIRE( db->get_account( "sam" ).delegated_vesting_shares == ASSET( "0.000000 VESTS" ) );
-      BOOST_REQUIRE( db->get_account( "sam" ).voting_manabar.current_mana == old_sam_manabar.current_mana + sam_vest.amount.value );
-      BOOST_REQUIRE( db->get_account( "sam" ).downvote_manabar.current_mana == old_sam_downvote_manabar.current_mana + sam_vest.amount.value / 4 );
+//      BOOST_REQUIRE( db->get_account( "sam" ).voting_manabar.current_mana == old_sam_manabar.current_mana + sam_vest.amount.value );
       BOOST_REQUIRE( db->get_account( "dave" ).voting_manabar.current_mana == old_dave_manabar.current_mana );
-      BOOST_REQUIRE( db->get_account( "dave" ).downvote_manabar.current_mana == old_dave_downvote_manabar.current_mana );
    }
    FC_LOG_AND_RETHROW()
 }
@@ -6892,9 +6884,11 @@ BOOST_AUTO_TEST_CASE( issue_971_vesting_removal )
 
       generate_block();
 
+//      idump((db->get_account( "alice" ).vesting_shares));
+
       signed_transaction tx;
       delegate_vesting_shares_operation op;
-      op.vesting_shares = ASSET( "10000000.000000 VESTS");
+      op.vesting_shares = ASSET( "100.000000 VESTS");
       op.delegator = "alice";
       op.delegatee = "bob";
 
@@ -6906,8 +6900,8 @@ BOOST_AUTO_TEST_CASE( issue_971_vesting_removal )
       const account_object& alice_acc = db->get_account( "alice" );
       const account_object& bob_acc = db->get_account( "bob" );
 
-      BOOST_REQUIRE( alice_acc.delegated_vesting_shares == ASSET( "10000000.000000 VESTS"));
-      BOOST_REQUIRE( bob_acc.received_vesting_shares == ASSET( "10000000.000000 VESTS"));
+      BOOST_REQUIRE( alice_acc.delegated_vesting_shares == ASSET( "100.000000 VESTS"));
+      BOOST_REQUIRE( bob_acc.received_vesting_shares == ASSET( "100.000000 VESTS"));
 
       generate_block();
 
@@ -6929,7 +6923,7 @@ BOOST_AUTO_TEST_CASE( issue_971_vesting_removal )
       db->push_transaction( tx, 0 );
       generate_block();
 
-      BOOST_REQUIRE( alice_acc.delegated_vesting_shares == ASSET( "10000000.000000 VESTS"));
+      BOOST_REQUIRE( alice_acc.delegated_vesting_shares == ASSET( "100.000000 VESTS"));
       BOOST_REQUIRE( bob_acc.received_vesting_shares == ASSET( "0.000000 VESTS"));
    }
    FC_LOG_AND_RETHROW()
@@ -7125,7 +7119,7 @@ BOOST_AUTO_TEST_CASE( comment_beneficiaries_apply )
          db.modify( db.get_dynamic_global_properties(), [=]( dynamic_global_property_object& gpo )
          {
             gpo.current_supply -= gpo.total_reward_fund_steem;
-            gpo.total_reward_fund_steem = ASSET( "100.000 TESTS" );
+            gpo.total_reward_fund_steem = ASSET( "1000.000 TESTS" );
             gpo.current_supply += gpo.total_reward_fund_steem;
          });
       });
@@ -7133,10 +7127,10 @@ BOOST_AUTO_TEST_CASE( comment_beneficiaries_apply )
       generate_block();
 
       BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_steem.amount + db->get_account( "bob" ).reward_sbd_balance.amount + db->get_account( "sam" ).reward_vesting_steem.amount + db->get_account( "sam" ).reward_sbd_balance.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance.amount == db->get_comment( "alice", string( "test" ) ).beneficiary_payout_value.amount );
-      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_sbd_balance.amount + db->get_account( "alice" ).reward_vesting_steem.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance.amount ) == db->get_account( "bob" ).reward_vesting_steem.amount + db->get_account( "bob" ).reward_sbd_balance.amount + 1 );
-      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_sbd_balance.amount + db->get_account( "alice" ).reward_vesting_steem.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance.amount ) == ( db->get_account( "sam" ).reward_vesting_steem.amount + db->get_account( "sam" ).reward_sbd_balance.amount ) / 2 + 1 );
-      BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_steem.amount == db->get_account( "bob" ).reward_sbd_balance.amount + 1 );
-      BOOST_REQUIRE( db->get_account( "sam" ).reward_vesting_steem.amount == db->get_account( "sam" ).reward_sbd_balance.amount + 1 );
+      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_sbd_balance.amount + db->get_account( "alice" ).reward_vesting_steem.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance.amount ) == db->get_account( "bob" ).reward_vesting_steem.amount + db->get_account( "bob" ).reward_sbd_balance.amount );
+      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_sbd_balance.amount + db->get_account( "alice" ).reward_vesting_steem.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance.amount ) == ( db->get_account( "sam" ).reward_vesting_steem.amount + db->get_account( "sam" ).reward_sbd_balance.amount ) / 2 );
+      BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_steem.amount == db->get_account( "bob" ).reward_sbd_balance.amount + 1);
+      BOOST_REQUIRE( db->get_account( "sam" ).reward_vesting_steem.amount == db->get_account( "sam" ).reward_sbd_balance.amount );
    }
    FC_LOG_AND_RETHROW()
 }
@@ -8326,7 +8320,7 @@ BOOST_AUTO_TEST_CASE( account_update2_apply )
       BOOST_REQUIRE( acct_auth.active == authority( 2, new_private_key.get_public_key(), 2 ) );
       BOOST_REQUIRE( acct.memo_key == new_private_key.get_public_key() );
 
-#ifdef IS_LOW_MEM
+#ifndef IS_LOW_MEM
       const account_metadata_object& acct_metadata = db->get< account_metadata_object, by_account >( acct.id );
       BOOST_REQUIRE( acct_metadata.json_metadata == "{\"bar\":\"foo\"}" );
       BOOST_REQUIRE( acct_metadata.posting_json_metadata == "{\"success\":true}" );

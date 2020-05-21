@@ -16,8 +16,6 @@
 
 #include <steem/plugins/condenser_api/condenser_api_plugin.hpp>
 
-#include <steem/chain/smt_objects/nai_pool_object.hpp>
-
 #include <fc/crypto/digest.hpp>
 #include <fc/smart_ref_impl.hpp>
 

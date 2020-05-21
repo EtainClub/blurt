@@ -9,7 +9,7 @@
 // This is checked by get_config_check.sh called from Dockerfile
 
 #ifdef IS_TEST_NET
-#define STEEM_BLOCKCHAIN_VERSION              ( version(0, 23, 0) )
+#define STEEM_BLOCKCHAIN_VERSION              ( version(0, 0, 0) )
 
 #define STEEM_INIT_PRIVATE_KEY                (fc::ecc::private_key::regenerate(fc::sha256::hash(std::string("init_key"))))
 #define STEEM_INIT_PUBLIC_KEY_STR             (std::string( steem::protocol::public_key_type(STEEM_INIT_PRIVATE_KEY.get_public_key()) ))
@@ -42,9 +42,11 @@
 /// Allows to limit number of total produced blocks.
 #define TESTNET_BLOCK_LIMIT                   (3000000)
 
+#define STEEM_VOTE_DUST_THRESHOLD             (0)
+
 #else // IS LIVE STEEM NETWORK
 
-#define STEEM_BLOCKCHAIN_VERSION              ( version(0, 22, 1) )
+#define STEEM_BLOCKCHAIN_VERSION              ( version(0, 0, 0) )
 
 #define STEEM_INIT_PUBLIC_KEY_STR             "STM8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"
 #define STEEM_CHAIN_ID fc::sha256()
@@ -71,6 +73,8 @@
 
 #define STEEM_INIT_SUPPLY                     int64_t(0)
 #define STEEM_SBD_INIT_SUPPLY                 int64_t(0)
+
+#define STEEM_VOTE_DUST_THRESHOLD             (50000000)
 
 #endif
 
@@ -119,7 +123,6 @@
 #define STEEM_REVERSE_AUCTION_WINDOW_SECONDS_HF20 (60*15) /// 15 minutes
 #define STEEM_REVERSE_AUCTION_WINDOW_SECONDS_HF21 (60*5) /// 5 minutes
 #define STEEM_MIN_VOTE_INTERVAL_SEC           3
-#define STEEM_VOTE_DUST_THRESHOLD             (50000000)
 
 #define STEEM_MIN_ROOT_COMMENT_INTERVAL       (fc::seconds(60*5)) // 5 minutes
 #define STEEM_MIN_REPLY_INTERVAL              (fc::seconds(20)) // 20 seconds

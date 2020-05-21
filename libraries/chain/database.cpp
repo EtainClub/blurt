@@ -2669,11 +2669,11 @@ void database::init_genesis( uint64_t init_supply, uint64_t sbd_init_supply )
       //////////////////////////////
       { // pre-apply HF 1 to 22 here
           { // STEEM_HARDFORK_0_1:
-             perform_vesting_share_split( 1000000 );
+//             perform_vesting_share_split( 1000000 );
           }
 
           { // STEEM_HARDFORK_0_2
-            retally_witness_votes();
+//            retally_witness_votes();
           }
 
           { // STEEM_HARDFORK_0_3
@@ -2703,58 +2703,58 @@ void database::init_genesis( uint64_t init_supply, uint64_t sbd_init_supply )
           }
 
           { // STEEM_HARDFORK_0_10:
-            retally_liquidity_weight();
+//            retally_liquidity_weight();
           }
 
           { // STEEM_HARDFORK_0_11:
           }
 
           { // STEEM_HARDFORK_0_12:
-            const auto& comment_idx = get_index< comment_index >().indices();
-
-            for( auto itr = comment_idx.begin(); itr != comment_idx.end(); ++itr )
-            {
-               // At the hardfork time, all new posts with no votes get their cashout time set to +12 hrs from head block time.
-               // All posts with a payout get their cashout time set to +30 days. This hardfork takes place within 30 days
-               // initial payout so we don't have to handle the case of posts that should be frozen that aren't
-               if( itr->parent_author == STEEM_ROOT_POST_PARENT )
-               {
-                  // Post has not been paid out and has no votes (cashout_time == 0 === net_rshares == 0, under current semmantics)
-                  if( itr->last_payout == fc::time_point_sec::min() && itr->cashout_time == fc::time_point_sec::maximum() )
-                  {
-                     modify( *itr, [&]( comment_object & c )
-                     {
-                        c.cashout_time = head_block_time() + STEEM_CASHOUT_WINDOW_SECONDS_PRE_HF17;
-                     });
-                  }
-                  // Has been paid out, needs to be on second cashout window
-                  else if( itr->last_payout > fc::time_point_sec() )
-                  {
-                     modify( *itr, [&]( comment_object& c )
-                     {
-                        c.cashout_time = c.last_payout + STEEM_SECOND_CASHOUT_WINDOW;
-                     });
-                  }
-               }
-            }
-
-            modify( get< account_authority_object, by_account >( STEEM_MINER_ACCOUNT ), [&]( account_authority_object& auth )
-            {
-               auth.posting = authority();
-               auth.posting.weight_threshold = 1;
-            });
-
-            modify( get< account_authority_object, by_account >( STEEM_NULL_ACCOUNT ), [&]( account_authority_object& auth )
-            {
-               auth.posting = authority();
-               auth.posting.weight_threshold = 1;
-            });
-
-            modify( get< account_authority_object, by_account >( STEEM_TEMP_ACCOUNT ), [&]( account_authority_object& auth )
-            {
-               auth.posting = authority();
-               auth.posting.weight_threshold = 1;
-            });
+//            const auto& comment_idx = get_index< comment_index >().indices();
+//
+//            for( auto itr = comment_idx.begin(); itr != comment_idx.end(); ++itr )
+//            {
+//               // At the hardfork time, all new posts with no votes get their cashout time set to +12 hrs from head block time.
+//               // All posts with a payout get their cashout time set to +30 days. This hardfork takes place within 30 days
+//               // initial payout so we don't have to handle the case of posts that should be frozen that aren't
+//               if( itr->parent_author == STEEM_ROOT_POST_PARENT )
+//               {
+//                  // Post has not been paid out and has no votes (cashout_time == 0 === net_rshares == 0, under current semmantics)
+//                  if( itr->last_payout == fc::time_point_sec::min() && itr->cashout_time == fc::time_point_sec::maximum() )
+//                  {
+//                     modify( *itr, [&]( comment_object & c )
+//                     {
+//                        c.cashout_time = head_block_time() + STEEM_CASHOUT_WINDOW_SECONDS_PRE_HF17;
+//                     });
+//                  }
+//                  // Has been paid out, needs to be on second cashout window
+//                  else if( itr->last_payout > fc::time_point_sec() )
+//                  {
+//                     modify( *itr, [&]( comment_object& c )
+//                     {
+//                        c.cashout_time = c.last_payout + STEEM_SECOND_CASHOUT_WINDOW;
+//                     });
+//                  }
+//               }
+//            }
+//
+//            modify( get< account_authority_object, by_account >( STEEM_MINER_ACCOUNT ), [&]( account_authority_object& auth )
+//            {
+//               auth.posting = authority();
+//               auth.posting.weight_threshold = 1;
+//            });
+//
+//            modify( get< account_authority_object, by_account >( STEEM_NULL_ACCOUNT ), [&]( account_authority_object& auth )
+//            {
+//               auth.posting = authority();
+//               auth.posting.weight_threshold = 1;
+//            });
+//
+//            modify( get< account_authority_object, by_account >( STEEM_TEMP_ACCOUNT ), [&]( account_authority_object& auth )
+//            {
+//               auth.posting = authority();
+//               auth.posting.weight_threshold = 1;
+//            });
          }
 
          { // STEEM_HARDFORK_0_13:
@@ -2873,7 +2873,9 @@ void database::init_genesis( uint64_t init_supply, uint64_t sbd_init_supply )
 
             modify( get< reward_fund_object, by_name >( STEEM_POST_REWARD_FUND_NAME ), [&]( reward_fund_object &rfo )
             {
+#ifndef IS_TEST_NET
                rfo.recent_claims = STEEM_HF_19_RECENT_CLAIMS;
+#endif
                rfo.author_reward_curve = curve_id::linear;
                rfo.curation_reward_curve = curve_id::square_root;
             });
