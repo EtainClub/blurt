@@ -180,11 +180,6 @@ struct count_operation_visitor
       execution_time_count += _e.withdraw_vesting_operation_exec_time;
    }
 
-   void operator()( const account_update_operation& )const
-   {
-      execution_time_count += _e.account_update_operation_exec_time;
-   }
-
    void operator()( const account_update2_operation& )const
    {
       execution_time_count += _e.account_update2_operation_exec_time;
