@@ -456,26 +456,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       legacy_asset            fee;
    };
 
-   struct legacy_feed_publish_operation
-   {
-      legacy_feed_publish_operation() {}
-      legacy_feed_publish_operation( const feed_publish_operation& op ) :
-         publisher( op.publisher ),
-         exchange_rate( legacy_price( op.exchange_rate ) )
-      {}
-
-      operator feed_publish_operation()const
-      {
-         feed_publish_operation op;
-         op.publisher = publisher;
-         op.exchange_rate = exchange_rate;
-         return op;
-      }
-
-      account_name_type publisher;
-      legacy_price      exchange_rate;
-   };
-
    struct legacy_transfer_to_savings_operation
    {
       legacy_transfer_to_savings_operation() {}
@@ -930,7 +910,6 @@ namespace steem { namespace plugins { namespace condenser_api {
             legacy_transfer_operation,
             legacy_transfer_to_vesting_operation,
             legacy_withdraw_vesting_operation,
-            legacy_feed_publish_operation,
             legacy_account_create_operation,
             legacy_account_update_operation,
             legacy_witness_update_operation,
@@ -1038,12 +1017,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       bool operator()( const withdraw_vesting_operation& op )const
       {
          l_op = legacy_withdraw_vesting_operation( op );
-         return true;
-      }
-
-      bool operator()( const feed_publish_operation& op )const
-      {
-         l_op = legacy_feed_publish_operation( op );
          return true;
       }
 
@@ -1221,11 +1194,6 @@ struct convert_from_legacy_operation_visitor
    operation operator()( const legacy_withdraw_vesting_operation& op )const
    {
       return operation( withdraw_vesting_operation( op ) );
-   }
-
-   operation operator()( const legacy_feed_publish_operation& op )const
-   {
-      return operation( feed_publish_operation( op ) );
    }
 
    operation operator()( const legacy_account_create_operation& op )const
@@ -1422,7 +1390,6 @@ FC_REFLECT( steem::plugins::condenser_api::api_chain_properties,
 FC_REFLECT( steem::plugins::condenser_api::legacy_price, (base)(quote) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_to_savings_operation, (from)(to)(amount)(memo) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_from_savings_operation, (from)(request_id)(to)(amount)(memo) )
-FC_REFLECT( steem::plugins::condenser_api::legacy_feed_publish_operation, (publisher)(exchange_rate) )
 
 FC_REFLECT( steem::plugins::condenser_api::legacy_account_create_operation,
             (fee)

@@ -2026,23 +2026,6 @@ condenser_api::legacy_signed_transaction wallet_api::set_withdraw_vesting_route(
    return my->sign_transaction( tx, broadcast );
 }
 
-condenser_api::legacy_signed_transaction wallet_api::publish_feed(
-   string witness,
-   condenser_api::legacy_price exchange_rate,
-   bool broadcast )
-{
-   FC_ASSERT( !is_locked() );
-   feed_publish_operation op;
-   op.publisher     = witness;
-   op.exchange_rate = price( exchange_rate );
-
-   signed_transaction tx;
-   tx.operations.push_back( op );
-   tx.validate();
-
-   return my->sign_transaction( tx, broadcast );
-}
-
 string wallet_api::decrypt_memo( string encrypted_memo )
 {
    if( is_locked() )

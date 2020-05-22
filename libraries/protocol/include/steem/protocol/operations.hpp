@@ -20,8 +20,6 @@ namespace steem { namespace protocol {
             transfer_to_vesting_operation,
             withdraw_vesting_operation,
 
-            feed_publish_operation,
-
             account_create_operation,
             account_update_operation,
 

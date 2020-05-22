@@ -117,7 +117,6 @@ struct operation_exec_info
    int64_t escrow_dispute_operation_exec_time                  =  11500;
    int64_t escrow_release_operation_exec_time                  =  17200;
    int64_t escrow_transfer_operation_exec_time                 =  19100;
-   int64_t feed_publish_operation_exec_time                    =   6200;
    int64_t request_account_recovery_operation_exec_time        =  54400;
    int64_t set_withdraw_vesting_route_operation_exec_time      =  17900;
    int64_t transfer_from_savings_operation_exec_time           =  17500;
@@ -187,7 +186,6 @@ FC_REFLECT( steem::plugins::rc::operation_exec_info,
    ( escrow_dispute_operation_exec_time )
    ( escrow_release_operation_exec_time )
    ( escrow_transfer_operation_exec_time )
-   ( feed_publish_operation_exec_time )
    ( request_account_recovery_operation_exec_time )
    ( set_withdraw_vesting_route_operation_exec_time )
    ( transfer_from_savings_operation_exec_time )

@@ -548,20 +548,6 @@ namespace steem { namespace protocol {
 
 
    /**
-    *  Feeds can only be published by the top N witnesses which are included in every round and are
-    *  used to define the exchange rate between steem and the dollar.
-    */
-   struct feed_publish_operation : public base_operation
-   {
-      account_name_type publisher;
-      price             exchange_rate;
-
-      void  validate()const;
-      void  get_required_active_authorities( flat_set<account_name_type>& a )const{ a.insert(publisher); }
-   };
-
-
-   /**
     * This operation is used to report a miner who signs two blocks
     * at the same time. To be valid, the violation must be reported within
     * STEEM_MAX_WITNESSES blocks of the head block (1 round) and the
@@ -832,7 +818,6 @@ FC_REFLECT( steem::protocol::set_reset_account_operation, (account)(current_rese
 
 
 FC_REFLECT( steem::protocol::report_over_production_operation, (reporter)(first_block)(second_block) )
-FC_REFLECT( steem::protocol::feed_publish_operation, (publisher)(exchange_rate) )
 FC_REFLECT( steem::protocol::legacy_chain_properties,
             (account_creation_fee)
             (maximum_block_size)

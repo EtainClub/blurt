@@ -2346,7 +2346,6 @@ void database::initialize_evaluators()
    _my->_evaluator_registry.register_evaluator< custom_binary_evaluator                  >();
    _my->_evaluator_registry.register_evaluator< custom_json_evaluator                    >();
    _my->_evaluator_registry.register_evaluator< report_over_production_evaluator         >();
-   _my->_evaluator_registry.register_evaluator< feed_publish_evaluator                   >();
    _my->_evaluator_registry.register_evaluator< claim_account_evaluator                  >();
    _my->_evaluator_registry.register_evaluator< create_claimed_account_evaluator         >();
    _my->_evaluator_registry.register_evaluator< request_account_recovery_evaluator       >();
