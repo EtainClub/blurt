@@ -11,7 +11,6 @@
 #define STEEM_DEBUG_NODE_PLUGIN_NAME "debug_node"
 
 namespace steem { namespace protocol {
-   struct pow2;
    struct signed_block;
 } }
 

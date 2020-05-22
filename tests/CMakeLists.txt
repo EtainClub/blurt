@@ -102,17 +102,6 @@ add_boost_test( chain_test
    operation_tests/convert_authorities
    operation_tests/convert_apply
    operation_tests/fixture_convert_checks_balance
-   operation_tests/limit_order_create_validate
-   operation_tests/limit_order_create_authorities
-   operation_tests/limit_order_create_apply
-   operation_tests/limit_order_create2_authorities
-   operation_tests/limit_order_create2_apply
-   operation_tests/limit_order_cancel_validate
-   operation_tests/limit_order_cancel_authorities
-   operation_tests/limit_order_cancel_apply
-   operation_tests/pow_validate
-   operation_tests/pow_authorities
-   operation_tests/pow_apply
    operation_tests/account_recovery
    operation_tests/change_recovery_account
    operation_tests/escrow_transfer_validate

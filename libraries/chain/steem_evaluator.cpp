@@ -1602,11 +1602,6 @@ void pow_apply( database& db, Operation o )
       db.create_vesting( inc_witness, pow_reward );
 }
 
-void pow2_evaluator::do_apply( const pow2_operation& o )
-{
-   FC_ASSERT( false, "mining is now disabled" );
-}
-
 void feed_publish_evaluator::do_apply( const feed_publish_operation& o )
 {
    FC_ASSERT( is_asset_type( o.exchange_rate.base, SBD_SYMBOL ) && is_asset_type( o.exchange_rate.quote, STEEM_SYMBOL ),
