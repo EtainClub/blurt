@@ -363,15 +363,6 @@ namespace steem { namespace protocol {
       exchange_rate.validate();
    }
 
-   void convert_operation::validate()const
-   {
-      validate_account_name( owner );
-      /// only allow conversion from SBD to STEEM, allowing the opposite can enable traders to abuse
-      /// market fluxuations through converting large quantities without moving the price.
-      FC_ASSERT( is_asset_type( amount, SBD_SYMBOL ), "Can only convert SBD to STEEM" );
-      FC_ASSERT( amount.amount > 0, "Must convert some SBD" );
-   }
-
    void report_over_production_operation::validate()const
    {
       validate_account_name( reporter );

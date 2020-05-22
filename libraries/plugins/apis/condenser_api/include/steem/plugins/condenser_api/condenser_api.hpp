@@ -645,26 +645,6 @@ struct api_vesting_delegation_expiration_object
    time_point_sec    expiration;
 };
 
-struct api_convert_request_object
-{
-   api_convert_request_object() {}
-   api_convert_request_object( const database_api::api_convert_request_object& c ) :
-      id( c.id ),
-      owner( c.owner ),
-      requestid( c.requestid ),
-      amount( legacy_asset::from_asset( c.amount ) ),
-      conversion_date( c.conversion_date )
-   {}
-
-
-   convert_request_id_type id;
-
-   account_name_type owner;
-   uint32_t          requestid = 0;
-   legacy_asset      amount;
-   time_point_sec    conversion_date;
-};
-
 struct api_proposal_object
 {
    api_proposal_object() {}
@@ -907,7 +887,6 @@ DEFINE_API_ARGS( get_savings_withdraw_to,                vector< variant >,   ve
 DEFINE_API_ARGS( get_vesting_delegations,                vector< variant >,   vector< api_vesting_delegation_object > )
 DEFINE_API_ARGS( get_expiring_vesting_delegations,       vector< variant >,   vector< api_vesting_delegation_expiration_object > )
 DEFINE_API_ARGS( get_witnesses,                          vector< variant >,   vector< optional< api_witness_object > > )
-DEFINE_API_ARGS( get_conversion_requests,                vector< variant >,   vector< api_convert_request_object > )
 DEFINE_API_ARGS( get_witness_by_account,                 vector< variant >,   optional< api_witness_object > )
 DEFINE_API_ARGS( get_witnesses_by_vote,                  vector< variant >,   vector< api_witness_object > )
 DEFINE_API_ARGS( lookup_witness_accounts,                vector< variant >,   vector< account_name_type > )
@@ -995,7 +974,6 @@ public:
       (get_vesting_delegations)
       (get_expiring_vesting_delegations)
       (get_witnesses)
-      (get_conversion_requests)
       (get_witness_by_account)
       (get_witnesses_by_vote)
       (lookup_witness_accounts)
@@ -1188,9 +1166,6 @@ FC_REFLECT( steem::plugins::condenser_api::api_vesting_delegation_object,
 
 FC_REFLECT( steem::plugins::condenser_api::api_vesting_delegation_expiration_object,
             (id)(delegator)(vesting_shares)(expiration) )
-
-FC_REFLECT( steem::plugins::condenser_api::api_convert_request_object,
-             (id)(owner)(requestid)(amount)(conversion_date) )
 
 FC_REFLECT( steem::plugins::condenser_api::api_proposal_object,
              (id)(proposal_id)(creator)(receiver)(start_date)(end_date)(daily_pay)(subject)(permlink)(total_votes) )

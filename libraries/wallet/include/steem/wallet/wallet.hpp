@@ -570,14 +570,6 @@ class wallet_api
        */
       optional< condenser_api::api_witness_object > get_witness(string owner_account);
 
-      /** Returns conversion requests by an account
-       *
-       * @param owner Account name of the account owning the requests
-       *
-       * @returns All pending conversion requests by account
-       */
-      vector< condenser_api::api_convert_request_object > get_conversion_requests( string owner );
-
 
       /**
        * Update a witness object owned by the given account.
@@ -1175,7 +1167,6 @@ FC_API( steem::wallet::wallet_api,
         (get_block)
         (get_ops_in_block)
         (get_feed_history)
-        (get_conversion_requests)
         (get_account_history)
         (get_state)
         (get_withdraw_routes)

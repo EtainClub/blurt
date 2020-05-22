@@ -53,8 +53,6 @@ class database_api_impl
          (find_vesting_delegations)
          (list_vesting_delegation_expirations)
          (find_vesting_delegation_expirations)
-         (list_sbd_conversion_requests)
-         (find_sbd_conversion_requests)
          (list_decline_voting_rights_requests)
          (find_decline_voting_rights_requests)
          (list_comments)
@@ -854,63 +852,6 @@ DEFINE_API_IMPL( database_api_impl, find_vesting_delegation_expirations )
    return result;
 }
 
-
-/* SBD Conversion Requests */
-
-DEFINE_API_IMPL( database_api_impl, list_sbd_conversion_requests )
-{
-   FC_ASSERT( args.limit <= DATABASE_API_SINGLE_QUERY_LIMIT );
-
-   list_sbd_conversion_requests_return result;
-   result.requests.reserve( args.limit );
-
-   switch( args.order )
-   {
-      case( by_conversion_date ):
-      {
-         auto key = args.start.as< std::pair< time_point_sec, convert_request_id_type > >();
-         iterate_results< chain::convert_request_index, chain::by_conversion_date >(
-            boost::make_tuple( key.first, key.second ),
-            result.requests,
-            args.limit,
-            &database_api_impl::on_push_default< api_convert_request_object >,
-            &database_api_impl::filter_default< convert_request_object > );
-         break;
-      }
-      case( by_account ):
-      {
-         auto key = args.start.as< std::pair< account_name_type, uint32_t > >();
-         iterate_results< chain::convert_request_index, chain::by_owner >(
-            boost::make_tuple( key.first, key.second ),
-            result.requests,
-            args.limit,
-            &database_api_impl::on_push_default< api_convert_request_object >,
-            &database_api_impl::filter_default< convert_request_object > );
-         break;
-      }
-      default:
-         FC_ASSERT( false, "Unknown or unsupported sort order" );
-   }
-
-   return result;
-}
-
-DEFINE_API_IMPL( database_api_impl, find_sbd_conversion_requests )
-{
-   find_sbd_conversion_requests_return result;
-   const auto& convert_idx = _db.get_index< chain::convert_request_index, chain::by_owner >();
-   auto itr = convert_idx.lower_bound( args.account );
-
-   while( itr != convert_idx.end() && itr->owner == args.account && result.requests.size() <= DATABASE_API_SINGLE_QUERY_LIMIT )
-   {
-      result.requests.push_back( *itr );
-      ++itr;
-   }
-
-   return result;
-}
-
-
 /* Decline Voting Rights Requests */
 
 DEFINE_API_IMPL( database_api_impl, list_decline_voting_rights_requests )
@@ -1613,8 +1554,6 @@ DEFINE_READ_APIS( database_api,
    (find_vesting_delegations)
    (list_vesting_delegation_expirations)
    (find_vesting_delegation_expirations)
-   (list_sbd_conversion_requests)
-   (find_sbd_conversion_requests)
    (list_decline_voting_rights_requests)
    (find_decline_voting_rights_requests)
    (list_comments)

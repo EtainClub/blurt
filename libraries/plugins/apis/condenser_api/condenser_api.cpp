@@ -77,7 +77,6 @@ namespace detail
             (get_vesting_delegations)
             (get_expiring_vesting_delegations)
             (get_witnesses)
-            (get_conversion_requests)
             (get_witness_by_account)
             (get_witnesses_by_vote)
             (lookup_witness_accounts)
@@ -260,7 +259,6 @@ namespace detail
                         case operation::tag<escrow_approve_operation>::value:
                         case operation::tag<escrow_dispute_operation>::value:
                         case operation::tag<escrow_release_operation>::value:
-                        case operation::tag<fill_convert_request_operation>::value:
                         case operation::tag<fill_order_operation>::value:
                         case operation::tag<claim_reward_balance_operation>::value:
                            if( item.second.op.visit( visitor ) )
@@ -1083,24 +1081,6 @@ namespace detail
                return api_witness_object( database_api::api_witness_object ( *o ) );
             return {};
          });
-
-      return result;
-   }
-
-   DEFINE_API_IMPL( condenser_api_impl, get_conversion_requests )
-   {
-      CHECK_ARG_SIZE( 1 )
-      auto requests = _database_api->find_sbd_conversion_requests(
-         {
-            args[0].as< account_name_type >()
-         }).requests;
-
-      get_conversion_requests_return result;
-
-      for( auto& r : requests )
-      {
-         result.push_back( api_convert_request_object( r ) );
-      }
 
       return result;
    }
@@ -2129,7 +2109,6 @@ DEFINE_READ_APIS( condenser_api,
    (get_vesting_delegations)
    (get_expiring_vesting_delegations)
    (get_witnesses)
-   (get_conversion_requests)
    (get_witness_by_account)
    (get_witnesses_by_vote)
    (lookup_witness_accounts)

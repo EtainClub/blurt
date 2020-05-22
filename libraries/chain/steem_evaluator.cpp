@@ -1615,26 +1615,6 @@ void feed_publish_evaluator::do_apply( const feed_publish_operation& o )
    });
 }
 
-void convert_evaluator::do_apply( const convert_operation& o )
-{
-  _db.adjust_balance( o.owner, -o.amount );
-
-  const auto& fhistory = _db.get_feed_history();
-  FC_ASSERT( !fhistory.current_median_history.is_null(), "Cannot convert SBD because there is no price feed." );
-
-  auto steem_conversion_delay = STEEM_CONVERSION_DELAY_PRE_HF_16;
-  steem_conversion_delay = STEEM_CONVERSION_DELAY;
-
-  _db.create<convert_request_object>( [&]( convert_request_object& obj )
-  {
-      obj.owner           = o.owner;
-      obj.requestid       = o.requestid;
-      obj.amount          = o.amount;
-      obj.conversion_date = _db.head_block_time() + steem_conversion_delay;
-  });
-
-}
-
 void report_over_production_evaluator::do_apply( const report_over_production_operation& o )
 {
    FC_ASSERT( false, "report_over_production_operation is disabled." );

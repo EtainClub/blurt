@@ -562,20 +562,6 @@ namespace steem { namespace protocol {
 
 
    /**
-    *  This operation instructs the blockchain to start a conversion between STEEM and SBD,
-    *  The funds are deposited after STEEM_CONVERSION_DELAY
-    */
-   struct convert_operation : public base_operation
-   {
-      account_name_type owner;
-      uint32_t          requestid = 0;
-      asset             amount;
-
-      void  validate()const;
-      void  get_required_active_authorities( flat_set<account_name_type>& a )const{ a.insert(owner); }
-   };
-
-   /**
     * This operation is used to report a miner who signs two blocks
     * at the same time. To be valid, the violation must be reported within
     * STEEM_MAX_WITNESSES blocks of the head block (1 round) and the
@@ -846,7 +832,6 @@ FC_REFLECT( steem::protocol::set_reset_account_operation, (account)(current_rese
 
 
 FC_REFLECT( steem::protocol::report_over_production_operation, (reporter)(first_block)(second_block) )
-FC_REFLECT( steem::protocol::convert_operation, (owner)(requestid)(amount) )
 FC_REFLECT( steem::protocol::feed_publish_operation, (publisher)(exchange_rate) )
 FC_REFLECT( steem::protocol::legacy_chain_properties,
             (account_creation_fee)

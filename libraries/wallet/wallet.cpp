@@ -2026,24 +2026,6 @@ condenser_api::legacy_signed_transaction wallet_api::set_withdraw_vesting_route(
    return my->sign_transaction( tx, broadcast );
 }
 
-condenser_api::legacy_signed_transaction wallet_api::convert_sbd(
-   string from,
-   condenser_api::legacy_asset amount,
-   bool broadcast )
-{
-   FC_ASSERT( !is_locked() );
-   convert_operation op;
-   op.owner = from;
-   op.requestid = fc::time_point::now().sec_since_epoch();
-   op.amount = amount.to_asset();
-
-   signed_transaction tx;
-   tx.operations.push_back( op );
-   tx.validate();
-
-   return my->sign_transaction( tx, broadcast );
-}
-
 condenser_api::legacy_signed_transaction wallet_api::publish_feed(
    string witness,
    condenser_api::legacy_price exchange_rate,
@@ -2059,11 +2041,6 @@ condenser_api::legacy_signed_transaction wallet_api::publish_feed(
    tx.validate();
 
    return my->sign_transaction( tx, broadcast );
-}
-
-vector< condenser_api::api_convert_request_object > wallet_api::get_conversion_requests( string owner_account )
-{
-   return my->_remote_api->get_conversion_requests( owner_account );
 }
 
 string wallet_api::decrypt_memo( string encrypted_memo )

@@ -378,8 +378,7 @@ namespace steem { namespace chain {
          share_type cashout_comment_helper( util::comment_reward_context& ctx, const comment_object& comment, bool forward_curation_remainder = true );
          void process_comment_cashout();
          void process_funds();
-         void process_conversions();
-         void process_savings_withdraws();
+          void process_savings_withdraws();
          void process_subsidized_accounts();
          void account_recovery_processing();
          void expire_escrow_ratification();

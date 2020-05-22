@@ -21,7 +21,6 @@ namespace steem { namespace protocol {
             withdraw_vesting_operation,
 
             feed_publish_operation,
-            convert_operation,
 
             account_create_operation,
             account_update_operation,
@@ -64,7 +63,6 @@ namespace steem { namespace protocol {
             remove_proposal_operation,
 
             /// virtual operations below this point
-            fill_convert_request_operation,
             author_reward_operation,
             curation_reward_operation,
             comment_reward_operation,

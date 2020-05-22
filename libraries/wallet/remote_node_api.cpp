@@ -159,11 +159,6 @@ vector< optional< condenser_api::api_witness_object > > remote_node_api::get_wit
    FC_ASSERT( false );
 }
 
-vector< condenser_api::api_convert_request_object > remote_node_api::get_conversion_requests( account_name_type )
-{
-   FC_ASSERT( false );
-}
-
 optional< condenser_api::api_witness_object > remote_node_api::get_witness_by_account( account_name_type )
 {
    FC_ASSERT( false );

@@ -19,29 +19,6 @@ namespace steem { namespace chain {
 
    typedef protocol::fixed_string< 16 > reward_fund_name_type;
 
-   /**
-    *  This object is used to track pending requests to convert sbd to steem
-    */
-   class convert_request_object : public object< convert_request_object_type, convert_request_object >
-   {
-      public:
-         template< typename Constructor, typename Allocator >
-         convert_request_object( Constructor&& c, allocator< Allocator > a )
-         {
-            c( *this );
-         }
-
-         convert_request_object(){}
-
-         id_type           id;
-
-         account_name_type owner;
-         uint32_t          requestid = 0; ///< id set by owner, the owner,requestid pair must be unique
-         asset             amount;
-         time_point_sec    conversion_date; ///< at this time the feed_history_median_price * amount
-   };
-
-
    class escrow_object : public object< escrow_object_type, escrow_object >
    {
       public:
@@ -238,28 +215,6 @@ namespace steem { namespace chain {
 
 
    struct by_owner;
-   struct by_conversion_date;
-   typedef multi_index_container<
-      convert_request_object,
-      indexed_by<
-         ordered_unique< tag< by_id >, member< convert_request_object, convert_request_id_type, &convert_request_object::id > >,
-         ordered_unique< tag< by_conversion_date >,
-            composite_key< convert_request_object,
-               member< convert_request_object, time_point_sec, &convert_request_object::conversion_date >,
-               member< convert_request_object, convert_request_id_type, &convert_request_object::id >
-            >
-         >,
-         ordered_unique< tag< by_owner >,
-            composite_key< convert_request_object,
-               member< convert_request_object, account_name_type, &convert_request_object::owner >,
-               member< convert_request_object, uint32_t, &convert_request_object::requestid >
-            >
-         >
-      >,
-      allocator< convert_request_object >
-   > convert_request_index;
-
-   struct by_owner;
    struct by_volume_weight;
 
    typedef multi_index_container<
@@ -398,7 +353,6 @@ namespace steem { namespace chain {
 #ifdef ENABLE_MIRA
 namespace mira {
 
-template<> struct is_static_length< steem::chain::convert_request_object > : public boost::true_type {};
 template<> struct is_static_length< steem::chain::escrow_object > : public boost::true_type {};
 template<> struct is_static_length< steem::chain::liquidity_reward_balance_object > : public boost::true_type {};
 template<> struct is_static_length< steem::chain::withdraw_vesting_route_object > : public boost::true_type {};
@@ -414,10 +368,6 @@ template<> struct is_static_length< steem::chain::reward_fund_object > : public 
 FC_REFLECT( steem::chain::feed_history_object,
              (id)(current_median_history)(price_history) )
 CHAINBASE_SET_INDEX_TYPE( steem::chain::feed_history_object, steem::chain::feed_history_index )
-
-FC_REFLECT( steem::chain::convert_request_object,
-             (id)(owner)(requestid)(amount)(conversion_date) )
-CHAINBASE_SET_INDEX_TYPE( steem::chain::convert_request_object, steem::chain::convert_request_index )
 
 FC_REFLECT( steem::chain::liquidity_reward_balance_object,
              (id)(owner)(steem_volume)(sbd_volume)(weight)(last_update) )

@@ -476,29 +476,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       legacy_price      exchange_rate;
    };
 
-   struct legacy_convert_operation
-   {
-      legacy_convert_operation() {}
-      legacy_convert_operation( const convert_operation& op ) :
-         owner( op.owner ),
-         requestid( op.requestid ),
-         amount( legacy_asset::from_asset( op.amount ) )
-      {}
-
-      operator convert_operation()const
-      {
-         convert_operation op;
-         op.owner = owner;
-         op.requestid = requestid;
-         op.amount = amount;
-         return op;
-      }
-
-      account_name_type owner;
-      uint32_t          requestid = 0;
-      legacy_asset      amount;
-   };
-
    struct legacy_transfer_to_savings_operation
    {
       legacy_transfer_to_savings_operation() {}
@@ -719,32 +696,6 @@ namespace steem { namespace plugins { namespace condenser_api {
 
       account_name_type owner;
       legacy_asset      interest;
-   };
-
-   struct legacy_fill_convert_request_operation
-   {
-      legacy_fill_convert_request_operation() {}
-      legacy_fill_convert_request_operation( const fill_convert_request_operation& op ) :
-         owner( op.owner ),
-         requestid( op.requestid ),
-         amount_in( legacy_asset::from_asset( op.amount_in ) ),
-         amount_out( legacy_asset::from_asset( op.amount_out ) )
-      {}
-
-      operator fill_convert_request_operation()const
-      {
-         fill_convert_request_operation op;
-         op.owner = owner;
-         op.requestid = requestid;
-         op.amount_in = amount_in;
-         op.amount_out = amount_out;
-         return op;
-      }
-
-      account_name_type owner;
-      uint32_t          requestid;
-      legacy_asset      amount_in;
-      legacy_asset      amount_out;
    };
 
    struct legacy_fill_vesting_withdraw_operation
@@ -980,7 +931,6 @@ namespace steem { namespace plugins { namespace condenser_api {
             legacy_transfer_to_vesting_operation,
             legacy_withdraw_vesting_operation,
             legacy_feed_publish_operation,
-            legacy_convert_operation,
             legacy_account_create_operation,
             legacy_account_update_operation,
             legacy_witness_update_operation,
@@ -1016,7 +966,6 @@ namespace steem { namespace plugins { namespace condenser_api {
             legacy_create_proposal_operation,
             legacy_update_proposal_votes_operation,
             legacy_remove_proposal_operation,
-            legacy_fill_convert_request_operation,
             legacy_author_reward_operation,
             legacy_curation_reward_operation,
             legacy_comment_reward_operation,
@@ -1098,12 +1047,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          return true;
       }
 
-      bool operator()( const convert_operation& op )const
-      {
-         l_op = legacy_convert_operation( op );
-         return true;
-      }
-
       bool operator()( const account_create_operation& op )const
       {
          l_op = legacy_account_create_operation( op );
@@ -1161,12 +1104,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       bool operator()( const account_create_with_delegation_operation& op )const
       {
          l_op = legacy_account_create_with_delegation_operation( op );
-         return true;
-      }
-
-      bool operator()( const fill_convert_request_operation& op )const
-      {
-         l_op = legacy_fill_convert_request_operation( op );
          return true;
       }
 
@@ -1291,11 +1228,6 @@ struct convert_from_legacy_operation_visitor
       return operation( feed_publish_operation( op ) );
    }
 
-   operation operator()( const legacy_convert_operation& op )const
-   {
-      return operation( convert_operation( op ) );
-   }
-
    operation operator()( const legacy_account_create_operation& op )const
    {
       return operation( account_create_operation( op ) );
@@ -1344,11 +1276,6 @@ struct convert_from_legacy_operation_visitor
    operation operator()( const legacy_account_create_with_delegation_operation& op )const
    {
       return operation( account_create_with_delegation_operation( op ) );
-   }
-
-   operation operator()( const legacy_fill_convert_request_operation& op )const
-   {
-      return operation( fill_convert_request_operation( op ) );
    }
 
    operation operator()( const legacy_author_reward_operation& op )const
@@ -1495,7 +1422,6 @@ FC_REFLECT( steem::plugins::condenser_api::api_chain_properties,
 FC_REFLECT( steem::plugins::condenser_api::legacy_price, (base)(quote) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_to_savings_operation, (from)(to)(amount)(memo) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_from_savings_operation, (from)(request_id)(to)(amount)(memo) )
-FC_REFLECT( steem::plugins::condenser_api::legacy_convert_operation, (owner)(requestid)(amount) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_feed_publish_operation, (publisher)(exchange_rate) )
 
 FC_REFLECT( steem::plugins::condenser_api::legacy_account_create_operation,
@@ -1532,7 +1458,6 @@ FC_REFLECT( steem::plugins::condenser_api::legacy_delegate_vesting_shares_operat
 FC_REFLECT( steem::plugins::condenser_api::legacy_author_reward_operation, (author)(permlink)(sbd_payout)(steem_payout)(vesting_payout) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_curation_reward_operation, (curator)(reward)(comment_author)(comment_permlink) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_comment_reward_operation, (author)(permlink)(payout) )
-FC_REFLECT( steem::plugins::condenser_api::legacy_fill_convert_request_operation, (owner)(requestid)(amount_in)(amount_out) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_liquidity_reward_operation, (owner)(payout) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_interest_operation, (owner)(interest) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_fill_vesting_withdraw_operation, (from_account)(to_account)(withdrawn)(deposited) )
