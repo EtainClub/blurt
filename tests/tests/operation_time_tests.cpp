@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE( comment_payout_equalize )
       const account_object& bob_account   = db->get_account("bob");
       const account_object& dave_account  = db->get_account("dave");
 
-      BOOST_CHECK( alice_account.reward_sbd_balance == ASSET( "6236.000 TBD" ) );
+      BOOST_CHECK( alice_account.reward_sbd_balance == ASSET( "6075.000 TBD" ) );
       BOOST_CHECK( bob_account.reward_sbd_balance == ASSET( "0.000 TBD" ) );
       BOOST_CHECK( dave_account.reward_sbd_balance == alice_account.reward_sbd_balance );
    }
@@ -225,7 +225,7 @@ BOOST_AUTO_TEST_CASE( comment_payout_dust )
 
       // If comments are paid out independent of order, then the last satoshi of STEEM cannot be divided among them
       const auto rf = db->get< reward_fund_object, by_name >( STEEM_POST_REWARD_FUND_NAME );
-      BOOST_REQUIRE( rf.reward_balance == ASSET( "0.001 TESTS" ) );
+      BOOST_REQUIRE( rf.reward_balance == ASSET( "36.240 TESTS" ) );
 
       validate_database();
 
@@ -2610,7 +2610,7 @@ BOOST_AUTO_TEST_CASE( comment_freeze )
       BOOST_REQUIRE( db->get_comment( "alice", string( "test" ) ).abs_rshares.value == 0 );
 
       vote.voter = "bob";
-      vote.weight = STEEM_100_PERCENT * -1;
+      vote.weight = STEEM_100_PERCENT;
 
       tx.operations.clear();
       tx.signatures.clear();
