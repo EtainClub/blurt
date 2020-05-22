@@ -746,12 +746,6 @@ struct pre_apply_operation_visitor
       regenerate( STEEM_NULL_ACCOUNT );
    }
 
-   void operator()( const pow_operation& op )const
-   {
-      regenerate< true >( op.worker_account );
-      regenerate< false >( _current_witness );
-   }
-
    void operator()( const pow2_operation& op )const
    {
       regenerate< true >( get_worker_name( op.work ) );
@@ -820,14 +814,6 @@ struct post_apply_operation_visitor
    void operator()( const create_claimed_account_operation& op )const
    {
       create_rc_account( _db, _current_time, op.new_account_name, _db.get_witness_schedule_object().median_props.account_creation_fee );
-   }
-
-   void operator()( const pow_operation& op )const
-   {
-      // ilog( "handling post-apply pow_operation" );
-      create_rc_account< true >( _db, _current_time, op.worker_account, asset( 0, STEEM_SYMBOL ) );
-      _mod_accounts.emplace_back( op.worker_account );
-      _mod_accounts.emplace_back( _current_witness );
    }
 
    void operator()( const pow2_operation& op )const

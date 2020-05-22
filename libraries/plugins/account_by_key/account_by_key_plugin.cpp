@@ -74,11 +74,6 @@ struct pre_operation_visitor
       if( acct_itr ) _plugin.cache_auths( *acct_itr );
    }
 
-   void operator()( const pow_operation& op )const
-   {
-      _plugin.clear_cache();
-   }
-
    void operator()( const pow2_operation& op )const
    {
       _plugin.clear_cache();
@@ -134,12 +129,6 @@ struct post_operation_visitor
    void operator()( const recover_account_operation& op )const
    {
       auto acct_itr = _plugin._db.find< account_authority_object, by_account >( op.account_to_recover );
-      if( acct_itr ) _plugin.update_key_lookup( *acct_itr );
-   }
-
-   void operator()( const pow_operation& op )const
-   {
-      auto acct_itr = _plugin._db.find< account_authority_object, by_account >( op.worker_account );
       if( acct_itr ) _plugin.update_key_lookup( *acct_itr );
    }
 

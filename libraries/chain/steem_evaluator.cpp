@@ -1602,11 +1602,6 @@ void pow_apply( database& db, Operation o )
       db.create_vesting( inc_witness, pow_reward );
 }
 
-void pow_evaluator::do_apply( const pow_operation& o ) {
-   FC_ASSERT( false, "pow is deprecated. Use pow2 instead" );
-}
-
-
 void pow2_evaluator::do_apply( const pow2_operation& o )
 {
    FC_ASSERT( false, "mining is now disabled" );

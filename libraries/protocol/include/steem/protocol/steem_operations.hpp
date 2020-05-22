@@ -586,24 +586,6 @@ namespace steem { namespace protocol {
       void validate()const;
    };
 
-   struct pow_operation : public base_operation
-   {
-      account_name_type worker_account;
-      block_id_type     block_id;
-      uint64_t          nonce = 0;
-      pow               work;
-      legacy_chain_properties  props;
-
-      void validate()const;
-      fc::sha256 work_input()const;
-
-      const account_name_type& get_worker_account()const { return worker_account; }
-
-      /** there is no need to verify authority, the proof of work is sufficient */
-      void get_required_active_authorities( flat_set<account_name_type>& a )const{  }
-   };
-
-
    struct pow2_input
    {
       account_name_type worker_account;
@@ -938,7 +920,6 @@ FC_REFLECT( steem::protocol::legacy_chain_properties,
           )
 
 FC_REFLECT_TYPENAME( steem::protocol::pow2_work )
-FC_REFLECT( steem::protocol::pow_operation, (worker_account)(block_id)(nonce)(work)(props) )
 FC_REFLECT( steem::protocol::pow2_operation, (work)(new_owner_key)(props) )
 
 FC_REFLECT( steem::protocol::account_create_operation,
