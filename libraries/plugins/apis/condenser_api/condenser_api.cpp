@@ -9,8 +9,6 @@
 #include <steem/plugins/tags_api/tags_api_plugin.hpp>
 #include <steem/plugins/follow_api/follow_api_plugin.hpp>
 #include <steem/plugins/reputation_api/reputation_api_plugin.hpp>
-#include <steem/plugins/market_history_api/market_history_api_plugin.hpp>
-
 
 #include <steem/utilities/git_revision.hpp>
 
@@ -84,7 +82,6 @@ namespace detail
             (get_witnesses_by_vote)
             (lookup_witness_accounts)
             (get_witness_count)
-            (get_open_orders)
             (get_transaction_hex)
             (get_transaction)
             (get_required_signatures)
@@ -125,13 +122,6 @@ namespace detail
             (get_account_reputations)
             (get_reblogged_by)
             (get_blog_authors)
-            (get_ticker)
-            (get_volume)
-            (get_order_book)
-            (get_trade_history)
-            (get_recent_trades)
-            (get_market_history)
-            (get_market_history_buckets)
             (list_proposals)
             (find_proposals)
             (list_proposal_votes)
@@ -156,7 +146,6 @@ namespace detail
          std::shared_ptr< tags::tags_api >                                 _tags_api;
          std::shared_ptr< follow::follow_api >                             _follow_api;
          std::shared_ptr< reputation::reputation_api >                     _reputation_api;
-         std::shared_ptr< market_history::market_history_api >             _market_history_api;
          map< transaction_id_type, confirmation_callback >                 _callbacks;
          map< time_point_sec, vector< transaction_id_type > >              _callback_expirations;
          boost::signals2::connection                                       _on_post_apply_block_conn;
@@ -281,10 +270,6 @@ namespace detail
                            break;
                         case operation::tag<comment_operation>::value:
                         //   eacnt.post_history[item.first] =  item.second;
-                           break;
-                        case operation::tag<limit_order_create_operation>::value:
-                        case operation::tag<limit_order_cancel_operation>::value:
-                        //   eacnt.market_history[item.first] =  item.second;
                            break;
                         case operation::tag<vote_operation>::value:
                         case operation::tag<account_witness_vote_operation>::value:
@@ -1194,30 +1179,6 @@ namespace detail
       return _db.get_index< witness_index >().indices().size();
    }
 
-   DEFINE_API_IMPL( condenser_api_impl, get_open_orders )
-   {
-      CHECK_ARG_SIZE( 1 )
-      account_name_type owner = args[0].as< account_name_type >();
-
-      vector< api_limit_order_object > result;
-      const auto& idx = _db.get_index< limit_order_index, by_account >();
-      auto itr = idx.lower_bound( owner );
-
-      while( itr != idx.end() && itr->seller == owner )
-      {
-         result.push_back( *itr );
-
-         // if( itr->sell_price.base.symbol == STEEM_SYMBOL )
-         //    result.back().real_price = (~result.back().sell_price).to_real();
-         // else
-         //    result.back().real_price = (result.back().sell_price).to_real();
-         result.back().real_price = 0.0;
-         ++itr;
-      }
-
-      return result;
-   }
-
    DEFINE_API_IMPL( condenser_api_impl, get_transaction_hex )
    {
       CHECK_ARG_SIZE( 1 )
@@ -1842,72 +1803,6 @@ namespace detail
       return _follow_api->get_blog_authors( { args[0].as< account_name_type >() } ).blog_authors;
    }
 
-   DEFINE_API_IMPL( condenser_api_impl, get_ticker )
-   {
-      CHECK_ARG_SIZE( 0 )
-      FC_ASSERT( _market_history_api, "market_history_api_plugin not enabled." );
-
-      return get_ticker_return( _market_history_api->get_ticker( {} ) );
-   }
-
-   DEFINE_API_IMPL( condenser_api_impl, get_volume )
-   {
-      CHECK_ARG_SIZE( 0 )
-      FC_ASSERT( _market_history_api, "market_history_api_plugin not enabled." );
-
-      return get_volume_return( _market_history_api->get_volume( {} ) );
-   }
-
-   DEFINE_API_IMPL( condenser_api_impl, get_order_book )
-   {
-      FC_ASSERT( args.size() == 0 || args.size() == 1, "Expected 0-1 arguments, was ${n}", ("n", args.size()) );
-      FC_ASSERT( _market_history_api, "market_history_api_plugin not enabled." );
-
-      return get_order_book_return( _market_history_api->get_order_book( { args.size() == 1 ? args[0].as< uint32_t >() : 500 } ) );
-   }
-
-   DEFINE_API_IMPL( condenser_api_impl, get_trade_history )
-   {
-      FC_ASSERT( args.size() == 2 || args.size() == 3, "Expected 2-3 arguments, was ${n}", ("n", args.size()) );
-      FC_ASSERT( _market_history_api, "market_history_api_plugin not enabled." );
-
-      const auto& trades = _market_history_api->get_trade_history( { args[0].as< time_point_sec >(), args[1].as< time_point_sec >(), args.size() == 3 ? args[2].as< uint32_t >() : 1000 } ).trades;
-      get_trade_history_return result;
-
-      for( const auto& t : trades ) result.push_back( market_trade( t ) );
-
-      return result;
-   }
-
-   DEFINE_API_IMPL( condenser_api_impl, get_recent_trades )
-   {
-      FC_ASSERT( args.size() == 0 || args.size() == 1, "Expected 0-1 arguments, was ${n}", ("n", args.size()) );
-      FC_ASSERT( _market_history_api, "market_history_api_plugin not enabled." );
-
-      const auto& trades = _market_history_api->get_recent_trades( { args.size() == 1 ? args[0].as< uint32_t >() : 1000 } ).trades;
-      get_trade_history_return result;
-
-      for( const auto& t : trades ) result.push_back( market_trade( t ) );
-
-      return result;
-   }
-
-   DEFINE_API_IMPL( condenser_api_impl, get_market_history )
-   {
-      CHECK_ARG_SIZE( 3 )
-      FC_ASSERT( _market_history_api, "market_history_api_plugin not enabled." );
-
-      return _market_history_api->get_market_history( { args[0].as< uint32_t >(), args[1].as< time_point_sec >(), args[2].as< time_point_sec >() } ).buckets;
-   }
-
-   DEFINE_API_IMPL( condenser_api_impl, get_market_history_buckets )
-   {
-      CHECK_ARG_SIZE( 0 )
-      FC_ASSERT( _market_history_api, "market_history_api_plugin not enabled." );
-
-      return _market_history_api->get_market_history_buckets( {} ).bucket_sizes;
-   }
-
    DEFINE_API_IMPL( condenser_api_impl, list_proposals )
    {
       FC_ASSERT( args.size() >= 3 && args.size() <= 5, "Expected 3-5 argument, was ${n}", ("n", args.size()) );
@@ -2195,12 +2090,6 @@ void condenser_api::api_startup()
    {
       my->_reputation_api = reputation->api;
    }
-
-   auto market_history = appbase::app().find_plugin< market_history::market_history_api_plugin >();
-   if( market_history != nullptr )
-   {
-      my->_market_history_api = market_history->api;
-   }
 }
 
 DEFINE_LOCKLESS_APIS( condenser_api,
@@ -2210,7 +2099,6 @@ DEFINE_LOCKLESS_APIS( condenser_api,
    (broadcast_transaction)
    (broadcast_transaction_synchronous)
    (broadcast_block)
-   (get_market_history_buckets)
 )
 
 DEFINE_READ_APIS( condenser_api,
@@ -2247,7 +2135,6 @@ DEFINE_READ_APIS( condenser_api,
    (get_witnesses_by_vote)
    (lookup_witness_accounts)
    (get_witness_count)
-   (get_open_orders)
    (get_transaction_hex)
    (get_transaction)
    (get_required_signatures)
@@ -2285,12 +2172,6 @@ DEFINE_READ_APIS( condenser_api,
    (get_account_reputations)
    (get_reblogged_by)
    (get_blog_authors)
-   (get_ticker)
-   (get_volume)
-   (get_order_book)
-   (get_trade_history)
-   (get_recent_trades)
-   (get_market_history)
    (list_proposals)
    (list_proposal_votes)
    (find_proposals)

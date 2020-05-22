@@ -26,7 +26,6 @@ void initialize_core_indexes( database& db )
    STEEM_ADD_CORE_INDEX(db, comment_content_index);
    STEEM_ADD_CORE_INDEX(db, comment_vote_index);
    STEEM_ADD_CORE_INDEX(db, witness_vote_index);
-   STEEM_ADD_CORE_INDEX(db, limit_order_index);
    STEEM_ADD_CORE_INDEX(db, feed_history_index);
    STEEM_ADD_CORE_INDEX(db, convert_request_index);
    STEEM_ADD_CORE_INDEX(db, liquidity_reward_balance_index);

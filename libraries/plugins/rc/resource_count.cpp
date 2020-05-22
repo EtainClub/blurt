@@ -119,20 +119,6 @@ struct count_operation_visitor
       execution_time_count += _e.escrow_transfer_operation_exec_time;
    }
 
-   void operator()( const limit_order_create_operation& op )const
-   {
-      state_bytes_count += op.fill_or_kill ? 0 : _w.limit_order_object_base_size;
-      execution_time_count += _e.limit_order_create_operation_exec_time;
-      market_op_count++;
-   }
-
-   void operator()( const limit_order_create2_operation& op )const
-   {
-      state_bytes_count += op.fill_or_kill ? 0 : _w.limit_order_object_base_size;
-      execution_time_count += _e.limit_order_create2_operation_exec_time;
-      market_op_count++;
-   }
-
    void operator()( const request_account_recovery_operation& op )const
    {
       state_bytes_count += _w.account_recovery_request_object_base_size;
@@ -289,11 +275,6 @@ struct count_operation_visitor
       execution_time_count += _e.feed_publish_operation_exec_time;
    }
 
-   void operator()( const limit_order_cancel_operation& )const
-   {
-      execution_time_count += _e.limit_order_cancel_operation_exec_time;
-   }
-
    void operator()( const witness_set_properties_operation& )const
    {
       execution_time_count += _e.witness_set_properties_operation_exec_time;
@@ -348,7 +329,7 @@ struct count_operation_visitor
 
    // TODO:
    // Should following ops be market ops?
-   // withdraw_vesting, convert, set_withdraw_vesting_route, limit_order_create2
+   // withdraw_vesting, convert, set_withdraw_vesting_route,
    // escrow_transfer, escrow_dispute, escrow_release, escrow_approve,
    // transfer_to_savings, transfer_from_savings, cancel_transfer_from_savings,
    // claim_reward_balance, delegate_vesting_shares, any SMT operations

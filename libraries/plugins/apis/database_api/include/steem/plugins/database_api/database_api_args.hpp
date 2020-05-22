@@ -408,34 +408,6 @@ struct find_votes_args
 typedef list_votes_return find_votes_return;
 
 
-/* Limit Orders */
-
-typedef list_object_args_type list_limit_orders_args;
-
-struct list_limit_orders_return
-{
-   vector< api_limit_order_object > orders;
-};
-
-
-struct find_limit_orders_args
-{
-   account_name_type account;
-};
-
-typedef list_limit_orders_return find_limit_orders_return;
-
-
-/* Order Book */
-
-struct get_order_book_args
-{
-   uint32_t          limit;
-};
-
-typedef order_book get_order_book_return;
-
-
 /* Proposals */
 
 struct list_proposals_args
@@ -714,15 +686,6 @@ FC_REFLECT( steem::plugins::database_api::list_votes_return,
 
 FC_REFLECT( steem::plugins::database_api::find_votes_args,
    (author)(permlink) )
-
-FC_REFLECT( steem::plugins::database_api::list_limit_orders_return,
-   (orders) )
-
-FC_REFLECT( steem::plugins::database_api::find_limit_orders_args,
-   (account) )
-
-FC_REFLECT( steem::plugins::database_api::get_order_book_args,
-   (limit) )
 
 FC_REFLECT( steem::plugins::database_api::list_proposals_args,
    (start)(limit)(order)(order_direction)(status) )

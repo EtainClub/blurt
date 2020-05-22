@@ -9,7 +9,6 @@
 #include <steem/plugins/tags_api/tags_api.hpp>
 #include <steem/plugins/follow_api/follow_api.hpp>
 #include <steem/plugins/reputation_api/reputation_api.hpp>
-#include <steem/plugins/market_history_api/market_history_api.hpp>
 #include <steem/plugins/condenser_api/condenser_api_legacy_objects.hpp>
 
 #include <fc/optional.hpp>
@@ -45,32 +44,6 @@ struct discussion_index
    vector< string > hot;              /// total lifetime payout
    vector< string > promoted;         /// pending lifetime payout
 };
-
-struct api_limit_order_object
-{
-   api_limit_order_object( const limit_order_object& o ) :
-      id( o.id ),
-      created( o.created ),
-      expiration( o.expiration ),
-      seller( o.seller ),
-      orderid( o.orderid ),
-      for_sale( o.for_sale ),
-      sell_price( o.sell_price )
-   {}
-
-   api_limit_order_object(){}
-
-   limit_order_id_type  id;
-   time_point_sec       created;
-   time_point_sec       expiration;
-   account_name_type    seller;
-   uint32_t             orderid = 0;
-   share_type           for_sale;
-   legacy_price         sell_price;
-   double               real_price = 0;
-   bool                 rewarded   = false;
-};
-
 
 struct api_operation_object
 {
@@ -245,7 +218,6 @@ struct extended_account : public api_account_object
    vector< tags::tag_count_object >                         tags_usage;
    vector< follow::reblog_count >                           guest_bloggers;
 
-   optional< map< uint32_t, api_limit_order_object > >      open_orders;
    optional< vector< string > >                             comments;         /// permlinks for this user
    optional< vector< string > >                             blog;             /// blog posts for this user
    optional< vector< string > >                             feed;             /// feed posts for this user
@@ -900,83 +872,6 @@ struct comment_blog_entry
    uint32_t             entry_id = 0;
 };
 
-struct ticker
-{
-   ticker() {}
-   ticker( const market_history::get_ticker_return& t ) :
-      latest( t.latest ),
-      lowest_ask( t.lowest_ask ),
-      highest_bid( t.highest_bid ),
-      percent_change( t.percent_change ),
-      steem_volume( legacy_asset::from_asset( t.steem_volume ) ),
-      sbd_volume( legacy_asset::from_asset( t.sbd_volume ) )
-   {}
-
-   double         latest = 0;
-   double         lowest_ask = 0;
-   double         highest_bid = 0;
-   double         percent_change = 0;
-   legacy_asset   steem_volume;
-   legacy_asset   sbd_volume;
-};
-
-struct volume
-{
-   volume() {}
-   volume( const market_history::get_volume_return& v ) :
-      steem_volume( legacy_asset::from_asset( v.steem_volume ) ),
-      sbd_volume( legacy_asset::from_asset( v.sbd_volume ) )
-   {}
-
-   legacy_asset   steem_volume;
-   legacy_asset   sbd_volume;
-};
-
-struct order
-{
-   order() {}
-   order( const market_history::order& o ) :
-      order_price( o.order_price ),
-      real_price( o.real_price ),
-      steem( o.steem ),
-      sbd( o.sbd ),
-      created( o.created )
-   {}
-
-   legacy_price   order_price;
-   double         real_price;
-   share_type     steem;
-   share_type     sbd;
-   time_point_sec created;
-};
-
-struct order_book
-{
-   order_book() {}
-   order_book( const market_history::get_order_book_return& book )
-   {
-      for( auto& b : book.bids ) bids.push_back( order( b ) );
-      for( auto& a : book.asks ) asks.push_back( order( a ) );
-   }
-
-   vector< order > bids;
-   vector< order > asks;
-};
-
-struct market_trade
-{
-   market_trade() {}
-   market_trade( const market_history::market_trade& t ) :
-      date( t.date ),
-      current_pays( legacy_asset::from_asset( t.current_pays ) ),
-      open_pays( legacy_asset::from_asset( t.open_pays ) )
-   {}
-
-   time_point_sec date;
-   legacy_asset   current_pays;
-   legacy_asset   open_pays;
-};
-
 #define DEFINE_API_ARGS( api_name, arg_type, return_type )  \
 typedef arg_type api_name ## _args;                         \
 typedef return_type api_name ## _return;
@@ -1016,7 +911,6 @@ DEFINE_API_ARGS( get_conversion_requests,                vector< variant >,   ve
 DEFINE_API_ARGS( get_witness_by_account,                 vector< variant >,   optional< api_witness_object > )
 DEFINE_API_ARGS( get_witnesses_by_vote,                  vector< variant >,   vector< api_witness_object > )
 DEFINE_API_ARGS( lookup_witness_accounts,                vector< variant >,   vector< account_name_type > )
-DEFINE_API_ARGS( get_open_orders,                        vector< variant >,   vector< api_limit_order_object > )
 DEFINE_API_ARGS( get_witness_count,                      vector< variant >,   uint64_t )
 DEFINE_API_ARGS( get_transaction_hex,                    vector< variant >,   string )
 DEFINE_API_ARGS( get_transaction,                        vector< variant >,   legacy_signed_transaction )
@@ -1057,13 +951,6 @@ DEFINE_API_ARGS( get_blog,                               vector< variant >,   ve
 DEFINE_API_ARGS( get_account_reputations,                vector< variant >,   vector< reputation::account_reputation > )
 DEFINE_API_ARGS( get_reblogged_by,                       vector< variant >,   vector< account_name_type > )
 DEFINE_API_ARGS( get_blog_authors,                       vector< variant >,   vector< follow::reblog_count > )
-DEFINE_API_ARGS( get_ticker,                             vector< variant >,   ticker )
-DEFINE_API_ARGS( get_volume,                             vector< variant >,   volume )
-DEFINE_API_ARGS( get_order_book,                         vector< variant >,   order_book )
-DEFINE_API_ARGS( get_trade_history,                      vector< variant >,   vector< market_trade > )
-DEFINE_API_ARGS( get_recent_trades,                      vector< variant >,   vector< market_trade > )
-DEFINE_API_ARGS( get_market_history,                     vector< variant >,   vector< market_history::bucket_object > )
-DEFINE_API_ARGS( get_market_history_buckets,             vector< variant >,   flat_set< uint32_t > )
 DEFINE_API_ARGS( list_proposals,                         vector< variant >,   vector< api_proposal_object > )
 DEFINE_API_ARGS( find_proposals,                         vector< variant >,   vector< api_proposal_object > )
 DEFINE_API_ARGS( list_proposal_votes,                    vector< variant >,   vector< database_api::api_proposal_vote_object > )
@@ -1113,7 +1000,6 @@ public:
       (get_witnesses_by_vote)
       (lookup_witness_accounts)
       (get_witness_count)
-      (get_open_orders)
       (get_transaction_hex)
       (get_transaction)
       (get_required_signatures)
@@ -1154,13 +1040,6 @@ public:
       (get_account_reputations)
       (get_reblogged_by)
       (get_blog_authors)
-      (get_ticker)
-      (get_volume)
-      (get_order_book)
-      (get_trade_history)
-      (get_recent_trades)
-      (get_market_history)
-      (get_market_history_buckets)
       (list_proposals)
       (find_proposals)
       (list_proposal_votes)
@@ -1183,9 +1062,6 @@ FC_REFLECT( steem::plugins::condenser_api::api_tag_object,
 
 FC_REFLECT( steem::plugins::condenser_api::state,
             (current_route)(props)(tag_idx)(tags)(content)(accounts)(witnesses)(discussion_idx)(witness_schedule)(feed_price)(error) )
-
-FC_REFLECT( steem::plugins::condenser_api::api_limit_order_object,
-            (id)(created)(expiration)(seller)(orderid)(for_sale)(sell_price)(real_price)(rewarded) )
 
 FC_REFLECT( steem::plugins::condenser_api::api_operation_object,
              (trx_id)(block)(trx_in_block)(op_in_trx)(virtual_op)(timestamp)(op) )
@@ -1210,7 +1086,7 @@ FC_REFLECT( steem::plugins::condenser_api::api_account_object,
           )
 
 FC_REFLECT_DERIVED( steem::plugins::condenser_api::extended_account, (steem::plugins::condenser_api::api_account_object),
-            (vesting_balance)(reputation)(transfer_history)(market_history)(post_history)(vote_history)(other_history)(witness_votes)(tags_usage)(guest_bloggers)(open_orders)(comments)(feed)(blog)(recent_replies)(recommended) )
+            (vesting_balance)(reputation)(transfer_history)(market_history)(post_history)(vote_history)(other_history)(witness_votes)(tags_usage)(guest_bloggers)(comments)(feed)(blog)(recent_replies)(recommended) )
 
 FC_REFLECT( steem::plugins::condenser_api::api_comment_object,
              (id)(author)(permlink)
@@ -1347,17 +1223,3 @@ FC_REFLECT( steem::plugins::condenser_api::comment_feed_entry,
 FC_REFLECT( steem::plugins::condenser_api::comment_blog_entry,
             (comment)(blog)(reblog_on)(entry_id) )
 
-FC_REFLECT( steem::plugins::condenser_api::ticker,
-            (latest)(lowest_ask)(highest_bid)(percent_change)(steem_volume)(sbd_volume) )
-
-FC_REFLECT( steem::plugins::condenser_api::volume,
-            (steem_volume)(sbd_volume) )
-
-FC_REFLECT( steem::plugins::condenser_api::order,
-            (order_price)(real_price)(steem)(sbd)(created) )
-
-FC_REFLECT( steem::plugins::condenser_api::order_book,
-            (bids)(asks) )
-
-FC_REFLECT( steem::plugins::condenser_api::market_trade,
-            (date)(current_pays)(open_pays) )

@@ -20,7 +20,6 @@ typedef dynamic_global_property_object         api_dynamic_global_property_objec
 typedef convert_request_object                 api_convert_request_object;
 typedef escrow_object                          api_escrow_object;
 typedef liquidity_reward_balance_object        api_liquidity_reward_balance_object;
-typedef limit_order_object                     api_limit_order_object;
 typedef withdraw_vesting_route_object          api_withdraw_vesting_route_object;
 typedef decline_voting_rights_request_object   api_decline_voting_rights_request_object;
 typedef witness_vote_object                    api_witness_vote_object;
@@ -592,21 +591,6 @@ struct api_proposal_vote_object
    api_proposal_object     proposal;
 };
 
-struct order
-{
-   price                order_price;
-   double               real_price; // dollars per steem
-   share_type           steem;
-   share_type           sbd;
-   fc::time_point_sec   created;
-};
-
-struct order_book
-{
-   vector< order >      asks;
-   vector< order >      bids;
-};
-
 } } } // steem::plugins::database_api
 
 FC_REFLECT( steem::plugins::database_api::api_comment_object,
@@ -752,7 +736,3 @@ FC_REFLECT( steem::plugins::database_api::api_proposal_vote_object,
             (voter)
             (proposal)
           )
-
-FC_REFLECT( steem::plugins::database_api::order, (order_price)(real_price)(steem)(sbd)(created) );
-
-FC_REFLECT( steem::plugins::database_api::order_book, (asks)(bids) );

@@ -884,14 +884,6 @@ class wallet_api
       operation get_prototype_operation(string operation_type);
 
       /**
-       * Gets the current order book for STEEM:SBD
-       *
-       * @param limit Maximum number of orders to return for bids and asks. Max is 1000.
-       */
-      condenser_api::get_order_book_return get_order_book( uint32_t limit = 1000 );
-      vector< condenser_api::api_limit_order_object > get_open_orders( string accountname );
-
-      /**
        *  Creates a limit order at the price amount_to_sell / min_to_receive and will deduct amount_to_sell from account
        *
        *  @param owner The name of the account creating the order
@@ -1214,8 +1206,6 @@ FC_API( steem::wallet::wallet_api,
         (set_withdraw_vesting_route)
         (convert_sbd)
         (publish_feed)
-        (get_order_book)
-        (get_open_orders)
         (create_order)
         (cancel_order)
         (post_comment)

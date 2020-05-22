@@ -21,7 +21,6 @@
 
 #define STATE_TRANSACTION_BYTE_SIZE               174
 #define STATE_TRANSFER_FROM_SAVINGS_BYTE_SIZE     229
-#define STATE_LIMIT_ORDER_BYTE_SIZE              1940
 #define STATE_COMMENT_VOTE_BYTE_SIZE              525
 
 #define EXEC_FOLLOW_CUSTOM_OP_SCALE                20
@@ -63,9 +62,6 @@ struct state_object_size_info
 
    // escrow_object
    int64_t escrow_object_base_size            = 119    *STATE_BYTES_SCALE;
-
-   // limit_order_object
-   int64_t limit_order_object_base_size       = 76     *STATE_LIMIT_ORDER_BYTE_SIZE;
 
    // savigns_withdraw_object
    int64_t savings_withdraw_object_byte_size  = 64     *STATE_TRANSFER_FROM_SAVINGS_BYTE_SIZE;
@@ -126,9 +122,6 @@ struct operation_exec_info
    int64_t escrow_release_operation_exec_time                  =  17200;
    int64_t escrow_transfer_operation_exec_time                 =  19100;
    int64_t feed_publish_operation_exec_time                    =   6200;
-   int64_t limit_order_cancel_operation_exec_time              =   9600;
-   int64_t limit_order_create_operation_exec_time              =  31700;
-   int64_t limit_order_create2_operation_exec_time             =  31700;
    int64_t request_account_recovery_operation_exec_time        =  54400;
    int64_t set_withdraw_vesting_route_operation_exec_time      =  17900;
    int64_t transfer_from_savings_operation_exec_time           =  17500;
@@ -161,7 +154,6 @@ FC_REFLECT( steem::plugins::rc::state_object_size_info,
    ( convert_request_object_base_size )
    ( decline_voting_rights_request_object_base_size )
    ( escrow_object_base_size )
-   ( limit_order_object_base_size )
    ( savings_withdraw_object_byte_size )
    ( transaction_object_base_size )
    ( transaction_object_byte_size )
@@ -202,9 +194,6 @@ FC_REFLECT( steem::plugins::rc::operation_exec_info,
    ( escrow_release_operation_exec_time )
    ( escrow_transfer_operation_exec_time )
    ( feed_publish_operation_exec_time )
-   ( limit_order_cancel_operation_exec_time )
-   ( limit_order_create_operation_exec_time )
-   ( limit_order_create2_operation_exec_time )
    ( request_account_recovery_operation_exec_time )
    ( set_withdraw_vesting_route_operation_exec_time )
    ( transfer_from_savings_operation_exec_time )

@@ -94,13 +94,6 @@ class database_api
          (list_votes)
          (find_votes)
 
-         ////////////
-         // Market //
-         ////////////
-         (list_limit_orders)
-         (find_limit_orders)
-         (get_order_book)
-
          /////////
          // SPS //
          /////////

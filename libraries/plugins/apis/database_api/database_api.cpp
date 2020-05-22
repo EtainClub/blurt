@@ -61,9 +61,6 @@ class database_api_impl
          (find_comments)
          (list_votes)
          (find_votes)
-         (list_limit_orders)
-         (find_limit_orders)
-         (get_order_book)
          (list_proposals)
          (find_proposals)
          (list_proposal_votes)
@@ -1278,114 +1275,6 @@ DEFINE_API_IMPL( database_api_impl, find_votes )
    return result;
 }
 
-
-//////////////////////////////////////////////////////////////////////
-//                                                                  //
-// Market                                                           //
-//                                                                  //
-//////////////////////////////////////////////////////////////////////
-
-/* Limit Orders */
-
-DEFINE_API_IMPL( database_api_impl, list_limit_orders )
-{
-   FC_ASSERT( args.limit <= DATABASE_API_SINGLE_QUERY_LIMIT );
-
-   list_limit_orders_return result;
-   result.orders.reserve( args.limit );
-
-   switch( args.order )
-   {
-      case( by_price ):
-      {
-         auto key = args.start.as< std::pair< price, limit_order_id_type > >();
-         iterate_results< chain::limit_order_index, chain::by_price >(
-            boost::make_tuple( key.first, key.second ),
-            result.orders,
-            args.limit,
-            &database_api_impl::on_push_default< api_limit_order_object >,
-            &database_api_impl::filter_default< limit_order_object > );
-         break;
-      }
-      case( by_account ):
-      {
-         auto key = args.start.as< std::pair< account_name_type, uint32_t > >();
-         iterate_results< chain::limit_order_index, chain::by_account >(
-            boost::make_tuple( key.first, key.second ),
-            result.orders,
-            args.limit,
-            &database_api_impl::on_push_default< api_limit_order_object >,
-            &database_api_impl::filter_default< limit_order_object > );
-         break;
-      }
-      default:
-         FC_ASSERT( false, "Unknown or unsupported sort order" );
-   }
-
-   return result;
-}
-
-DEFINE_API_IMPL( database_api_impl, find_limit_orders )
-{
-   find_limit_orders_return result;
-   const auto& order_idx = _db.get_index< chain::limit_order_index, chain::by_account >();
-   auto itr = order_idx.lower_bound( args.account );
-
-   while( itr != order_idx.end() && itr->seller == args.account && result.orders.size() <= DATABASE_API_SINGLE_QUERY_LIMIT )
-   {
-      result.orders.push_back( *itr );
-      ++itr;
-   }
-
-   return result;
-}
-
-
-/* Order Book */
-
-DEFINE_API_IMPL( database_api_impl, get_order_book )
-{
-   FC_ASSERT( args.limit <= DATABASE_API_SINGLE_QUERY_LIMIT );
-   get_order_book_return result;
-
-   auto max_sell = price::max( SBD_SYMBOL, STEEM_SYMBOL );
-   auto max_buy = price::max( STEEM_SYMBOL, SBD_SYMBOL );
-
-   const auto& limit_price_idx = _db.get_index< chain::limit_order_index >().indices().get< chain::by_price >();
-   auto sell_itr = limit_price_idx.lower_bound( max_sell );
-   auto buy_itr  = limit_price_idx.lower_bound( max_buy );
-   auto end = limit_price_idx.end();
-
-   while( sell_itr != end && sell_itr->sell_price.base.symbol == SBD_SYMBOL && result.bids.size() < args.limit )
-   {
-      auto itr = sell_itr;
-      order cur;
-      cur.order_price = itr->sell_price;
-      cur.real_price  = 0.0;
-      // cur.real_price  = (cur.order_price).to_real();
-      cur.sbd = itr->for_sale;
-      cur.steem = ( asset( itr->for_sale, SBD_SYMBOL ) * cur.order_price ).amount;
-      cur.created = itr->created;
-      result.bids.push_back( cur );
-      ++sell_itr;
-   }
-   while( buy_itr != end && buy_itr->sell_price.base.symbol == STEEM_SYMBOL && result.asks.size() < args.limit )
-   {
-      auto itr = buy_itr;
-      order cur;
-      cur.order_price = itr->sell_price;
-      cur.real_price = 0.0;
-      // cur.real_price  = (~cur.order_price).to_real();
-      cur.steem   = itr->for_sale;
-      cur.sbd     = ( asset( itr->for_sale, STEEM_SYMBOL ) * cur.order_price ).amount;
-      cur.created = itr->created;
-      result.asks.push_back( cur );
-      ++buy_itr;
-   }
-
-   return result;
-}
-
 //////////////////////////////////////////////////////////////////////
 //                                                                  //
 // SPS                                                              //
@@ -1732,12 +1621,9 @@ DEFINE_READ_APIS( database_api,
    (find_comments)
    (list_votes)
    (find_votes)
-   (list_limit_orders)
-   (find_limit_orders)
    (list_proposals)
    (find_proposals)
    (list_proposal_votes)
-   (get_order_book)
    (get_transaction_hex)
    (get_required_signatures)
    (get_potential_signatures)

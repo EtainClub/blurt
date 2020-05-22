@@ -57,7 +57,6 @@ struct remote_node_api
    vector< condenser_api::api_witness_object > get_witnesses_by_vote( account_name_type, uint32_t );
    vector< account_name_type > lookup_witness_accounts( string, uint32_t );
    uint64_t get_witness_count();
-   vector< condenser_api::api_limit_order_object > get_open_orders( account_name_type );
    string get_transaction_hex( condenser_api::legacy_signed_transaction );
    condenser_api::legacy_signed_transaction get_transaction( transaction_id_type );
    set< public_key_type > get_required_signatures( condenser_api::legacy_signed_transaction, flat_set< public_key_type > );
@@ -99,13 +98,6 @@ struct remote_node_api
    vector< follow::account_reputation > get_account_reputations( account_name_type, uint32_t );
    vector< account_name_type > get_reblogged_by( account_name_type, string );
    vector< follow::reblog_count > get_blog_authors( account_name_type );
-   condenser_api::get_ticker_return get_ticker();
-   condenser_api::get_volume_return get_volume();
-   condenser_api::get_order_book_return get_order_book( uint32_t );
-   vector< condenser_api::market_trade > get_trade_history( time_point_sec, time_point_sec, uint32_t );
-   vector< condenser_api::market_trade > get_recent_trades( uint32_t );
-   vector< market_history::bucket_object > get_market_history( uint32_t, time_point_sec, time_point_sec );
-   flat_set< uint32_t > get_market_history_buckets();
    vector< condenser_api::api_proposal_object > list_proposals( fc::variant, uint32_t, database_api::sort_order_type, database_api::order_direction_type, database_api::proposal_status );
    vector< condenser_api::api_proposal_object > find_proposals( vector< int64_t > );
    vector< database_api::api_proposal_vote_object > list_proposal_votes( fc::variant, uint32_t, database_api::sort_order_type, database_api::order_direction_type, database_api::proposal_status );
@@ -150,7 +142,6 @@ FC_API( steem::wallet::remote_node_api,
         (get_witnesses_by_vote)
         (lookup_witness_accounts)
         (get_witness_count)
-        (get_open_orders)
         (get_transaction_hex)
         (get_transaction)
         (get_required_signatures)
@@ -192,13 +183,6 @@ FC_API( steem::wallet::remote_node_api,
         (get_account_reputations)
         (get_reblogged_by)
         (get_blog_authors)
-        (get_ticker)
-        (get_volume)
-        (get_order_book)
-        (get_trade_history)
-        (get_recent_trades)
-        (get_market_history)
-        (get_market_history_buckets)
         (list_proposals)
         (find_proposals)
         (list_proposal_votes)

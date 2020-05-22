@@ -55,7 +55,6 @@ namespace steem { namespace plugins { namespace condenser_api {
    typedef custom_operation                       legacy_custom_operation;
    typedef custom_json_operation                  legacy_custom_json_operation;
    typedef custom_binary_operation                legacy_custom_binary_operation;
-   typedef limit_order_cancel_operation           legacy_limit_order_cancel_operation;
    typedef pow_operation                          legacy_pow_operation;
    typedef report_over_production_operation       legacy_report_over_production_operation;
    typedef request_account_recovery_operation     legacy_request_account_recovery_operation;
@@ -532,70 +531,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       account_name_type owner;
       uint32_t          requestid = 0;
       legacy_asset      amount;
-   };
-
-   struct legacy_limit_order_create_operation
-   {
-      legacy_limit_order_create_operation() {}
-      legacy_limit_order_create_operation( const limit_order_create_operation& op ) :
-         owner( op.owner ),
-         orderid( op.orderid ),
-         amount_to_sell( legacy_asset::from_asset( op.amount_to_sell ) ),
-         min_to_receive( legacy_asset::from_asset( op.min_to_receive ) ),
-         fill_or_kill( op.fill_or_kill ),
-         expiration( op.expiration )
-      {}
-
-      operator limit_order_create_operation()const
-      {
-         limit_order_create_operation op;
-         op.owner = owner;
-         op.orderid = orderid;
-         op.amount_to_sell = amount_to_sell;
-         op.min_to_receive = min_to_receive;
-         op.fill_or_kill = fill_or_kill;
-         op.expiration = expiration;
-         return op;
-      }
-
-      account_name_type owner;
-      uint32_t          orderid;
-      legacy_asset      amount_to_sell;
-      legacy_asset      min_to_receive;
-      bool              fill_or_kill;
-      time_point_sec    expiration;
-   };
-
-   struct legacy_limit_order_create2_operation
-   {
-      legacy_limit_order_create2_operation() {}
-      legacy_limit_order_create2_operation( const limit_order_create2_operation& op ) :
-         owner( op.owner ),
-         orderid( op.orderid ),
-         amount_to_sell( legacy_asset::from_asset( op.amount_to_sell ) ),
-         fill_or_kill( op.fill_or_kill ),
-         exchange_rate( op.exchange_rate ),
-         expiration( op.expiration )
-      {}
-
-      operator limit_order_create2_operation()const
-      {
-         limit_order_create2_operation op;
-         op.owner = owner;
-         op.orderid = orderid;
-         op.amount_to_sell = amount_to_sell;
-         op.fill_or_kill = fill_or_kill;
-         op.exchange_rate = exchange_rate;
-         op.expiration = expiration;
-         return op;
-      }
-
-      account_name_type owner;
-      uint32_t          orderid;
-      legacy_asset      amount_to_sell;
-      bool              fill_or_kill;
-      legacy_price      exchange_rate;
-      time_point_sec    expiration;
    };
 
    struct legacy_transfer_to_savings_operation
@@ -1078,8 +1013,6 @@ namespace steem { namespace plugins { namespace condenser_api {
             legacy_transfer_operation,
             legacy_transfer_to_vesting_operation,
             legacy_withdraw_vesting_operation,
-            legacy_limit_order_create_operation,
-            legacy_limit_order_cancel_operation,
             legacy_feed_publish_operation,
             legacy_convert_operation,
             legacy_account_create_operation,
@@ -1094,7 +1027,6 @@ namespace steem { namespace plugins { namespace condenser_api {
             legacy_custom_json_operation,
             legacy_comment_options_operation,
             legacy_set_withdraw_vesting_route_operation,
-            legacy_limit_order_create2_operation,
             legacy_claim_account_operation,
             legacy_create_claimed_account_operation,
             legacy_request_account_recovery_operation,
@@ -1163,7 +1095,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       bool operator()( const custom_operation& op )const                         { l_op = op; return true; }
       bool operator()( const custom_json_operation& op )const                    { l_op = op; return true; }
       bool operator()( const custom_binary_operation& op )const                  { l_op = op; return true; }
-      bool operator()( const limit_order_cancel_operation& op )const             { l_op = op; return true; }
       bool operator()( const pow_operation& op )const                            { l_op = op; return true; }
       bool operator()( const report_over_production_operation& op )const         { l_op = op; return true; }
       bool operator()( const request_account_recovery_operation& op )const       { l_op = op; return true; }
@@ -1198,12 +1129,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          return true;
       }
 
-      bool operator()( const limit_order_create_operation& op )const
-      {
-         l_op = legacy_limit_order_create_operation( op );
-         return true;
-      }
-
       bool operator()( const feed_publish_operation& op )const
       {
          l_op = legacy_feed_publish_operation( op );
@@ -1231,12 +1156,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       bool operator()( const comment_options_operation& op )const
       {
          l_op = legacy_comment_options_operation( op );
-         return true;
-      }
-
-      bool operator()( const limit_order_create2_operation& op )const
-      {
-         l_op = legacy_limit_order_create2_operation( op );
          return true;
       }
 
@@ -1410,11 +1329,6 @@ struct convert_from_legacy_operation_visitor
       return operation( withdraw_vesting_operation( op ) );
    }
 
-   operation operator()( const legacy_limit_order_create_operation& op )const
-   {
-      return operation( limit_order_create_operation( op ) );
-   }
-
    operation operator()( const legacy_feed_publish_operation& op )const
    {
       return operation( feed_publish_operation( op ) );
@@ -1438,11 +1352,6 @@ struct convert_from_legacy_operation_visitor
    operation operator()( const legacy_comment_options_operation& op )const
    {
       return operation( comment_options_operation( op ) );
-   }
-
-   operation operator()( const legacy_limit_order_create2_operation& op )const
-   {
-      return operation( limit_order_create2_operation( op ) );
    }
 
    operation operator()( const legacy_escrow_transfer_operation& op )const
@@ -1666,8 +1575,6 @@ FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_operation, (from)(to)
 FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_to_vesting_operation, (from)(to)(amount) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_withdraw_vesting_operation, (account)(vesting_shares) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_witness_update_operation, (owner)(url)(block_signing_key)(props)(fee) )
-FC_REFLECT( steem::plugins::condenser_api::legacy_limit_order_create_operation, (owner)(orderid)(amount_to_sell)(min_to_receive)(fill_or_kill)(expiration) )
-FC_REFLECT( steem::plugins::condenser_api::legacy_limit_order_create2_operation, (owner)(orderid)(amount_to_sell)(exchange_rate)(fill_or_kill)(expiration) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_comment_options_operation, (author)(permlink)(max_accepted_payout)(percent_steem_dollars)(allow_votes)(allow_curation_rewards)(extensions) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_escrow_transfer_operation, (from)(to)(sbd_amount)(steem_amount)(escrow_id)(agent)(fee)(json_meta)(ratification_deadline)(escrow_expiration) );
 FC_REFLECT( steem::plugins::condenser_api::legacy_escrow_release_operation, (from)(to)(agent)(who)(receiver)(escrow_id)(sbd_amount)(steem_amount) );

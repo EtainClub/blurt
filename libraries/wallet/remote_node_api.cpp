@@ -184,11 +184,6 @@ uint64_t remote_node_api::get_witness_count()
    FC_ASSERT( false );
 }
 
-vector< condenser_api::api_limit_order_object > remote_node_api::get_open_orders( account_name_type )
-{
-   FC_ASSERT( false );
-}
-
 string remote_node_api::get_transaction_hex( condenser_api::legacy_signed_transaction )
 {
    FC_ASSERT( false );
@@ -390,36 +385,6 @@ vector< account_name_type > remote_node_api::get_reblogged_by( account_name_type
 }
 
 vector< follow::reblog_count > remote_node_api::get_blog_authors( account_name_type )
-{
-   FC_ASSERT( false );
-}
-
-condenser_api::get_ticker_return remote_node_api::get_ticker()
-{
-   FC_ASSERT( false );
-}
-
-condenser_api::get_volume_return remote_node_api::get_volume()
-{
-   FC_ASSERT( false );
-}
-
-condenser_api::get_order_book_return remote_node_api::get_order_book( uint32_t )
-{
-   FC_ASSERT( false );
-}
-
-vector< condenser_api::market_trade > remote_node_api::get_trade_history( time_point_sec, time_point_sec, uint32_t )
-{
-   FC_ASSERT( false );
-}
-
-vector< condenser_api::market_trade > remote_node_api::get_recent_trades( uint32_t )
-{
-   FC_ASSERT( false );
-}
-
-vector< market_history::bucket_object > remote_node_api::get_market_history( uint32_t, time_point_sec, time_point_sec )
 {
    FC_ASSERT( false );
 }
