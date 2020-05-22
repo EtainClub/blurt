@@ -546,30 +546,6 @@ namespace steem { namespace protocol {
       void get_required_authorities( vector< authority >& a )const{ for( const auto& i : required_auths ) a.push_back( i ); }
    };
 
-
-   /**
-    * This operation is used to report a miner who signs two blocks
-    * at the same time. To be valid, the violation must be reported within
-    * STEEM_MAX_WITNESSES blocks of the head block (1 round) and the
-    * producer must be in the ACTIVE witness set.
-    *
-    * Users not in the ACTIVE witness set should not have to worry about their
-    * key getting compromised and being used to produced multiple blocks so
-    * the attacker can report it and steel their vesting steem.
-    *
-    * The result of the operation is to transfer the full VESTING STEEM balance
-    * of the block producer to the reporter.
-    */
-   struct report_over_production_operation : public base_operation
-   {
-      account_name_type    reporter;
-      signed_block_header  first_block;
-      signed_block_header  second_block;
-
-      void validate()const;
-   };
-
-
    /**
     * All account recovery requests come from a listed recovery account. This
     * is secure based on the assumption that only a trusted account should be
@@ -816,8 +792,6 @@ FC_REFLECT( steem::protocol::cancel_transfer_from_savings_operation, (from)(requ
 FC_REFLECT( steem::protocol::reset_account_operation, (reset_account)(account_to_reset)(new_owner_authority) )
 FC_REFLECT( steem::protocol::set_reset_account_operation, (account)(current_reset_account)(reset_account) )
 
-
-FC_REFLECT( steem::protocol::report_over_production_operation, (reporter)(first_block)(second_block) )
 FC_REFLECT( steem::protocol::legacy_chain_properties,
             (account_creation_fee)
             (maximum_block_size)

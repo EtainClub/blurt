@@ -1602,11 +1602,6 @@ void pow_apply( database& db, Operation o )
       db.create_vesting( inc_witness, pow_reward );
 }
 
-void report_over_production_evaluator::do_apply( const report_over_production_operation& o )
-{
-   FC_ASSERT( false, "report_over_production_operation is disabled." );
-}
-
 void claim_account_evaluator::do_apply( const claim_account_operation& o )
 {
    const auto& creator = _db.get_account( o.creator );
