@@ -77,7 +77,6 @@ namespace steem { namespace protocol {
       asset             deposited;
    };
 
-
    struct shutdown_witness_operation : public virtual_operation
    {
       shutdown_witness_operation(){}
@@ -85,22 +84,6 @@ namespace steem { namespace protocol {
 
       account_name_type owner;
    };
-
-
-   struct fill_order_operation : public virtual_operation
-   {
-      fill_order_operation(){}
-      fill_order_operation( const string& c_o, uint32_t c_id, const asset& c_p, const string& o_o, uint32_t o_id, const asset& o_p )
-      :current_owner(c_o), current_orderid(c_id), current_pays(c_p), open_owner(o_o), open_orderid(o_id), open_pays(o_p) {}
-
-      account_name_type current_owner;
-      uint32_t          current_orderid = 0;
-      asset             current_pays;
-      account_name_type open_owner;
-      uint32_t          open_orderid = 0;
-      asset             open_pays;
-   };
-
 
    struct fill_transfer_from_savings_operation : public virtual_operation
    {
@@ -187,7 +170,6 @@ FC_REFLECT( steem::protocol::liquidity_reward_operation, (owner)(payout) )
 FC_REFLECT( steem::protocol::interest_operation, (owner)(interest) )
 FC_REFLECT( steem::protocol::fill_vesting_withdraw_operation, (from_account)(to_account)(withdrawn)(deposited) )
 FC_REFLECT( steem::protocol::shutdown_witness_operation, (owner) )
-FC_REFLECT( steem::protocol::fill_order_operation, (current_owner)(current_orderid)(current_pays)(open_owner)(open_orderid)(open_pays) )
 FC_REFLECT( steem::protocol::fill_transfer_from_savings_operation, (from)(to)(amount)(request_id)(memo) )
 FC_REFLECT( steem::protocol::hardfork_operation, (hardfork_id) )
 FC_REFLECT( steem::protocol::comment_payout_update_operation, (author)(permlink) )

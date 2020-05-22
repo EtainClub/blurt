@@ -65,7 +65,6 @@ namespace steem { namespace protocol {
             liquidity_reward_operation,
             interest_operation,
             fill_vesting_withdraw_operation,
-            fill_order_operation,
             shutdown_witness_operation,
             fill_transfer_from_savings_operation,
             hardfork_operation,

@@ -259,7 +259,6 @@ namespace detail
                         case operation::tag<escrow_approve_operation>::value:
                         case operation::tag<escrow_dispute_operation>::value:
                         case operation::tag<escrow_release_operation>::value:
-                        case operation::tag<fill_order_operation>::value:
                         case operation::tag<claim_reward_balance_operation>::value:
                            if( item.second.op.visit( visitor ) )
                            {
