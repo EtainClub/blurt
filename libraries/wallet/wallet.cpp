@@ -1178,42 +1178,6 @@ condenser_api::legacy_signed_transaction wallet_api::create_account_with_keys(
    return my->sign_transaction( tx, broadcast );
 } FC_CAPTURE_AND_RETHROW( (creator)(new_account_name)(json_meta)(owner)(active)(memo)(broadcast) ) }
 
-/**
- * This method is used by faucets to create new accounts for other users which must
- * provide their desired keys. The resulting account may not be controllable by this
- * wallet.
- */
-condenser_api::legacy_signed_transaction wallet_api::create_account_with_keys_delegated(
-   string creator,
-   condenser_api::legacy_asset steem_fee,
-   condenser_api::legacy_asset delegated_vests,
-   string new_account_name,
-   string json_meta,
-   public_key_type owner,
-   public_key_type active,
-   public_key_type posting,
-   public_key_type memo,
-   bool broadcast )const
-{ try {
-   FC_ASSERT( !is_locked() );
-   account_create_with_delegation_operation op;
-   op.creator = creator;
-   op.new_account_name = new_account_name;
-   op.owner = authority( 1, owner, 1 );
-   op.active = authority( 1, active, 1 );
-   op.posting = authority( 1, posting, 1 );
-   op.memo_key = memo;
-   op.json_metadata = json_meta;
-   op.fee = steem_fee.to_asset();
-   op.delegation = delegated_vests.to_asset();
-
-   signed_transaction tx;
-   tx.operations.push_back(op);
-   tx.validate();
-
-   return my->sign_transaction( tx, broadcast );
-} FC_CAPTURE_AND_RETHROW( (creator)(new_account_name)(json_meta)(owner)(active)(memo)(broadcast) ) }
-
 condenser_api::legacy_signed_transaction wallet_api::request_account_recovery( string recovery_account, string account_to_recover, authority new_authority, bool broadcast )
 {
    FC_ASSERT( !is_locked() );

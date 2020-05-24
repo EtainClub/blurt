@@ -129,8 +129,6 @@ add_boost_test( chain_test
    operation_tests/decline_voting_rights_apply
    operation_tests/claim_reward_balance_validate
    operation_tests/claim_reward_balance_authorities
-   operation_tests/account_create_with_delegation_authorities
-   operation_tests/account_create_with_delegation_apply
    operation_tests/claim_reward_balance_apply
    operation_tests/delegate_vesting_shares_validate
    operation_tests/delegate_vesting_shares_authorities

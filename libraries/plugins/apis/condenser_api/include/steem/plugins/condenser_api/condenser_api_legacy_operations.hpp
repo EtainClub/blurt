@@ -142,52 +142,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       string            json_metadata;
    };
 
-   struct legacy_account_create_with_delegation_operation
-   {
-      legacy_account_create_with_delegation_operation() {}
-      legacy_account_create_with_delegation_operation( const account_create_with_delegation_operation op ) :
-         fee( legacy_asset::from_asset( op.fee ) ),
-         delegation( legacy_asset::from_asset( op.delegation ) ),
-         creator( op.creator ),
-         new_account_name( op.new_account_name ),
-         owner( op.owner ),
-         active( op.active ),
-         posting( op.posting ),
-         memo_key( op.memo_key ),
-         json_metadata( op.json_metadata )
-      {
-         extensions.insert( op.extensions.begin(), op.extensions.end() );
-      }
-
-      operator account_create_with_delegation_operation()const
-      {
-         account_create_with_delegation_operation op;
-         op.fee = fee;
-         op.delegation = delegation;
-         op.creator = creator;
-         op.new_account_name = new_account_name;
-         op.owner = owner;
-         op.active = active;
-         op.posting = posting;
-         op.memo_key = memo_key;
-         op.json_metadata = json_metadata;
-         op.extensions.insert( extensions.begin(), extensions.end() );
-         return op;
-      }
-
-      legacy_asset      fee;
-      legacy_asset      delegation;
-      account_name_type creator;
-      account_name_type new_account_name;
-      authority         owner;
-      authority         active;
-      authority         posting;
-      public_key_type   memo_key;
-      string            json_metadata;
-
-      extensions_type   extensions;
-   };
-
    struct legacy_comment_options_operation
    {
       legacy_comment_options_operation() {}
@@ -903,7 +857,6 @@ namespace steem { namespace plugins { namespace condenser_api {
             legacy_set_reset_account_operation,
             legacy_claim_reward_balance_operation,
             legacy_delegate_vesting_shares_operation,
-            legacy_account_create_with_delegation_operation,
             legacy_witness_set_properties_operation,
             legacy_account_update_operation,
             legacy_create_proposal_operation,
@@ -1032,12 +985,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       bool operator()( const delegate_vesting_shares_operation& op )const
       {
          l_op = legacy_delegate_vesting_shares_operation( op );
-         return true;
-      }
-
-      bool operator()( const account_create_with_delegation_operation& op )const
-      {
-         l_op = legacy_account_create_with_delegation_operation( op );
          return true;
       }
 
@@ -1196,11 +1143,6 @@ struct convert_from_legacy_operation_visitor
       return operation( delegate_vesting_shares_operation( op ) );
    }
 
-   operation operator()( const legacy_account_create_with_delegation_operation& op )const
-   {
-      return operation( account_create_with_delegation_operation( op ) );
-   }
-
    operation operator()( const legacy_author_reward_operation& op )const
    {
       return operation( author_reward_operation( op ) );
@@ -1350,18 +1292,6 @@ FC_REFLECT( steem::plugins::condenser_api::legacy_account_create_operation,
             (posting)
             (memo_key)
             (json_metadata) )
-
-FC_REFLECT( steem::plugins::condenser_api::legacy_account_create_with_delegation_operation,
-            (fee)
-            (delegation)
-            (creator)
-            (new_account_name)
-            (owner)
-            (active)
-            (posting)
-            (memo_key)
-            (json_metadata)
-            (extensions) )
 
 FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_operation, (from)(to)(amount)(memo) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_to_vesting_operation, (from)(to)(amount) )
