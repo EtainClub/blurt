@@ -590,26 +590,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       legacy_asset      payout;
    };
 
-   struct legacy_interest_operation
-   {
-      legacy_interest_operation() {}
-      legacy_interest_operation( const interest_operation& op ) :
-         owner( op.owner ),
-         interest( legacy_asset::from_asset( op.interest ) )
-      {}
-
-      operator interest_operation()const
-      {
-         interest_operation op;
-         op.owner = owner;
-         op.interest = interest;
-         return op;
-      }
-
-      account_name_type owner;
-      legacy_asset      interest;
-   };
-
    struct legacy_fill_vesting_withdraw_operation
    {
       legacy_fill_vesting_withdraw_operation() {}
@@ -845,7 +825,6 @@ namespace steem { namespace plugins { namespace condenser_api {
             legacy_author_reward_operation,
             legacy_curation_reward_operation,
             legacy_comment_reward_operation,
-            legacy_interest_operation,
             legacy_fill_vesting_withdraw_operation,
             legacy_shutdown_witness_operation,
             legacy_fill_transfer_from_savings_operation,
@@ -982,12 +961,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       bool operator()( const comment_reward_operation& op )const
       {
          l_op = legacy_comment_reward_operation( op );
-         return true;
-      }
-
-      bool operator()( const interest_operation& op )const
-      {
-         l_op = legacy_interest_operation( op );
          return true;
       }
 
@@ -1131,11 +1104,6 @@ struct convert_from_legacy_operation_visitor
       return operation( comment_reward_operation( op ) );
    }
 
-   operation operator()( const legacy_interest_operation& op )const
-   {
-      return operation( interest_operation( op ) );
-   }
-
    operation operator()( const legacy_fill_vesting_withdraw_operation& op )const
    {
       return operation( fill_vesting_withdraw_operation( op ) );
@@ -1273,7 +1241,6 @@ FC_REFLECT( steem::plugins::condenser_api::legacy_delegate_vesting_shares_operat
 FC_REFLECT( steem::plugins::condenser_api::legacy_author_reward_operation, (author)(permlink)(sbd_payout)(steem_payout)(vesting_payout) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_curation_reward_operation, (curator)(reward)(comment_author)(comment_permlink) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_comment_reward_operation, (author)(permlink)(payout) )
-FC_REFLECT( steem::plugins::condenser_api::legacy_interest_operation, (owner)(interest) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_fill_vesting_withdraw_operation, (from_account)(to_account)(withdrawn)(deposited) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_fill_transfer_from_savings_operation, (from)(to)(amount)(request_id)(memo) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_return_vesting_delegation_operation, (account)(vesting_shares) )

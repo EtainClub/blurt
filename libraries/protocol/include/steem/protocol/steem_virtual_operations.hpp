@@ -45,16 +45,6 @@ namespace steem { namespace protocol {
    };
 
 
-   struct interest_operation : public virtual_operation
-   {
-      interest_operation( const string& o = "", const asset& i = asset(0,SBD_SYMBOL) )
-         :owner(o),interest(i){}
-
-      account_name_type owner;
-      asset             interest;
-   };
-
-
    struct fill_vesting_withdraw_operation : public virtual_operation
    {
       fill_vesting_withdraw_operation(){}
@@ -156,7 +146,6 @@ namespace steem { namespace protocol {
 FC_REFLECT( steem::protocol::author_reward_operation, (author)(permlink)(sbd_payout)(steem_payout)(vesting_payout) )
 FC_REFLECT( steem::protocol::curation_reward_operation, (curator)(reward)(comment_author)(comment_permlink) )
 FC_REFLECT( steem::protocol::comment_reward_operation, (author)(permlink)(payout) )
-FC_REFLECT( steem::protocol::interest_operation, (owner)(interest) )
 FC_REFLECT( steem::protocol::fill_vesting_withdraw_operation, (from_account)(to_account)(withdrawn)(deposited) )
 FC_REFLECT( steem::protocol::shutdown_witness_operation, (owner) )
 FC_REFLECT( steem::protocol::fill_transfer_from_savings_operation, (from)(to)(amount)(request_id)(memo) )
