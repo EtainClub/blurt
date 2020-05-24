@@ -148,9 +148,9 @@ add_boost_test( chain_test
    operation_tests/create_claimed_account_authorities
    operation_tests/create_claimed_account_apply
    operation_tests/account_auth_tests
-   operation_tests/account_update2_validate
-   operation_tests/account_update2_authorities
-   operation_tests/account_update2_apply
+   operation_tests/account_update_validate
+   operation_tests/account_update_authorities
+   operation_tests/account_update_apply
    operation_time_tests/comment_payout_equalize
    operation_time_tests/comment_payout_dust
    operation_time_tests/recent_claims_decay

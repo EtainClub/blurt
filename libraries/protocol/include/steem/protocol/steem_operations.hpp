@@ -45,7 +45,7 @@ namespace steem { namespace protocol {
       void get_required_active_authorities( flat_set<account_name_type>& a )const{ a.insert(creator); }
    };
 
-   struct account_update2_operation : public base_operation
+   struct account_update_operation : public base_operation
    {
       account_name_type             account;
       optional< authority >         owner;
@@ -801,7 +801,7 @@ FC_REFLECT( steem::protocol::account_create_with_delegation_operation,
             (json_metadata)
             (extensions) )
 
-FC_REFLECT( steem::protocol::account_update2_operation,
+FC_REFLECT( steem::protocol::account_update_operation,
             (account)
             (owner)
             (active)

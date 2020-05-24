@@ -6575,14 +6575,14 @@ BOOST_AUTO_TEST_CASE( account_auth_tests )
    FC_LOG_AND_RETHROW()
 }
 
-BOOST_AUTO_TEST_CASE( account_update2_validate )
+BOOST_AUTO_TEST_CASE( account_update_validate )
 {
    try
    {
-      BOOST_TEST_MESSAGE( "Testing: account_update2_validate" );
+      BOOST_TEST_MESSAGE( "Testing: account_update_validate" );
 
       BOOST_TEST_MESSAGE( " -- Testing failure when account name is not valid" );
-      account_update2_operation op;
+      account_update_operation op;
       op.account = "invalid_account";
 
       STEEM_REQUIRE_THROW( op.validate(), fc::assert_exception );
@@ -6607,14 +6607,14 @@ BOOST_AUTO_TEST_CASE( account_update2_validate )
    FC_LOG_AND_RETHROW()
 }
 
-BOOST_AUTO_TEST_CASE( account_update2_authorities )
+BOOST_AUTO_TEST_CASE( account_update_authorities )
 {
    try
    {
-      BOOST_TEST_MESSAGE( "Testing: account_update2_authorities" );
+      BOOST_TEST_MESSAGE( "Testing: account_update_authorities" );
 
       BOOST_TEST_MESSAGE( " -- Testing account only case" );
-      account_update2_operation op;
+      account_update_operation op;
       op.account = "alice";
 
       flat_set< account_name_type > auths;
@@ -6654,7 +6654,7 @@ BOOST_AUTO_TEST_CASE( account_update2_authorities )
       auths.clear();
 
       BOOST_TEST_MESSAGE( " -- Testing active case" );
-      op = account_update2_operation();
+      op = account_update_operation();
       op.account = "alice";
       op.active = authority();
       op.active->weight_threshold = 1;
@@ -6676,7 +6676,7 @@ BOOST_AUTO_TEST_CASE( account_update2_authorities )
       auths.clear();
 
       BOOST_TEST_MESSAGE( " -- Testing posting case" );
-      op = account_update2_operation();
+      op = account_update_operation();
       op.account = "alice";
       op.posting = authority();
       op.posting->weight_threshold = 1;
@@ -6698,7 +6698,7 @@ BOOST_AUTO_TEST_CASE( account_update2_authorities )
       auths.clear();
 
       BOOST_TEST_MESSAGE( " -- Testing memo_key case" );
-      op = account_update2_operation();
+      op = account_update_operation();
       op.account = "alice";
       op.memo_key = public_key_type();
 
@@ -6718,7 +6718,7 @@ BOOST_AUTO_TEST_CASE( account_update2_authorities )
       auths.clear();
 
       BOOST_TEST_MESSAGE( " -- Testing json_metadata case" );
-      op = account_update2_operation();
+      op = account_update_operation();
       op.account = "alice";
       op.json_metadata = "{\"success\":true}";
 
@@ -6738,7 +6738,7 @@ BOOST_AUTO_TEST_CASE( account_update2_authorities )
       auths.clear();
 
       BOOST_TEST_MESSAGE( " -- Testing posting_json_metadata case" );
-      op = account_update2_operation();
+      op = account_update_operation();
       op.account = "alice";
       op.posting_json_metadata = "{\"success\":true}";
 
@@ -6759,7 +6759,7 @@ BOOST_AUTO_TEST_CASE( account_update2_authorities )
 
       BOOST_TEST_MESSAGE( " -- Testing full operation cases" );
 
-      op = account_update2_operation();
+      op = account_update_operation();
       op.account = "alice";
 
       op.get_required_owner_authorities( auths );
@@ -6861,18 +6861,18 @@ BOOST_AUTO_TEST_CASE( account_update2_authorities )
    FC_LOG_AND_RETHROW()
 }
 
-BOOST_AUTO_TEST_CASE( account_update2_apply )
+BOOST_AUTO_TEST_CASE( account_update_apply )
 {
    try
    {
-      BOOST_TEST_MESSAGE( "Testing: account_update2_apply" );
+      BOOST_TEST_MESSAGE( "Testing: account_update_apply" );
 
       ACTORS( (alice)(sam) )
       private_key_type new_private_key = generate_private_key( "new_key" );
 
       BOOST_TEST_MESSAGE( "--- Test normal update" );
 
-      account_update2_operation op;
+      account_update_operation op;
       op.account = "alice";
       op.owner = authority( 1, new_private_key.get_public_key(), 1 );
       op.active = authority( 2, new_private_key.get_public_key(), 2 );
@@ -6914,7 +6914,7 @@ BOOST_AUTO_TEST_CASE( account_update2_apply )
 
       BOOST_TEST_MESSAGE( "--- Test failure when account authority does not exist" );
       tx.clear();
-      op = account_update2_operation();
+      op = account_update_operation();
       op.account = "alice";
       op.posting = authority();
       op.posting->weight_threshold = 1;

@@ -21,6 +21,7 @@ namespace steem { namespace protocol {
             withdraw_vesting_operation,
 
             account_create_operation,
+            account_update_operation,
 
             witness_update_operation,
             account_witness_vote_operation,
@@ -52,7 +53,6 @@ namespace steem { namespace protocol {
             delegate_vesting_shares_operation,
             account_create_with_delegation_operation,
             witness_set_properties_operation,
-            account_update2_operation,
             create_proposal_operation,
             update_proposal_votes_operation,
             remove_proposal_operation,

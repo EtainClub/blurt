@@ -343,7 +343,7 @@ void account_create_with_delegation_evaluator::do_apply( const account_create_wi
    FC_ASSERT( false, "Account creation with delegation is deprecated" );
 }
 
-void account_update2_evaluator::do_apply( const account_update2_operation& o )
+void account_update_evaluator::do_apply( const account_update_operation& o )
 {
    FC_ASSERT( o.account != STEEM_TEMP_ACCOUNT, "Cannot update temp account." );
 

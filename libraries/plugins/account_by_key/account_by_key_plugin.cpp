@@ -53,7 +53,7 @@ struct pre_operation_visitor
       _plugin.clear_cache();
    }
 
-   void operator()( const account_update2_operation& op )const
+   void operator()( const account_update_operation& op )const
    {
       _plugin.clear_cache();
       auto acct_itr = _plugin._db.find< account_authority_object, by_account >( op.account );
@@ -91,7 +91,7 @@ struct post_operation_visitor
       if( acct_itr ) _plugin.update_key_lookup( *acct_itr );
    }
 
-   void operator()( const account_update2_operation& op )const
+   void operator()( const account_update_operation& op )const
    {
       auto acct_itr = _plugin._db.find< account_authority_object, by_account >( op.account );
       if( acct_itr ) _plugin.update_key_lookup( *acct_itr );

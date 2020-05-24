@@ -51,7 +51,7 @@ namespace steem { namespace protocol {
       FC_ASSERT( delegation >= asset( 0, VESTS_SYMBOL ), "Delegation cannot be negative" );
    }
 
-   void account_update2_operation::validate() const
+   void account_update_operation::validate() const
    {
       validate_account_name( account );
 

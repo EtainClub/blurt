@@ -35,7 +35,7 @@ namespace steem { namespace plugins { namespace condenser_api {
 
    using namespace steem::protocol;
 
-   typedef account_update2_operation              legacy_account_update2_operation;
+   typedef account_update_operation               legacy_account_update_operation;
    typedef comment_operation                      legacy_comment_operation;
    typedef create_claimed_account_operation       legacy_create_claimed_account_operation;
    typedef delete_comment_operation               legacy_delete_comment_operation;
@@ -905,7 +905,7 @@ namespace steem { namespace plugins { namespace condenser_api {
             legacy_delegate_vesting_shares_operation,
             legacy_account_create_with_delegation_operation,
             legacy_witness_set_properties_operation,
-            legacy_account_update2_operation,
+            legacy_account_update_operation,
             legacy_create_proposal_operation,
             legacy_update_proposal_votes_operation,
             legacy_remove_proposal_operation,
@@ -935,7 +935,7 @@ namespace steem { namespace plugins { namespace condenser_api {
 
       legacy_operation& l_op;
 
-      bool operator()( const account_update2_operation& op )const                { l_op = op; return true; }
+      bool operator()( const account_update_operation& op )const                 { l_op = op; return true; }
       bool operator()( const comment_operation& op )const                        { l_op = op; return true; }
       bool operator()( const create_claimed_account_operation& op )const         { l_op = op; return true; }
       bool operator()( const delete_comment_operation& op )const                 { l_op = op; return true; }
