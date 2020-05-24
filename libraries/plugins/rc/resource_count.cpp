@@ -280,7 +280,6 @@ struct count_operation_visitor
    void operator()( const author_reward_operation& ) const {}
    void operator()( const curation_reward_operation& ) const {}
    void operator()( const comment_reward_operation& ) const {}
-   void operator()( const liquidity_reward_operation& ) const {}
    void operator()( const interest_operation& ) const {}
    void operator()( const fill_vesting_withdraw_operation& ) const {}
    void operator()( const shutdown_witness_operation& ) const {}

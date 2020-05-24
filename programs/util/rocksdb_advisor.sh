@@ -16,8 +16,6 @@ OBJECTS=( "account_authority"                \
           "escrow"                           \
           "feed_history"                     \
           "hardfork_property"                \
-          "limit_order"                      \
-          "liquidity_reward_balance"         \
           "operation"                        \
           "owner_authority_history"          \
           "pending_optional_action"          \

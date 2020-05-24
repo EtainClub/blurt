@@ -158,7 +158,6 @@ add_boost_test( chain_test
    operation_time_tests/convert_delay
    operation_time_tests/steem_inflation
    operation_time_tests/sbd_interest
-   operation_time_tests/liquidity_rewards
    operation_time_tests/post_rate_limit
    operation_time_tests/comment_freeze
    operation_time_tests/sbd_stability

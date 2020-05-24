@@ -2074,11 +2074,6 @@ void database::process_subsidized_accounts()
    }
 }
 
-asset database::get_liquidity_reward()const
-{
-   return asset( 0, STEEM_SYMBOL );
-}
-
 asset database::get_content_reward()const
 {
    const auto& props = get_dynamic_global_properties();
@@ -2141,40 +2136,6 @@ asset database::get_pow_reward()const
    static_assert( STEEM_MAX_WITNESSES == 21, "this code assumes 21 per round" );
    asset percent( calc_percent_reward_per_round< STEEM_POW_APR_PERCENT >( props.virtual_supply.amount ), STEEM_SYMBOL);
    return std::max( percent, STEEM_MIN_POW_REWARD );
-}
-
-
-void database::pay_liquidity_reward()
-{
-#ifdef IS_TEST_NET
-   if( !liquidity_rewards_enabled )
-      return;
-#endif
-
-   if( (head_block_num() % STEEM_LIQUIDITY_REWARD_BLOCKS) == 0 )
-   {
-      auto reward = get_liquidity_reward();
-
-      if( reward.amount == 0 )
-         return;
-
-      const auto& ridx = get_index< liquidity_reward_balance_index >().indices().get< by_volume_weight >();
-      auto itr = ridx.begin();
-      if( itr != ridx.end() && itr->volume_weight() > 0 )
-      {
-         adjust_supply( reward, true );
-         adjust_balance( get(itr->owner), reward );
-         modify( *itr, [&]( liquidity_reward_balance_object& obj )
-         {
-            obj.steem_volume = 0;
-            obj.sbd_volume   = 0;
-            obj.last_update  = head_block_time();
-            obj.weight = 0;
-         } );
-
-         push_virtual_operation( liquidity_reward_operation( get(itr->owner).name, reward ) );
-      }
-   }
 }
 
 uint16_t database::get_curation_rewards_percent( const comment_object& c ) const
@@ -3213,7 +3174,6 @@ void database::_apply_block( const signed_block& next_block )
    process_vesting_withdrawals();
    process_savings_withdraws();
    process_subsidized_accounts();
-   pay_liquidity_reward();
    update_virtual_supply();
 
    account_recovery_processing();
@@ -3836,46 +3796,6 @@ void database::migrate_irreversible_state()
    FC_CAPTURE_AND_RETHROW()
 }
 
-void database::adjust_liquidity_reward( const account_object& owner, const asset& volume, bool is_sdb )
-{
-   const auto& ridx = get_index< liquidity_reward_balance_index >().indices().get< by_owner >();
-   auto itr = ridx.find( owner.id );
-   if( itr != ridx.end() )
-   {
-      modify<liquidity_reward_balance_object>( *itr, [&]( liquidity_reward_balance_object& r )
-      {
-         if( head_block_time() - r.last_update >= STEEM_LIQUIDITY_TIMEOUT_SEC )
-         {
-            r.sbd_volume = 0;
-            r.steem_volume = 0;
-            r.weight = 0;
-         }
-
-         if( is_sdb )
-            r.sbd_volume += volume.amount.value;
-         else
-            r.steem_volume += volume.amount.value;
-
-         r.update_weight( true );
-         r.last_update = head_block_time();
-      } );
-   }
-   else
-   {
-      create<liquidity_reward_balance_object>( [&](liquidity_reward_balance_object& r )
-      {
-         r.owner = owner.id;
-         if( is_sdb )
-            r.sbd_volume = volume.amount.value;
-         else
-            r.steem_volume = volume.amount.value;
-
-         r.update_weight( true );
-         r.last_update = head_block_time();
-      } );
-   }
-}
-
 void database::clear_expired_transactions()
 {
    //Look for expired transactions in the deduplication list, and remove them.
@@ -4268,15 +4188,6 @@ void database::apply_hardfork( uint32_t hardfork )
    } );
 
    post_push_virtual_operation( hardfork_vop );
-}
-
-void database::retally_liquidity_weight() {
-   const auto& ridx = get_index< liquidity_reward_balance_index >().indices().get< by_owner >();
-   for( const auto& i : ridx ) {
-      modify( i, []( liquidity_reward_balance_object& o ){
-         o.update_weight(true/*HAS HARDFORK10 if this method is called*/);
-      });
-   }
 }
 
 /**

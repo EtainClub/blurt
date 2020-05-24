@@ -167,11 +167,6 @@
 #define STEEM_EQUIHASH_N                      140
 #define STEEM_EQUIHASH_K                      6
 
-#define STEEM_LIQUIDITY_TIMEOUT_SEC           (fc::seconds(60*60*24*7)) // After one week volume is set to 0
-#define STEEM_MIN_LIQUIDITY_REWARD_PERIOD_SEC (fc::seconds(60)) // 1 minute required on books to receive volume
-#define STEEM_LIQUIDITY_REWARD_PERIOD_SEC     (60*60)
-#define STEEM_LIQUIDITY_REWARD_BLOCKS         (STEEM_LIQUIDITY_REWARD_PERIOD_SEC/STEEM_BLOCK_INTERVAL)
-#define STEEM_MIN_LIQUIDITY_REWARD            (asset( 1000*STEEM_LIQUIDITY_REWARD_BLOCKS, STEEM_SYMBOL )) // Minumum reward to be paid out to liquidity providers
 #define STEEM_MIN_CONTENT_REWARD              STEEM_MINING_REWARD
 #define STEEM_MIN_CURATE_REWARD               STEEM_MINING_REWARD
 #define STEEM_MIN_PRODUCER_REWARD             STEEM_MINING_REWARD
@@ -220,7 +215,6 @@
 // *including the corresponding 9x vesting rewards*
 #define STEEM_CURATE_APR_PERCENT              3875
 #define STEEM_CONTENT_APR_PERCENT             3875
-#define STEEM_LIQUIDITY_APR_PERCENT            750
 #define STEEM_PRODUCER_APR_PERCENT             750
 #define STEEM_POW_APR_PERCENT                  750
 

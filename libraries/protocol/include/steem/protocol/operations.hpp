@@ -60,7 +60,6 @@ namespace steem { namespace protocol {
             author_reward_operation,
             curation_reward_operation,
             comment_reward_operation,
-            liquidity_reward_operation,
             interest_operation,
             fill_vesting_withdraw_operation,
             shutdown_witness_operation,

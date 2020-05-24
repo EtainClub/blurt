@@ -15,11 +15,9 @@
 #define VCONTENT_OFF    3
 #define PRODUCER_OFF    4
 #define VPRODUCER_OFF   5
-#define LIQUIDITY_OFF   6
-#define VLIQUIDITY_OFF  7
-#define POW_OFF         8
-#define VPOW_OFF        9
-#define REWARD_TYPES   10
+#define POW_OFF         6
+#define VPOW_OFF        7
+#define REWARD_TYPES    8
 
 using steem::protocol::asset;
 using steem::protocol::share_type;
@@ -100,7 +98,6 @@ int main( int argc, char** argv, char** envp )
       // supply for above is computed by using pre-updated supply for computing all 3 amounts.
       // supply for below reward types is basically a self-contained event which updates the supply immediately before the next reward type's computation.
 
-      share_type liquidity_reward = 0;
       share_type pow_reward = 0;
 
       if( (block_num % STEEM_MAX_WITNESSES) == 0 )
@@ -118,15 +115,6 @@ int main( int argc, char** argv, char** envp )
       reward_delta[ VPOW_OFF ] = reward_delta[ POW_OFF ] * vesting_factor;
 
       current_supply += reward_delta[ POW_OFF ] + reward_delta[ VPOW_OFF ];
-
-      if( (block_num > liquidity_begin_block) && ((block_num % STEEM_LIQUIDITY_REWARD_BLOCKS) == 0) )
-      {
-         liquidity_reward = calc_percent_reward_per_hour< STEEM_LIQUIDITY_APR_PERCENT >( current_supply );
-         liquidity_reward = std::max( liquidity_reward, STEEM_MIN_LIQUIDITY_REWARD.amount );
-      }
-      reward_delta[ LIQUIDITY_OFF ] = liquidity_reward;
-      reward_delta[ VLIQUIDITY_OFF ] = reward_delta[ LIQUIDITY_OFF ] * vesting_factor;
-      current_supply += reward_delta[ LIQUIDITY_OFF ] + reward_delta[ VLIQUIDITY_OFF ];
 
       for( int i=0; i<REWARD_TYPES; i++ )
       {
