@@ -123,12 +123,6 @@ class wallet_api
        */
       vector< condenser_api::api_operation_object > get_ops_in_block( uint32_t block_num, bool only_virtual = true );
 
-      /** Return the current price feed history
-       *
-       * @returns Price feed history data on the blockchain
-       */
-      condenser_api::api_feed_history_object get_feed_history()const;
-
       /**
        * Returns the list of witnesses producing blocks in the current round (21 Blocks)
        */
@@ -625,7 +619,7 @@ class wallet_api
          bool broadcast = false);
 
       /**
-       * Transfer funds from one account to another. STEEM and SBD can be transferred.
+       * Transfer funds from one account to another. STEEM can be transferred.
        *
        * @param from The account the funds are coming from
        * @param to The account the funds are going to
@@ -641,13 +635,12 @@ class wallet_api
          bool broadcast = false);
 
       /**
-       * Transfer funds from one account to another using escrow. STEEM and SBD can be transferred.
+       * Transfer funds from one account to another using escrow. STEEM can be transferred.
        *
        * @param from The account the funds are coming from
        * @param to The account the funds are going to
        * @param agent The account acting as the agent in case of dispute
        * @param escrow_id A unique id for the escrow transfer. (from, escrow_id) must be a unique pair
-       * @param sbd_amount The amount of SBD to transfer
        * @param steem_amount The amount of STEEM to transfer
        * @param fee The fee paid to the agent
        * @param ratification_deadline The deadline for 'to' and 'agent' to approve the escrow transfer
@@ -660,7 +653,6 @@ class wallet_api
          string to,
          string agent,
          uint32_t escrow_id,
-         condenser_api::legacy_asset sbd_amount,
          condenser_api::legacy_asset steem_amount,
          condenser_api::legacy_asset fee,
          time_point_sec ratification_deadline,
@@ -719,7 +711,6 @@ class wallet_api
        * @param who The account authorizing the release
        * @param receiver The account that will receive funds being released
        * @param escrow_id A unique id for the escrow transfer
-       * @param sbd_amount The amount of SBD that will be released
        * @param steem_amount The amount of STEEM that will be released
        * @param broadcast true if you wish to broadcast the transaction
        */
@@ -730,7 +721,6 @@ class wallet_api
          string who,
          string receiver,
          uint32_t escrow_id,
-         condenser_api::legacy_asset sbd_amount,
          condenser_api::legacy_asset steem_amount,
          bool broadcast = false
       );
@@ -819,32 +809,6 @@ class wallet_api
          bool auto_vest,
          bool broadcast = false );
 
-      /**
-       *  This method will convert SBD to STEEM at the current_median_history price one
-       *  week from the time it is executed. This method depends upon there being a valid price feed.
-       *
-       *  @param from The account requesting conversion of its SBD i.e. "1.000 SBD"
-       *  @param amount The amount of SBD to convert
-       *  @param broadcast true if you wish to broadcast the transaction
-       */
-      condenser_api::legacy_signed_transaction convert_sbd(
-         string from,
-         condenser_api::legacy_asset amount,
-         bool broadcast = false );
-
-      /**
-       * A witness can public a price feed for the STEEM:SBD market. The median price feed is used
-       * to process conversion requests from SBD to STEEM.
-       *
-       * @param witness The witness publishing the price feed
-       * @param exchange_rate The desired exchange rate
-       * @param broadcast true if you wish to broadcast the transaction
-       */
-      condenser_api::legacy_signed_transaction publish_feed(
-         string witness,
-         condenser_api::legacy_price exchange_rate,
-         bool broadcast );
-
       /** Signs a transaction.
        *
        * Given a fully-formed transaction that is only lacking signatures, this signs
@@ -874,38 +838,6 @@ class wallet_api
        * @return a default-constructed operation of the given type
        */
       operation get_prototype_operation(string operation_type);
-
-      /**
-       *  Creates a limit order at the price amount_to_sell / min_to_receive and will deduct amount_to_sell from account
-       *
-       *  @param owner The name of the account creating the order
-       *  @param order_id is a unique identifier assigned by the creator of the order, it can be reused after the order has been filled
-       *  @param amount_to_sell The amount of either SBD or STEEM you wish to sell
-       *  @param min_to_receive The amount of the other asset you will receive at a minimum
-       *  @param fill_or_kill true if you want the order to be killed if it cannot immediately be filled
-       *  @param expiration the time the order should expire if it has not been filled
-       *  @param broadcast true if you wish to broadcast the transaction
-       */
-      condenser_api::legacy_signed_transaction create_order(
-         string owner,
-         uint32_t order_id,
-         condenser_api::legacy_asset amount_to_sell,
-         condenser_api::legacy_asset min_to_receive,
-         bool fill_or_kill,
-         uint32_t expiration,
-         bool broadcast );
-
-      /**
-       * Cancel an order created with create_order
-       *
-       * @param owner The name of the account owning the order to cancel_order
-       * @param orderid The unique identifier assigned to the order by its creator
-       * @param broadcast true if you wish to broadcast the transaction
-       */
-      condenser_api::legacy_signed_transaction cancel_order(
-         string owner,
-         uint32_t orderid,
-         bool broadcast );
 
       /**
        *  Post or update a comment.
@@ -1047,7 +979,6 @@ class wallet_api
       condenser_api::legacy_signed_transaction claim_reward_balance(
          string account,
          condenser_api::legacy_asset reward_steem,
-         condenser_api::legacy_asset reward_sbd,
          condenser_api::legacy_asset reward_vests,
          bool broadcast );
 
@@ -1057,7 +988,7 @@ class wallet_api
        * @param receiver   - the account that will be funded,
        * @param start_date - start date of proposal,
        * @param end_date   - end date of proposal,
-       * @param daily_pay  - the amount of SBD that is being requested to be paid out daily,
+       * @param daily_pay  - the amount of STEEM_SYMBOL that is being requested to be paid out daily,
        * @param subject    - briefly description of proposal of its title,
        * @param url        - link to page with description of proposal.
        */
@@ -1166,7 +1097,6 @@ FC_API( steem::wallet::wallet_api,
         (get_account)
         (get_block)
         (get_ops_in_block)
-        (get_feed_history)
         (get_account_history)
         (get_state)
         (get_withdraw_routes)
@@ -1195,10 +1125,6 @@ FC_API( steem::wallet::wallet_api,
         (transfer_to_vesting)
         (withdraw_vesting)
         (set_withdraw_vesting_route)
-        (convert_sbd)
-        (publish_feed)
-        (create_order)
-        (cancel_order)
         (post_comment)
         (vote)
         (set_transaction_expiration)

@@ -40,8 +40,6 @@ class database_api
          (get_witness_schedule)
          (get_hardfork_properties)
          (get_reward_funds)
-         (get_current_price_feed)
-         (get_feed_history)
 
          ///////////////
          // Witnesses //

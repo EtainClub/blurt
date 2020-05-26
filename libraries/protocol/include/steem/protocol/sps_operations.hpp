@@ -15,7 +15,7 @@ struct create_proposal_operation : public base_operation
    time_point_sec start_date;
    time_point_sec end_date;
 
-   /// Amount of SBDs to be daily paid to the `receiver` account.
+   /// Amount of STEEM_SYMBOL to be daily paid to the `receiver` account.
    asset daily_pay;
 
    string subject;
@@ -74,7 +74,7 @@ struct proposal_pay_operation : public virtual_operation
 
    /// Name of the account which is paid for
    account_name_type receiver;
-   /// Amount of SBDs paid.
+   /// Amount of STEEM_SYMBOL paid.
    asset             payment;
 
    /// Transaction id + position of operation where appeared a proposal being a source of given operation.

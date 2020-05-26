@@ -46,10 +46,6 @@ uint32_t string_to_asset_num( const char* p, uint8_t decimals )
                FC_ASSERT( decimals == 3, "Incorrect decimal places" );
                asset_num = STEEM_ASSET_NUM_STEEM;
                break;
-            case SBD_SYMBOL_U64:
-               FC_ASSERT( decimals == 3, "Incorrect decimal places" );
-               asset_num = STEEM_ASSET_NUM_SBD;
-               break;
             case VESTS_SYMBOL_U64:
                FC_ASSERT( decimals == 6, "Incorrect decimal places" );
                asset_num = STEEM_ASSET_NUM_VESTS;
@@ -89,13 +85,9 @@ std::string asset_num_to_string( uint32_t asset_num )
 #ifdef IS_TEST_NET
       case STEEM_ASSET_NUM_STEEM:
          return "TESTS";
-      case STEEM_ASSET_NUM_SBD:
-         return "TBD";
 #else
       case STEEM_ASSET_NUM_STEEM:
          return "STEEM";
-      case STEEM_ASSET_NUM_SBD:
-         return "SBD";
 #endif
       case STEEM_ASSET_NUM_VESTS:
          return "VESTS";

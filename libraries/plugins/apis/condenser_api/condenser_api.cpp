@@ -56,8 +56,6 @@ namespace detail
             (get_config)
             (get_dynamic_global_properties)
             (get_chain_properties)
-            (get_current_median_history_price)
-            (get_feed_history)
             (get_witness_schedule)
             (get_hardfork_version)
             (get_next_scheduled_hardfork)
@@ -187,7 +185,6 @@ namespace detail
       state _state;
       _state.props         = get_dynamic_global_properties( {} );
       _state.current_route = path;
-      _state.feed_price    = _database_api->get_current_price_feed( {} );
 
       try
       {
@@ -772,18 +769,6 @@ namespace detail
    {
       CHECK_ARG_SIZE( 0 )
       return api_chain_properties( _database_api->get_witness_schedule( {} ).median_props );
-   }
-
-   DEFINE_API_IMPL( condenser_api_impl, get_current_median_history_price )
-   {
-      CHECK_ARG_SIZE( 0 )
-      return _database_api->get_current_price_feed( {} );
-   }
-
-   DEFINE_API_IMPL( condenser_api_impl, get_feed_history )
-   {
-      CHECK_ARG_SIZE( 0 )
-      return _database_api->get_feed_history( {} );
    }
 
    DEFINE_API_IMPL( condenser_api_impl, get_witness_schedule )
@@ -1873,16 +1858,12 @@ namespace detail
          auto itr = cidx.lower_bound( d.id );
          if( itr != cidx.end() && itr->comment == d.id )
          {
-            d.promoted = legacy_asset::from_asset( asset( itr->promoted_balance, SBD_SYMBOL ) );
+            d.promoted = legacy_asset::from_asset( asset( itr->promoted_balance, STEEM_SYMBOL ) );
          }
       }
 
-      const auto& hist  = _db.get_feed_history();
-
       asset pot;
       pot = _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) ).reward_balance;
-
-      if( !hist.current_median_history.is_null() ) pot = pot * hist.current_median_history;
 
       u256 total_r2 = 0;
       total_r2 = chain::util::to256( _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) ).recent_claims );
@@ -2085,8 +2066,6 @@ DEFINE_READ_APIS( condenser_api,
    (get_ops_in_block)
    (get_dynamic_global_properties)
    (get_chain_properties)
-   (get_current_median_history_price)
-   (get_feed_history)
    (get_witness_schedule)
    (get_hardfork_version)
    (get_next_scheduled_hardfork)

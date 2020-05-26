@@ -122,18 +122,6 @@ struct get_reward_funds_return
 };
 
 
-/* get_current_price_feed */
-
-typedef void_type get_current_price_feed_args;
-typedef price     get_current_price_feed_return;
-
-
-/* get_current_feed_history */
-
-typedef void_type                get_feed_history_args;
-typedef api_feed_history_object  get_feed_history_return;
-
-
 /* Witnesses */
 
 typedef list_object_args_type list_witnesses_args;

@@ -92,16 +92,7 @@ struct api_account_object
       voting_manabar( a.voting_manabar ),
       balance( legacy_asset::from_asset( a.balance ) ),
       savings_balance( legacy_asset::from_asset( a.savings_balance ) ),
-      sbd_balance( legacy_asset::from_asset( a.sbd_balance ) ),
-      sbd_seconds( a.sbd_seconds ),
-      sbd_seconds_last_update( a.sbd_seconds_last_update ),
-      sbd_last_interest_payment( a.sbd_last_interest_payment ),
-      savings_sbd_balance( legacy_asset::from_asset( a.savings_sbd_balance ) ),
-      savings_sbd_seconds( a.savings_sbd_seconds ),
-      savings_sbd_seconds_last_update( a.savings_sbd_seconds_last_update ),
-      savings_sbd_last_interest_payment( a.savings_sbd_last_interest_payment ),
       savings_withdraw_requests( a.savings_withdraw_requests ),
-      reward_sbd_balance( legacy_asset::from_asset( a.reward_sbd_balance ) ),
       reward_steem_balance( legacy_asset::from_asset( a.reward_steem_balance ) ),
       reward_vesting_balance( legacy_asset::from_asset( a.reward_vesting_balance ) ),
       reward_vesting_steem( legacy_asset::from_asset( a.reward_vesting_steem ) ),
@@ -160,19 +151,8 @@ struct api_account_object
    legacy_asset      balance;
    legacy_asset      savings_balance;
 
-   legacy_asset      sbd_balance;
-   uint128_t         sbd_seconds;
-   time_point_sec    sbd_seconds_last_update;
-   time_point_sec    sbd_last_interest_payment;
-
-   legacy_asset      savings_sbd_balance;
-   uint128_t         savings_sbd_seconds;
-   time_point_sec    savings_sbd_seconds_last_update;
-   time_point_sec    savings_sbd_last_interest_payment;
-
    uint8_t           savings_withdraw_requests = 0;
 
-   legacy_asset      reward_sbd_balance;
    legacy_asset      reward_steem_balance;
    legacy_asset      reward_vesting_balance;
    legacy_asset      reward_vesting_steem;
@@ -258,7 +238,6 @@ struct api_comment_object
       root_author( c.root_author ),
       root_permlink( c.root_permlink ),
       max_accepted_payout( legacy_asset::from_asset( c.max_accepted_payout ) ),
-      percent_steem_dollars( c.percent_steem_dollars ),
       allow_replies( c.allow_replies ),
       allow_votes( c.allow_votes ),
       allow_curation_rewards( c.allow_curation_rewards )
@@ -311,7 +290,6 @@ struct api_comment_object
    string            root_permlink;
 
    legacy_asset      max_accepted_payout;
-   uint16_t          percent_steem_dollars = 0;
    bool              allow_replies = false;
    bool              allow_votes = false;
    bool              allow_curation_rewards = false;
@@ -331,17 +309,12 @@ struct extended_dynamic_global_properties
       virtual_supply( legacy_asset::from_asset( o.virtual_supply ) ),
       current_supply( legacy_asset::from_asset( o.current_supply ) ),
       confidential_supply( legacy_asset::from_asset( o.confidential_supply ) ),
-      init_sbd_supply( legacy_asset::from_asset( o.init_sbd_supply ) ),
-      current_sbd_supply( legacy_asset::from_asset( o.current_sbd_supply ) ),
-      confidential_sbd_supply( legacy_asset::from_asset( o.confidential_sbd_supply ) ),
       total_vesting_fund_steem( legacy_asset::from_asset( o.total_vesting_fund_steem ) ),
       total_vesting_shares( legacy_asset::from_asset( o.total_vesting_shares ) ),
       total_reward_fund_steem( legacy_asset::from_asset( o.total_reward_fund_steem ) ),
       total_reward_shares2( o.total_reward_shares2 ),
       pending_rewarded_vesting_shares( legacy_asset::from_asset( o.pending_rewarded_vesting_shares ) ),
       pending_rewarded_vesting_steem( legacy_asset::from_asset( o.pending_rewarded_vesting_steem ) ),
-      sbd_interest_rate( o.sbd_interest_rate ),
-      sbd_print_rate( o.sbd_print_rate ),
       maximum_block_size( o.maximum_block_size ),
       current_aslot( o.current_aslot ),
       recent_slots_filled( o.recent_slots_filled ),
@@ -351,8 +324,6 @@ struct extended_dynamic_global_properties
       delegation_return_period( o.delegation_return_period ),
       reverse_auction_seconds( o.reverse_auction_seconds ),
       available_account_subsidies( o.available_account_subsidies ),
-      sbd_stop_percent( o.sbd_stop_percent ),
-      sbd_start_percent( o.sbd_start_percent ),
       next_maintenance_time( o.next_maintenance_time ),
       last_budget_time( o.last_budget_time ),
       content_reward_percent( o.content_reward_percent ),
@@ -373,18 +344,12 @@ struct extended_dynamic_global_properties
    legacy_asset      virtual_supply;
    legacy_asset      current_supply;
    legacy_asset      confidential_supply;
-   legacy_asset      init_sbd_supply;
-   legacy_asset      current_sbd_supply;
-   legacy_asset      confidential_sbd_supply;
    legacy_asset      total_vesting_fund_steem;
    legacy_asset      total_vesting_shares;
    legacy_asset      total_reward_fund_steem;
    fc::uint128       total_reward_shares2;
    legacy_asset      pending_rewarded_vesting_shares;
    legacy_asset      pending_rewarded_vesting_steem;
-
-   uint16_t          sbd_interest_rate = 0;
-   uint16_t          sbd_print_rate = STEEM_100_PERCENT;
 
    uint32_t          maximum_block_size = 0;
    uint64_t          current_aslot = 0;
@@ -399,9 +364,6 @@ struct extended_dynamic_global_properties
    uint64_t          reverse_auction_seconds = 0;
 
    int64_t           available_account_subsidies = 0;
-
-   uint16_t          sbd_stop_percent = 0;
-   uint16_t          sbd_start_percent = 0;
 
    time_point_sec    next_maintenance_time;
    time_point_sec    last_budget_time;
@@ -427,8 +389,6 @@ struct api_witness_object
       pow_worker( w.pow_worker ),
       signing_key( w.signing_key ),
       props( w.props ),
-      sbd_exchange_rate( w.sbd_exchange_rate ),
-      last_sbd_exchange_update( w.last_sbd_exchange_update ),
       votes( w.votes ),
       virtual_last_update( w.virtual_last_update ),
       virtual_position( w.virtual_position ),
@@ -450,8 +410,6 @@ struct api_witness_object
    uint64_t                pow_worker;
    public_key_type         signing_key;
    api_chain_properties    props;
-   legacy_price            sbd_exchange_rate;
-   time_point_sec          last_sbd_exchange_update;
    share_type              votes;
    fc::uint128_t           virtual_last_update;
    fc::uint128_t           virtual_position;
@@ -565,7 +523,6 @@ struct api_escrow_object
       agent( e.agent ),
       ratification_deadline( e.ratification_deadline ),
       escrow_expiration( e.escrow_expiration ),
-      sbd_balance( legacy_asset::from_asset( e.sbd_balance ) ),
       steem_balance( legacy_asset::from_asset( e.steem_balance ) ),
       pending_fee( legacy_asset::from_asset( e.pending_fee ) ),
       to_approved( e.to_approved ),
@@ -580,7 +537,6 @@ struct api_escrow_object
    account_name_type agent;
    time_point_sec    ratification_deadline;
    time_point_sec    escrow_expiration;
-   legacy_asset      sbd_balance;
    legacy_asset      steem_balance;
    legacy_asset      pending_fee;
    bool              to_approved = false;
@@ -697,8 +653,8 @@ struct discussion : public api_comment_object
 
    string                        url; /// /category/@rootauthor/root_permlink#author/permlink
    string                        root_title;
-   legacy_asset                  pending_payout_value; ///< sbd
-   legacy_asset                  total_pending_payout_value; ///< sbd including replies
+   legacy_asset                  pending_payout_value; ///< STEEM_SYMBOL
+   legacy_asset                  total_pending_payout_value; ///< STEEM_SYMBOL including replies
    vector< tags::vote_state >    active_votes;
    vector< string >              replies; ///< author/slug mapping
    share_type                    author_reputation = 0;
@@ -757,7 +713,6 @@ struct state
 
    map< string, api_witness_object >                  witnesses;
    api_witness_schedule_object                        witness_schedule;
-   legacy_price                                       feed_price;
    string                                             error;
 };
 
@@ -866,8 +821,6 @@ DEFINE_API_ARGS( get_ops_in_block,                       vector< variant >,   ve
 DEFINE_API_ARGS( get_config,                             vector< variant >,   fc::variant_object )
 DEFINE_API_ARGS( get_dynamic_global_properties,          vector< variant >,   extended_dynamic_global_properties )
 DEFINE_API_ARGS( get_chain_properties,                   vector< variant >,   api_chain_properties )
-DEFINE_API_ARGS( get_current_median_history_price,       vector< variant >,   legacy_price )
-DEFINE_API_ARGS( get_feed_history,                       vector< variant >,   api_feed_history_object )
 DEFINE_API_ARGS( get_witness_schedule,                   vector< variant >,   api_witness_schedule_object )
 DEFINE_API_ARGS( get_hardfork_version,                   vector< variant >,   hardfork_version )
 DEFINE_API_ARGS( get_next_scheduled_hardfork,            vector< variant >,   scheduled_hardfork )
@@ -953,8 +906,6 @@ public:
       (get_config)
       (get_dynamic_global_properties)
       (get_chain_properties)
-      (get_current_median_history_price)
-      (get_feed_history)
       (get_witness_schedule)
       (get_hardfork_version)
       (get_next_scheduled_hardfork)
@@ -1039,7 +990,7 @@ FC_REFLECT( steem::plugins::condenser_api::api_tag_object,
             (name)(total_payouts)(net_votes)(top_posts)(comments)(trending) )
 
 FC_REFLECT( steem::plugins::condenser_api::state,
-            (current_route)(props)(tag_idx)(tags)(content)(accounts)(witnesses)(discussion_idx)(witness_schedule)(feed_price)(error) )
+            (current_route)(props)(tag_idx)(tags)(content)(accounts)(witnesses)(discussion_idx)(witness_schedule)(error) )
 
 FC_REFLECT( steem::plugins::condenser_api::api_operation_object,
              (trx_id)(block)(trx_in_block)(op_in_trx)(virtual_op)(timestamp)(op) )
@@ -1052,9 +1003,8 @@ FC_REFLECT( steem::plugins::condenser_api::api_account_object,
              (comment_count)(lifetime_vote_count)(post_count)(can_vote)(voting_manabar)(voting_power)
              (balance)
              (savings_balance)
-             (sbd_balance)(sbd_seconds)(sbd_seconds_last_update)(sbd_last_interest_payment)
-             (savings_sbd_balance)(savings_sbd_seconds)(savings_sbd_seconds_last_update)(savings_sbd_last_interest_payment)(savings_withdraw_requests)
-             (reward_sbd_balance)(reward_steem_balance)(reward_vesting_balance)(reward_vesting_steem)
+             (savings_withdraw_requests)
+             (reward_steem_balance)(reward_vesting_balance)(reward_vesting_steem)
              (vesting_shares)(delegated_vesting_shares)(received_vesting_shares)(vesting_withdraw_rate)(next_vesting_withdrawal)(withdrawn)(to_withdraw)(withdraw_routes)
              (curation_rewards)
              (posting_rewards)
@@ -1075,19 +1025,18 @@ FC_REFLECT( steem::plugins::condenser_api::api_comment_object,
              (children_abs_rshares)(cashout_time)(max_cashout_time)
              (total_vote_weight)(reward_weight)(total_payout_value)(curator_payout_value)(author_rewards)(net_votes)
              (root_author)(root_permlink)
-             (max_accepted_payout)(percent_steem_dollars)(allow_replies)(allow_votes)(allow_curation_rewards)
+             (max_accepted_payout)(allow_replies)(allow_votes)(allow_curation_rewards)
              (beneficiaries)
           )
 
 FC_REFLECT( steem::plugins::condenser_api::extended_dynamic_global_properties,
             (head_block_number)(head_block_id)(time)
             (current_witness)(total_pow)(num_pow_witnesses)
-            (virtual_supply)(current_supply)(confidential_supply)(init_sbd_supply)(current_sbd_supply)(confidential_sbd_supply)
+            (virtual_supply)(current_supply)(confidential_supply)
             (total_vesting_fund_steem)(total_vesting_shares)
             (total_reward_fund_steem)(total_reward_shares2)(pending_rewarded_vesting_shares)(pending_rewarded_vesting_steem)
-            (sbd_interest_rate)(sbd_print_rate)
             (maximum_block_size)(current_aslot)(recent_slots_filled)(participation_count)(last_irreversible_block_num)
-            (vote_power_reserve_rate)(delegation_return_period)(reverse_auction_seconds)(available_account_subsidies)(sbd_stop_percent)(sbd_start_percent)
+            (vote_power_reserve_rate)(delegation_return_period)(reverse_auction_seconds)(available_account_subsidies)
             (next_maintenance_time)(last_budget_time)(content_reward_percent)(vesting_reward_percent)(sps_fund_percent)(sps_interval_ledger)
           )
 
@@ -1098,7 +1047,6 @@ FC_REFLECT( steem::plugins::condenser_api::api_witness_object,
              (url)(votes)(virtual_last_update)(virtual_position)(virtual_scheduled_time)(total_missed)
              (last_aslot)(last_confirmed_block_num)(pow_worker)(signing_key)
              (props)
-             (sbd_exchange_rate)(last_sbd_exchange_update)
              (last_work)
              (running_version)
              (hardfork_version_vote)(hardfork_time_vote)
@@ -1148,7 +1096,7 @@ FC_REFLECT( steem::plugins::condenser_api::api_reward_fund_object,
 FC_REFLECT( steem::plugins::condenser_api::api_escrow_object,
              (id)(escrow_id)(from)(to)(agent)
              (ratification_deadline)(escrow_expiration)
-             (sbd_balance)(steem_balance)(pending_fee)
+             (steem_balance)(pending_fee)
              (to_approved)(agent_approved)(disputed) )
 
 FC_REFLECT( steem::plugins::condenser_api::api_savings_withdraw_object,

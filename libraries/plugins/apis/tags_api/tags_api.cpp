@@ -539,14 +539,10 @@ void tags_api_impl::set_pending_payout( discussion& d )
    const auto& cidx = _db.get_index< tags::tag_index, tags::by_comment>();
    auto itr = cidx.lower_bound( d.id );
    if( itr != cidx.end() && itr->comment == d.id )  {
-      d.promoted = asset( itr->promoted_balance, SBD_SYMBOL );
+      d.promoted = asset( itr->promoted_balance, STEEM_SYMBOL );
    }
 
-   const auto& hist  = _db.get_feed_history();
    asset pot = _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) ).reward_balance;
-
-   if( !hist.current_median_history.is_null() ) pot = pot * hist.current_median_history;
-
    u256 total_r2 = chain::util::to256( _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) ).recent_claims );
 
    if( total_r2 > 0 )
@@ -656,7 +652,7 @@ discussion_query_result tags_api_impl::get_discussions( const discussion_query& 
       try
       {
          result.discussions.push_back( lookup_discussion( tidx_itr->comment, truncate_body ) );
-         result.discussions.back().promoted = asset(tidx_itr->promoted_balance, SBD_SYMBOL );
+         result.discussions.back().promoted = asset(tidx_itr->promoted_balance, STEEM_SYMBOL );
 
          if( filter( result.discussions.back() ) )
          {

@@ -31,8 +31,6 @@ struct remote_node_api
    fc::variant_object get_config();
    condenser_api::extended_dynamic_global_properties get_dynamic_global_properties();
    condenser_api::api_chain_properties get_chain_properties();
-   condenser_api::legacy_price get_current_median_history_price();
-   condenser_api::api_feed_history_object get_feed_history();
    condenser_api::api_witness_schedule_object get_witness_schedule();
    hardfork_version get_hardfork_version();
    condenser_api::scheduled_hardfork get_next_scheduled_hardfork();
@@ -115,8 +113,6 @@ FC_API( steem::wallet::remote_node_api,
         (get_config)
         (get_dynamic_global_properties)
         (get_chain_properties)
-        (get_current_median_history_price)
-        (get_feed_history)
         (get_witness_schedule)
         (get_hardfork_version)
         (get_next_scheduled_hardfork)

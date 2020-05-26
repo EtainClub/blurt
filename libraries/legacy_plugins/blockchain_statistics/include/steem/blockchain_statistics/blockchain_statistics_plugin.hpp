@@ -77,8 +77,6 @@ struct bucket_object : public object< bucket_object_type, bucket_object >
    uint32_t             transactions = 0;                            ///< Transactions processed
    uint32_t             transfers = 0;                               ///< Account to account transfers
    share_type           steem_transferred = 0;                       ///< STEEM transferred from account to account
-   share_type           sbd_transferred = 0;                         ///< SBD transferred from account to account
-   share_type           sbd_paid_as_interest = 0;                    ///< SBD paid as interest
    uint32_t             paid_accounts_created = 0;                   ///< Accounts created with fee
    uint32_t             mined_accounts_created = 0;                  ///< Accounts mined for free
    uint32_t             root_comments = 0;                           ///< Top level root comments
@@ -92,7 +90,6 @@ struct bucket_object : public object< bucket_object_type, bucket_object >
    uint32_t             new_reply_votes = 0;                         ///< New votes on replies
    uint32_t             changed_reply_votes = 0;                     ///< Changed votes on replies
    uint32_t             payouts = 0;                                 ///< Number of comment payouts
-   share_type           sbd_paid_to_authors = 0;                     ///< Ammount of SBD paid to authors
    share_type           vests_paid_to_authors = 0;                   ///< Ammount of VESS paid to authors
    share_type           vests_paid_to_curators = 0;                  ///< Ammount of VESTS paid to curators
    uint32_t             transfers_to_vesting = 0;                    ///< Transfers of STEEM into VESTS
@@ -104,9 +101,6 @@ struct bucket_object : public object< bucket_object_type, bucket_object >
    uint32_t             finished_vesting_withdrawals = 0;            ///< Processed vesting withdrawals that are now finished
    share_type           vests_withdrawn = 0;                         ///< Ammount of VESTS withdrawn to STEEM
    share_type           vests_transferred = 0;                       ///< Ammount of VESTS transferred to another account
-   uint32_t             sbd_conversion_requests_created = 0;         ///< SBD conversion requests created
-   share_type           sbd_to_be_converted = 0;                     ///< Amount of SBD to be converted
-   uint32_t             sbd_conversion_requests_filled = 0;          ///< SBD conversion requests filled
    share_type           steem_converted = 0;                         ///< Amount of STEEM that was converted
    uint32_t             total_pow = 0;                               ///< POW submitted
    uint128_t            estimated_hashpower = 0;                     ///< Estimated average hashpower over interval
@@ -142,8 +136,6 @@ FC_REFLECT( steem::blockchain_statistics::bucket_object,
    (transactions)
    (transfers)
    (steem_transferred)
-   (sbd_transferred)
-   (sbd_paid_as_interest)
    (paid_accounts_created)
    (mined_accounts_created)
    (root_comments)
@@ -157,7 +149,6 @@ FC_REFLECT( steem::blockchain_statistics::bucket_object,
    (new_reply_votes)
    (changed_reply_votes)
    (payouts)
-   (sbd_paid_to_authors)
    (vests_paid_to_authors)
    (vests_paid_to_curators)
    (transfers_to_vesting)
@@ -169,9 +160,6 @@ FC_REFLECT( steem::blockchain_statistics::bucket_object,
    (finished_vesting_withdrawals)
    (vests_withdrawn)
    (vests_transferred)
-   (sbd_conversion_requests_created)
-   (sbd_to_be_converted)
-   (sbd_conversion_requests_filled)
    (steem_converted)
    (total_pow)
    (estimated_hashpower)
