@@ -54,16 +54,6 @@ condenser_api::api_chain_properties remote_node_api::get_chain_properties()
    FC_ASSERT( false );
 }
 
-condenser_api::legacy_price remote_node_api::get_current_median_history_price()
-{
-   FC_ASSERT( false );
-}
-
-condenser_api::api_feed_history_object remote_node_api::get_feed_history()
-{
-   FC_ASSERT( false );
-}
-
 condenser_api::api_witness_schedule_object remote_node_api::get_witness_schedule()
 {
    FC_ASSERT( false );

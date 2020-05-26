@@ -117,7 +117,6 @@ namespace steem { namespace chain {
             fc::path data_dir;
             fc::path shared_mem_dir;
             uint64_t initial_supply = STEEM_INIT_SUPPLY;
-            uint64_t sbd_initial_supply = STEEM_SBD_INIT_SUPPLY;
             uint64_t shared_file_size = 0;
             uint16_t shared_file_full_threshold = 0;
             uint16_t shared_file_scale_rate = 0;
@@ -219,7 +218,6 @@ namespace steem { namespace chain {
 
          const dynamic_global_property_object&  get_dynamic_global_properties()const;
          const node_property_object&            get_node_properties()const;
-         const feed_history_object&             get_feed_history()const;
          const witness_schedule_object&         get_witness_schedule_object()const;
          const hardfork_property_object&        get_hardfork_property_object()const;
 
@@ -333,10 +331,8 @@ namespace steem { namespace chain {
           */
          uint32_t get_slot_at_time(fc::time_point_sec when)const;
 
-         /** @return the sbd created and deposited to_account, may return STEEM if there is no median feed */
-         std::pair< asset, asset > create_sbd( const account_object& to_account, asset steem, bool to_reward_balance=false );
          asset create_vesting( const account_object& to_account, asset steem, bool to_reward_balance=false );
-         void adjust_total_payout( const comment_object& a, const asset& sbd, const asset& curator_sbd_value, const asset& beneficiary_value );
+         void adjust_total_payout( const comment_object& a, const asset& total_payout_value, const asset& curator_payout_value, const asset& beneficiary_payout_value );
 
          void        adjust_balance( const account_object& a, const asset& delta );
          void        adjust_balance( const account_name_type& name, const asset& delta );
@@ -377,12 +373,11 @@ namespace steem { namespace chain {
          share_type cashout_comment_helper( util::comment_reward_context& ctx, const comment_object& comment, bool forward_curation_remainder = true );
          void process_comment_cashout();
          void process_funds();
-          void process_savings_withdraws();
+         void process_savings_withdraws();
          void process_subsidized_accounts();
          void account_recovery_processing();
          void expire_escrow_ratification();
          void process_decline_voting_rights();
-         void update_median_feed();
 
          asset get_content_reward()const;
          asset get_producer_reward();
@@ -392,13 +387,6 @@ namespace steem { namespace chain {
          uint16_t get_curation_rewards_percent( const comment_object& c ) const;
 
          share_type pay_reward_funds( share_type reward );
-
-         /**
-          * Helper method to return the current sbd value of a given amount of
-          * STEEM.  Return 0 SBD if there isn't a current_median_history
-          */
-         asset to_sbd( const asset& steem )const;
-         asset to_steem( const asset& sbd )const;
 
          time_point_sec   head_block_time()const;
          uint32_t         head_block_num()const;
@@ -416,7 +404,7 @@ namespace steem { namespace chain {
          /// Reset the object graph in-memory
          void initialize_indexes();
          void init_schema();
-         void init_genesis(uint64_t initial_supply = STEEM_INIT_SUPPLY, uint64_t sbd_initial_supply = STEEM_SBD_INIT_SUPPLY );
+         void init_genesis(uint64_t initial_supply = STEEM_INIT_SUPPLY );
 
          /**
           *  This method validates transactions without adding it to the pending state.
@@ -434,7 +422,6 @@ namespace steem { namespace chain {
          void retally_witness_votes();
          void retally_witness_vote_counts( bool force = false );
          void retally_liquidity_weight();
-         void update_virtual_supply();
 
          bool has_hardfork( uint32_t hardfork )const;
 

@@ -54,9 +54,6 @@ namespace steem { namespace chain {
          asset       virtual_supply             = asset( 0, STEEM_SYMBOL );
          asset       current_supply             = asset( 0, STEEM_SYMBOL );
          asset       confidential_supply        = asset( 0, STEEM_SYMBOL ); ///< total asset held in confidential balances
-         asset       init_sbd_supply            = asset( 0, SBD_SYMBOL );
-         asset       current_sbd_supply         = asset( 0, SBD_SYMBOL );
-         asset       confidential_sbd_supply    = asset( 0, SBD_SYMBOL ); ///< total asset held in confidential balances
          asset       total_vesting_fund_steem   = asset( 0, STEEM_SYMBOL );
          asset       total_vesting_shares       = asset( 0, VESTS_SYMBOL );
          asset       total_reward_fund_steem    = asset( 0, STEEM_SYMBOL );
@@ -80,13 +77,6 @@ namespace steem { namespace chain {
             return price( total_vesting_shares + pending_rewarded_vesting_shares,
                total_vesting_fund_steem + pending_rewarded_vesting_steem );
          }
-
-         /**
-          *  This property defines the interest rate that SBD deposits receive.
-          */
-         uint16_t sbd_interest_rate = 0;
-
-         uint16_t sbd_print_rate = STEEM_100_PERCENT;
 
          /**
           *  Maximum block size is decided by the set of active witnesses which change every round.
@@ -126,9 +116,6 @@ namespace steem { namespace chain {
 
          int64_t available_account_subsidies = 0;
 
-         uint16_t sbd_stop_percent = 0;
-         uint16_t sbd_start_percent = 0;
-
          //settings used to compute payments for every proposal
          time_point_sec next_maintenance_time;
          time_point_sec last_budget_time;
@@ -137,7 +124,7 @@ namespace steem { namespace chain {
          uint16_t vesting_reward_percent = STEEM_VESTING_FUND_PERCENT_HF16;
          uint16_t sps_fund_percent = STEEM_PROPOSAL_FUND_PERCENT_HF0;
 
-         asset sps_interval_ledger = asset( 0, SBD_SYMBOL );
+         asset sps_interval_ledger = asset( 0, STEEM_SYMBOL );
    };
 
    typedef multi_index_container<
@@ -170,17 +157,12 @@ FC_REFLECT( steem::chain::dynamic_global_property_object,
              (virtual_supply)
              (current_supply)
              (confidential_supply)
-             (init_sbd_supply)
-             (current_sbd_supply)
-             (confidential_sbd_supply)
              (total_vesting_fund_steem)
              (total_vesting_shares)
              (total_reward_fund_steem)
              (total_reward_shares2)
              (pending_rewarded_vesting_shares)
              (pending_rewarded_vesting_steem)
-             (sbd_interest_rate)
-             (sbd_print_rate)
              (maximum_block_size)
              (current_aslot)
              (recent_slots_filled)
@@ -190,8 +172,6 @@ FC_REFLECT( steem::chain::dynamic_global_property_object,
              (delegation_return_period)
              (reverse_auction_seconds)
              (available_account_subsidies)
-             (sbd_stop_percent)
-             (sbd_start_percent)
              (next_maintenance_time)
              (last_budget_time)
              (content_reward_percent)

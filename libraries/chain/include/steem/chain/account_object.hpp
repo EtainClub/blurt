@@ -50,35 +50,9 @@ namespace steem { namespace chain {
          asset             balance = asset( 0, STEEM_SYMBOL );  ///< total liquid shares held by this account
          asset             savings_balance = asset( 0, STEEM_SYMBOL );  ///< total liquid shares held by this account
 
-         /**
-          *  SBD Deposits pay interest based upon the interest rate set by witnesses. The purpose of these
-          *  fields is to track the total (time * sbd_balance) that it is held. Then at the appointed time
-          *  interest can be paid using the following equation:
-          *
-          *  interest = interest_rate * sbd_seconds / seconds_per_year
-          *
-          *  Every time the sbd_balance is updated the sbd_seconds is also updated. If at least
-          *  STEEM_MIN_COMPOUNDING_INTERVAL_SECONDS has past since sbd_last_interest_payment then
-          *  interest is added to sbd_balance.
-          *
-          *  @defgroup sbd_data sbd Balance Data
-          */
-         ///@{
-         asset             sbd_balance = asset( 0, SBD_SYMBOL ); /// total sbd balance
-         uint128_t         sbd_seconds; ///< total sbd * how long it has been hel
-         time_point_sec    sbd_seconds_last_update; ///< the last time the sbd_seconds was updated
-         time_point_sec    sbd_last_interest_payment; ///< used to pay interest at most once per month
-
-
-         asset             savings_sbd_balance = asset( 0, SBD_SYMBOL ); /// total sbd balance
-         uint128_t         savings_sbd_seconds; ///< total sbd * how long it has been hel
-         time_point_sec    savings_sbd_seconds_last_update; ///< the last time the sbd_seconds was updated
-         time_point_sec    savings_sbd_last_interest_payment; ///< used to pay interest at most once per month
-
          uint8_t           savings_withdraw_requests = 0;
          ///@}
 
-         asset             reward_sbd_balance = asset( 0, SBD_SYMBOL );
          asset             reward_steem_balance = asset( 0, STEEM_SYMBOL );
          asset             reward_vesting_balance = asset( 0, VESTS_SYMBOL );
          asset             reward_vesting_steem = asset( 0, STEEM_SYMBOL );
@@ -442,9 +416,8 @@ FC_REFLECT( steem::chain::account_object,
              (comment_count)(lifetime_vote_count)(post_count)(can_vote)(voting_manabar)
              (balance)
              (savings_balance)
-             (sbd_balance)(sbd_seconds)(sbd_seconds_last_update)(sbd_last_interest_payment)
-             (savings_sbd_balance)(savings_sbd_seconds)(savings_sbd_seconds_last_update)(savings_sbd_last_interest_payment)(savings_withdraw_requests)
-             (reward_steem_balance)(reward_sbd_balance)(reward_vesting_balance)(reward_vesting_steem)
+             (savings_withdraw_requests)
+             (reward_steem_balance)(reward_vesting_balance)(reward_vesting_steem)
              (vesting_shares)(delegated_vesting_shares)(received_vesting_shares)
              (vesting_withdraw_rate)(next_vesting_withdrawal)(withdrawn)(to_withdraw)(withdraw_routes)
              (curation_rewards)

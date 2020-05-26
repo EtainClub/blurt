@@ -104,8 +104,7 @@ namespace steem { namespace protocol {
    void comment_options_operation::validate()const
    {
       validate_account_name( author );
-      FC_ASSERT( percent_steem_dollars <= STEEM_100_PERCENT, "Percent cannot exceed 100%" );
-      FC_ASSERT( max_accepted_payout.symbol == SBD_SYMBOL, "Max accepted payout must be in SBD" );
+      FC_ASSERT( max_accepted_payout.symbol == STEEM_SYMBOL, "Max accepted payout must be in STEEM_SYMBOL" );
       FC_ASSERT( max_accepted_payout.amount.value >= 0, "Cannot accept less than 0 payout" );
       validate_permlink( permlink );
       for( auto& e : extensions )
@@ -225,31 +224,12 @@ namespace steem { namespace protocol {
          FC_ASSERT( maximum_block_size >= STEEM_MIN_BLOCK_SIZE_LIMIT, "maximum_block_size smaller than minimum max block size" );
       }
 
-      itr = props.find( "sbd_interest_rate" );
-      if( itr != props.end() )
-      {
-         uint16_t sbd_interest_rate;
-         fc::raw::unpack_from_vector( itr->second, sbd_interest_rate );
-         FC_ASSERT( sbd_interest_rate >= 0, "sbd_interest_rate must be positive" );
-         FC_ASSERT( sbd_interest_rate <= STEEM_100_PERCENT, "sbd_interest_rate must not exceed 100%" );
-      }
-
       itr = props.find( "new_signing_key" );
       if( itr != props.end() )
       {
          public_key_type signing_key;
          fc::raw::unpack_from_vector( itr->second, signing_key );
          FC_UNUSED( signing_key ); // This tests the deserialization of the key
-      }
-
-      itr = props.find( "sbd_exchange_rate" );
-      if( itr != props.end() )
-      {
-         price sbd_exchange_rate;
-         fc::raw::unpack_from_vector( itr->second, sbd_exchange_rate );
-         FC_ASSERT( ( is_asset_type( sbd_exchange_rate.base, SBD_SYMBOL ) && is_asset_type( sbd_exchange_rate.quote, STEEM_SYMBOL ) ),
-            "Price feed must be a STEEM/SBD price" );
-         sbd_exchange_rate.validate();
       }
 
       itr = props.find( "url" );
@@ -322,12 +302,9 @@ namespace steem { namespace protocol {
       validate_account_name( to );
       validate_account_name( agent );
       FC_ASSERT( fee.amount >= 0, "fee cannot be negative" );
-      FC_ASSERT( sbd_amount.amount >= 0, "sbd amount cannot be negative" );
       FC_ASSERT( steem_amount.amount >= 0, "steem amount cannot be negative" );
-      FC_ASSERT( sbd_amount.amount > 0 || steem_amount.amount > 0, "escrow must transfer a non-zero amount" );
       FC_ASSERT( from != agent && to != agent, "agent must be a third party" );
-      FC_ASSERT( (fee.symbol == STEEM_SYMBOL) || (fee.symbol == SBD_SYMBOL), "fee must be STEEM or SBD" );
-      FC_ASSERT( sbd_amount.symbol == SBD_SYMBOL, "sbd amount must contain SBD" );
+      FC_ASSERT( fee.symbol == STEEM_SYMBOL, "fee must be STEEM" );
       FC_ASSERT( steem_amount.symbol == STEEM_SYMBOL, "steem amount must contain STEEM" );
       FC_ASSERT( ratification_deadline < escrow_expiration, "ratification deadline must be before escrow expiration" );
       if ( json_meta.size() > 0 )
@@ -364,10 +341,7 @@ namespace steem { namespace protocol {
       validate_account_name( receiver );
       FC_ASSERT( who == from || who == to || who == agent, "who must be from or to or agent" );
       FC_ASSERT( receiver == from || receiver == to, "receiver must be from or to" );
-      FC_ASSERT( sbd_amount.amount >= 0, "sbd amount cannot be negative" );
       FC_ASSERT( steem_amount.amount >= 0, "steem amount cannot be negative" );
-      FC_ASSERT( sbd_amount.amount > 0 || steem_amount.amount > 0, "escrow must release a non-zero amount" );
-      FC_ASSERT( sbd_amount.symbol == SBD_SYMBOL, "sbd amount must contain SBD" );
       FC_ASSERT( steem_amount.symbol == STEEM_SYMBOL, "steem amount must contain STEEM" );
    }
 
@@ -399,7 +373,7 @@ namespace steem { namespace protocol {
       validate_account_name( from );
       validate_account_name( to );
       FC_ASSERT( amount.amount > 0 );
-      FC_ASSERT( amount.symbol == STEEM_SYMBOL || amount.symbol == SBD_SYMBOL );
+      FC_ASSERT( amount.symbol == STEEM_SYMBOL );
       FC_ASSERT( memo.size() < STEEM_MAX_MEMO_SIZE, "Memo is too large" );
       FC_ASSERT( fc::is_utf8( memo ), "Memo is not UTF8" );
    }
@@ -407,7 +381,7 @@ namespace steem { namespace protocol {
       validate_account_name( from );
       validate_account_name( to );
       FC_ASSERT( amount.amount > 0 );
-      FC_ASSERT( amount.symbol == STEEM_SYMBOL || amount.symbol == SBD_SYMBOL );
+      FC_ASSERT( amount.symbol == STEEM_SYMBOL );
       FC_ASSERT( memo.size() < STEEM_MAX_MEMO_SIZE, "Memo is too large" );
       FC_ASSERT( fc::is_utf8( memo ), "Memo is not UTF8" );
    }
@@ -442,12 +416,10 @@ namespace steem { namespace protocol {
    {
       validate_account_name( account );
       FC_ASSERT( is_asset_type( reward_steem, STEEM_SYMBOL ), "Reward Steem must be STEEM" );
-      FC_ASSERT( is_asset_type( reward_sbd, SBD_SYMBOL ), "Reward Steem must be SBD" );
       FC_ASSERT( is_asset_type( reward_vests, VESTS_SYMBOL ), "Reward Steem must be VESTS" );
       FC_ASSERT( reward_steem.amount >= 0, "Cannot claim a negative amount" );
-      FC_ASSERT( reward_sbd.amount >= 0, "Cannot claim a negative amount" );
       FC_ASSERT( reward_vests.amount >= 0, "Cannot claim a negative amount" );
-      FC_ASSERT( reward_steem.amount > 0 || reward_sbd.amount > 0 || reward_vests.amount > 0, "Must claim something." );
+      FC_ASSERT( reward_steem.amount > 0 || reward_vests.amount > 0, "Must claim something." );
    }
 
    void delegate_vesting_shares_operation::validate()const

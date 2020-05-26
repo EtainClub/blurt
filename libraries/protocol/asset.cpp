@@ -120,9 +120,6 @@ uint32_t asset_symbol_type::asset_num_from_nai( uint32_t nai, uint8_t decimal_pl
       case STEEM_NAI_STEEM:
          FC_ASSERT( decimal_places == STEEM_PRECISION_STEEM );
          return STEEM_ASSET_NUM_STEEM;
-      case STEEM_NAI_SBD:
-         FC_ASSERT( decimal_places == STEEM_PRECISION_SBD );
-         return STEEM_ASSET_NUM_SBD;
       case STEEM_NAI_VESTS:
          FC_ASSERT( decimal_places == STEEM_PRECISION_VESTS );
          return STEEM_ASSET_NUM_VESTS;
@@ -141,9 +138,6 @@ uint32_t asset_symbol_type::to_nai()const
    {
       case STEEM_ASSET_NUM_STEEM:
          nai_data_digits = STEEM_NAI_STEEM;
-         break;
-      case STEEM_ASSET_NUM_SBD:
-         nai_data_digits = STEEM_NAI_SBD;
          break;
       case STEEM_ASSET_NUM_VESTS:
          nai_data_digits = STEEM_NAI_VESTS;
@@ -166,9 +160,6 @@ bool asset_symbol_type::is_vesting() const
          switch( asset_num )
          {
             case STEEM_ASSET_NUM_STEEM:
-               return false;
-            case STEEM_ASSET_NUM_SBD:
-               // SBD is certainly liquid.
                return false;
             case STEEM_ASSET_NUM_VESTS:
                return true;
@@ -194,8 +185,6 @@ asset_symbol_type asset_symbol_type::get_paired_symbol() const
          {
             case STEEM_ASSET_NUM_STEEM:
                return from_asset_num( STEEM_ASSET_NUM_VESTS );
-            case STEEM_ASSET_NUM_SBD:
-               return *this;
             case STEEM_ASSET_NUM_VESTS:
                return from_asset_num( STEEM_ASSET_NUM_STEEM );
             default:
@@ -219,7 +208,6 @@ asset_symbol_type::asset_symbol_space asset_symbol_type::space()const
    switch( asset_num )
    {
       case STEEM_ASSET_NUM_STEEM:
-      case STEEM_ASSET_NUM_SBD:
       case STEEM_ASSET_NUM_VESTS:
          s = legacy_space;
          break;
@@ -234,7 +222,6 @@ void asset_symbol_type::validate()const
    switch( asset_num )
    {
       case STEEM_ASSET_NUM_STEEM:
-      case STEEM_ASSET_NUM_SBD:
       case STEEM_ASSET_NUM_VESTS:
          break;
       default:

@@ -83,7 +83,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       api_chain_properties( const chain::chain_properties& c ) :
          account_creation_fee( legacy_asset::from_asset( c.account_creation_fee ) ),
          maximum_block_size( c.maximum_block_size ),
-         sbd_interest_rate( c.sbd_interest_rate ),
          account_subsidy_budget( c.account_subsidy_budget ),
          account_subsidy_decay( c.account_subsidy_decay )
       {}
@@ -93,13 +92,11 @@ namespace steem { namespace plugins { namespace condenser_api {
          legacy_chain_properties props;
          props.account_creation_fee = legacy_steem_asset::from_asset( asset( account_creation_fee ) );
          props.maximum_block_size = maximum_block_size;
-         props.sbd_interest_rate = sbd_interest_rate;
          return props;
       }
 
       legacy_asset   account_creation_fee;
       uint32_t       maximum_block_size = STEEM_MIN_BLOCK_SIZE_LIMIT * 2;
-      uint16_t       sbd_interest_rate = STEEM_DEFAULT_SBD_INTEREST_RATE;
       int32_t        account_subsidy_budget = STEEM_DEFAULT_ACCOUNT_SUBSIDY_BUDGET;
       uint32_t       account_subsidy_decay = STEEM_DEFAULT_ACCOUNT_SUBSIDY_DECAY;
    };
@@ -149,7 +146,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          author( op.author ),
          permlink( op.permlink ),
          max_accepted_payout( legacy_asset::from_asset( op.max_accepted_payout ) ),
-         percent_steem_dollars( op.percent_steem_dollars ),
          allow_votes( op.allow_votes ),
          allow_curation_rewards( op.allow_curation_rewards )
       {
@@ -167,7 +163,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          op.author = author;
          op.permlink = permlink;
          op.max_accepted_payout = max_accepted_payout;
-         op.percent_steem_dollars = percent_steem_dollars;
          op.allow_curation_rewards = allow_curation_rewards;
          op.extensions.insert( extensions.begin(), extensions.end() );
          return op;
@@ -177,7 +172,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       string            permlink;
 
       legacy_asset      max_accepted_payout;
-      uint16_t          percent_steem_dollars;
       bool              allow_votes;
       bool              allow_curation_rewards;
       legacy_comment_options_extensions_type extensions;
@@ -218,7 +212,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          to( op.to ),
          agent( op.agent ),
          escrow_id( op.escrow_id ),
-         sbd_amount( legacy_asset::from_asset( op.sbd_amount ) ),
          steem_amount( legacy_asset::from_asset( op.steem_amount ) ),
          fee( legacy_asset::from_asset( op.fee ) ),
          ratification_deadline( op.ratification_deadline ),
@@ -233,7 +226,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          op.to = to;
          op.agent = agent;
          op.escrow_id = escrow_id;
-         op.sbd_amount = sbd_amount;
          op.steem_amount = steem_amount;
          op.fee = fee;
          op.ratification_deadline = ratification_deadline;
@@ -247,7 +239,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       account_name_type agent;
       uint32_t          escrow_id;
 
-      legacy_asset      sbd_amount;
       legacy_asset      steem_amount;
       legacy_asset      fee;
 
@@ -267,7 +258,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          who( op.who ),
          receiver( op.receiver ),
          escrow_id( op.escrow_id ),
-         sbd_amount( legacy_asset::from_asset( op.sbd_amount ) ),
          steem_amount( legacy_asset::from_asset( op.steem_amount ) )
       {}
 
@@ -280,7 +270,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          op.who = who;
          op.receiver = receiver;
          op.escrow_id = escrow_id;
-         op.sbd_amount = sbd_amount;
          op.steem_amount = steem_amount;
          return op;
       }
@@ -292,7 +281,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       account_name_type receiver;
 
       uint32_t          escrow_id;
-      legacy_asset      sbd_amount;
       legacy_asset      steem_amount;
    };
 
@@ -385,7 +373,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       {
          props.account_creation_fee = legacy_asset::from_asset( op.props.account_creation_fee.to_asset< false >() );
          props.maximum_block_size = op.props.maximum_block_size;
-         props.sbd_interest_rate = op.props.sbd_interest_rate;
       }
 
       operator witness_update_operation()const
@@ -396,7 +383,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          op.block_signing_key = block_signing_key;
          op.props.account_creation_fee = legacy_steem_asset::from_asset( asset( props.account_creation_fee ) );
          op.props.maximum_block_size = props.maximum_block_size;
-         op.props.sbd_interest_rate = props.sbd_interest_rate;
          op.fee = fee;
          return op;
       }
@@ -469,7 +455,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       legacy_claim_reward_balance_operation( const claim_reward_balance_operation& op ) :
          account( op.account ),
          reward_steem( legacy_asset::from_asset( op.reward_steem ) ),
-         reward_sbd( legacy_asset::from_asset( op.reward_sbd ) ),
          reward_vests( legacy_asset::from_asset( op.reward_vests ) )
       {}
 
@@ -478,14 +463,12 @@ namespace steem { namespace plugins { namespace condenser_api {
          claim_reward_balance_operation op;
          op.account = account;
          op.reward_steem = reward_steem;
-         op.reward_sbd = reward_sbd;
          op.reward_vests = reward_vests;
          return op;
       }
 
       account_name_type account;
       legacy_asset      reward_steem;
-      legacy_asset      reward_sbd;
       legacy_asset      reward_vests;
    };
 
@@ -518,7 +501,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       legacy_author_reward_operation( const author_reward_operation& op ) :
          author( op.author ),
          permlink( op.permlink ),
-         sbd_payout( legacy_asset::from_asset( op.sbd_payout ) ),
          steem_payout( legacy_asset::from_asset( op.steem_payout ) ),
          vesting_payout( legacy_asset::from_asset( op.vesting_payout ) )
       {}
@@ -528,7 +510,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          author_reward_operation op;
          op.author = author;
          op.permlink = permlink;
-         op.sbd_payout = sbd_payout;
          op.steem_payout = steem_payout;
          op.vesting_payout = vesting_payout;
          return op;
@@ -536,7 +517,6 @@ namespace steem { namespace plugins { namespace condenser_api {
 
       account_name_type author;
       string            permlink;
-      legacy_asset      sbd_payout;
       legacy_asset      steem_payout;
       legacy_asset      vesting_payout;
    };
@@ -672,7 +652,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          benefactor( op.benefactor ),
          author( op.author ),
          permlink( op.permlink ),
-         sbd_payout( legacy_asset::from_asset( op.sbd_payout ) ),
          steem_payout( legacy_asset::from_asset( op.steem_payout ) ),
          vesting_payout( legacy_asset::from_asset( op.vesting_payout ) )
       {}
@@ -683,7 +662,6 @@ namespace steem { namespace plugins { namespace condenser_api {
          op.benefactor = benefactor;
          op.author = author;
          op.permlink = permlink;
-         op.sbd_payout = sbd_payout;
          op.steem_payout = steem_payout;
          op.vesting_payout = vesting_payout;
          return op;
@@ -692,7 +670,6 @@ namespace steem { namespace plugins { namespace condenser_api {
       account_name_type benefactor;
       account_name_type author;
       string            permlink;
-      legacy_asset      sbd_payout;
       legacy_asset      steem_payout;
       legacy_asset      vesting_payout;
    };
@@ -1212,7 +1189,7 @@ void old_sv_from_variant( const fc::variant& v, T& sv )
 }
 
 FC_REFLECT( steem::plugins::condenser_api::api_chain_properties,
-            (account_creation_fee)(maximum_block_size)(sbd_interest_rate)(account_subsidy_budget)(account_subsidy_decay)
+            (account_creation_fee)(maximum_block_size)(account_subsidy_budget)(account_subsidy_decay)
           )
 
 FC_REFLECT( steem::plugins::condenser_api::legacy_price, (base)(quote) )
@@ -1233,18 +1210,18 @@ FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_operation, (from)(to)
 FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_to_vesting_operation, (from)(to)(amount) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_withdraw_vesting_operation, (account)(vesting_shares) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_witness_update_operation, (owner)(url)(block_signing_key)(props)(fee) )
-FC_REFLECT( steem::plugins::condenser_api::legacy_comment_options_operation, (author)(permlink)(max_accepted_payout)(percent_steem_dollars)(allow_votes)(allow_curation_rewards)(extensions) )
-FC_REFLECT( steem::plugins::condenser_api::legacy_escrow_transfer_operation, (from)(to)(sbd_amount)(steem_amount)(escrow_id)(agent)(fee)(json_meta)(ratification_deadline)(escrow_expiration) );
-FC_REFLECT( steem::plugins::condenser_api::legacy_escrow_release_operation, (from)(to)(agent)(who)(receiver)(escrow_id)(sbd_amount)(steem_amount) );
-FC_REFLECT( steem::plugins::condenser_api::legacy_claim_reward_balance_operation, (account)(reward_steem)(reward_sbd)(reward_vests) )
+FC_REFLECT( steem::plugins::condenser_api::legacy_comment_options_operation, (author)(permlink)(max_accepted_payout)(allow_votes)(allow_curation_rewards)(extensions) )
+FC_REFLECT( steem::plugins::condenser_api::legacy_escrow_transfer_operation, (from)(to)(steem_amount)(escrow_id)(agent)(fee)(json_meta)(ratification_deadline)(escrow_expiration) );
+FC_REFLECT( steem::plugins::condenser_api::legacy_escrow_release_operation, (from)(to)(agent)(who)(receiver)(escrow_id)(steem_amount) );
+FC_REFLECT( steem::plugins::condenser_api::legacy_claim_reward_balance_operation, (account)(reward_steem)(reward_vests) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_delegate_vesting_shares_operation, (delegator)(delegatee)(vesting_shares) );
-FC_REFLECT( steem::plugins::condenser_api::legacy_author_reward_operation, (author)(permlink)(sbd_payout)(steem_payout)(vesting_payout) )
+FC_REFLECT( steem::plugins::condenser_api::legacy_author_reward_operation, (author)(permlink)(steem_payout)(vesting_payout) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_curation_reward_operation, (curator)(reward)(comment_author)(comment_permlink) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_comment_reward_operation, (author)(permlink)(payout) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_fill_vesting_withdraw_operation, (from_account)(to_account)(withdrawn)(deposited) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_fill_transfer_from_savings_operation, (from)(to)(amount)(request_id)(memo) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_return_vesting_delegation_operation, (account)(vesting_shares) )
-FC_REFLECT( steem::plugins::condenser_api::legacy_comment_benefactor_reward_operation, (benefactor)(author)(permlink)(sbd_payout)(steem_payout)(vesting_payout) )
+FC_REFLECT( steem::plugins::condenser_api::legacy_comment_benefactor_reward_operation, (benefactor)(author)(permlink)(steem_payout)(vesting_payout) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_producer_reward_operation, (producer)(vesting_shares) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_claim_account_operation, (creator)(fee)(extensions) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_proposal_pay_operation, (receiver)(payment)(trx_id)(op_in_trx) )

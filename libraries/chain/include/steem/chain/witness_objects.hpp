@@ -40,7 +40,7 @@ namespace steem { namespace chain {
        *  to tune rate limiting and capacity
        */
       uint32_t          maximum_block_size = STEEM_MIN_BLOCK_SIZE_LIMIT * 2;
-      uint16_t          sbd_interest_rate  = STEEM_DEFAULT_SBD_INTEREST_RATE;
+
       /**
        * How many free accounts should be created per elected witness block.
        * Scaled so that STEEM_ACCOUNT_SUBSIDY_PRECISION represents one account.
@@ -104,9 +104,6 @@ namespace steem { namespace chain {
          public_key_type   signing_key;
 
          chain_properties  props;
-         price             sbd_exchange_rate;
-         time_point_sec    last_sbd_exchange_update;
-
 
          /**
           *  The total votes for this witness. This determines how the witness is ranked for
@@ -301,7 +298,6 @@ FC_REFLECT_ENUM( steem::chain::witness_object::witness_schedule_type, (elected)(
 FC_REFLECT( steem::chain::chain_properties,
              (account_creation_fee)
              (maximum_block_size)
-             (sbd_interest_rate)
              (account_subsidy_budget)
              (account_subsidy_decay)
           )
@@ -313,7 +309,6 @@ FC_REFLECT( steem::chain::witness_object,
              (url)(votes)(schedule)(virtual_last_update)(virtual_position)(virtual_scheduled_time)(total_missed)
              (last_aslot)(last_confirmed_block_num)(pow_worker)(signing_key)
              (props)
-             (sbd_exchange_rate)(last_sbd_exchange_update)
              (last_work)
              (running_version)
              (hardfork_version_vote)(hardfork_time_vote)

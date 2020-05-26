@@ -14,18 +14,14 @@
 #define SMT_MAX_NAI_POOL_COUNT               10
 #define SMT_MAX_NAI_GENERATION_TRIES         100
 
-#define STEEM_PRECISION_SBD   (3)
 #define STEEM_PRECISION_STEEM (3)
 #define STEEM_PRECISION_VESTS (6)
 
 // One's place is used for check digit, which means NAI 0-9 all have NAI data of 0 which is invalid
 // This space is safe to use because it would alwasys result in failure to convert from NAI
-#define STEEM_NAI_SBD   (1)
 #define STEEM_NAI_STEEM (2)
 #define STEEM_NAI_VESTS (3)
 
-#define STEEM_ASSET_NUM_SBD \
-  (uint32_t(((SMT_MAX_NAI + STEEM_NAI_SBD)   << STEEM_NAI_SHIFT) | STEEM_PRECISION_SBD))
 #define STEEM_ASSET_NUM_STEEM \
   (uint32_t(((SMT_MAX_NAI + STEEM_NAI_STEEM) << STEEM_NAI_SHIFT) | STEEM_PRECISION_STEEM))
 #define STEEM_ASSET_NUM_VESTS \
@@ -35,19 +31,16 @@
 
 #define VESTS_SYMBOL_U64  (uint64_t('V') | (uint64_t('E') << 8) | (uint64_t('S') << 16) | (uint64_t('T') << 24) | (uint64_t('S') << 32))
 #define STEEM_SYMBOL_U64  (uint64_t('T') | (uint64_t('E') << 8) | (uint64_t('S') << 16) | (uint64_t('T') << 24) | (uint64_t('S') << 32))
-#define SBD_SYMBOL_U64    (uint64_t('T') | (uint64_t('B') << 8) | (uint64_t('D') << 16))
 
 #else
 
 #define VESTS_SYMBOL_U64  (uint64_t('V') | (uint64_t('E') << 8) | (uint64_t('S') << 16) | (uint64_t('T') << 24) | (uint64_t('S') << 32))
 #define STEEM_SYMBOL_U64  (uint64_t('S') | (uint64_t('T') << 8) | (uint64_t('E') << 16) | (uint64_t('E') << 24) | (uint64_t('M') << 32))
-#define SBD_SYMBOL_U64    (uint64_t('S') | (uint64_t('B') << 8) | (uint64_t('D') << 16))
 
 #endif
 
 #define VESTS_SYMBOL_SER  (uint64_t(6) | (VESTS_SYMBOL_U64 << 8)) ///< VESTS|VESTS with 6 digits of precision
 #define STEEM_SYMBOL_SER  (uint64_t(3) | (STEEM_SYMBOL_U64 << 8)) ///< STEEM|TESTS with 3 digits of precision
-#define SBD_SYMBOL_SER    (uint64_t(3) |   (SBD_SYMBOL_U64 << 8)) ///< SBD|TBD with 3 digits of precision
 
 #define STEEM_ASSET_MAX_DECIMALS 12
 
@@ -99,7 +92,6 @@ class asset_symbol_type
       bool is_vesting() const;
       /**Returns vesting symbol when called from liquid one
        * and liquid symbol when called from vesting one.
-       * Returns back the SBD symbol if represents SBD.
        */
       asset_symbol_type get_paired_symbol() const;
       /**Returns asset_num stripped of precision holding bits.
@@ -160,9 +152,6 @@ inline void pack( Stream& s, const steem::protocol::asset_symbol_type& sym )
             case STEEM_ASSET_NUM_STEEM:
                ser = STEEM_SYMBOL_SER;
                break;
-            case STEEM_ASSET_NUM_SBD:
-               ser = SBD_SYMBOL_SER;
-               break;
             case STEEM_ASSET_NUM_VESTS:
                ser = VESTS_SYMBOL_SER;
                break;
@@ -192,11 +181,6 @@ inline void unpack( Stream& s, steem::protocol::asset_symbol_type& sym, uint32_t
          s.read( ((char*) &ser)+4, 4 );
          FC_ASSERT( ser == STEEM_SYMBOL_SER, "invalid asset bits" );
          sym.asset_num = STEEM_ASSET_NUM_STEEM;
-         break;
-      case SBD_SYMBOL_SER & 0xFFFFFFFF:
-         s.read( ((char*) &ser)+4, 4 );
-         FC_ASSERT( ser == SBD_SYMBOL_SER, "invalid asset bits" );
-         sym.asset_num = STEEM_ASSET_NUM_SBD;
          break;
       case VESTS_SYMBOL_SER & 0xFFFFFFFF:
          s.read( ((char*) &ser)+4, 4 );
