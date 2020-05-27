@@ -2336,12 +2336,12 @@ void database::init_genesis( uint64_t init_supply )
          auth.active.weight_threshold = 1;
       });
 
-#ifdef IS_TEST_NET
+//#ifdef IS_TEST_NET
       create< account_object >( [&]( account_object& a )
       {
          a.name = STEEM_TREASURY_ACCOUNT;
       } );
-#endif
+//#endif
 
       create< account_object >( [&]( account_object& a )
       {
