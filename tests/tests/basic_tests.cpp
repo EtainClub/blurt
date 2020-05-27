@@ -346,17 +346,6 @@ BOOST_AUTO_TEST_CASE( adjust_balance_test )
    db->adjust_balance( "alice", asset( -30000, STEEM_SYMBOL ) );
    db->adjust_balance( "alice", asset( -20000, STEEM_SYMBOL ) );
    BOOST_REQUIRE( db->get_balance( "alice", STEEM_SYMBOL ) == asset( 0, STEEM_SYMBOL ) );
-
-   BOOST_TEST_MESSAGE( " --- Testing adding SBD_SYMBOL" );
-   db->adjust_balance( "alice", asset( 100000, SBD_SYMBOL ) );
-   BOOST_REQUIRE( db->get_balance( "alice", SBD_SYMBOL ) == asset( 100000, SBD_SYMBOL ) );
-
-   BOOST_TEST_MESSAGE( " --- Testing deducting SBD_SYMBOL" );
-   STEEM_REQUIRE_THROW( db->adjust_balance( "alice", asset( -100001, SBD_SYMBOL ) ), fc::assert_exception );
-   db->adjust_balance( "alice", asset( -50000, SBD_SYMBOL ) );
-   db->adjust_balance( "alice", asset( -25000, SBD_SYMBOL ) );
-   db->adjust_balance( "alice", asset( -25000, SBD_SYMBOL ) );
-   BOOST_REQUIRE( db->get_balance( "alice", SBD_SYMBOL ) == asset( 0, SBD_SYMBOL ) );
 }
 
 uint8_t find_msb( const uint128_t& u )

@@ -20,7 +20,6 @@
 #include <iostream>
 
 #define INITIAL_TEST_SUPPLY (10000000000ll)
-#define SBD_INITIAL_TEST_SUPPLY (300000000ll)
 
 extern uint32_t STEEM_TESTING_GENESIS_TIMESTAMP;
 
@@ -255,11 +254,9 @@ struct database_fixture {
    void fund( const string& account_name, const share_type& amount = 500000 );
    void fund( const string& account_name, const asset& amount );
    void transfer( const string& from, const string& to, const asset& amount );
-   void convert( const string& account_name, const asset& amount );
    void vest( const string& from, const string& to, const asset& amount );
    void vest( const string& from, const share_type& amount );
    void proxy( const string& account, const string& proxy );
-   void set_price_feed( const price& new_price );
    void set_witness_props( const flat_map< string, vector< char > >& new_props );
    const asset& get_balance( const string& account_name )const;
    void sign( signed_transaction& trx, const fc::ecc::private_key& key );

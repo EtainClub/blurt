@@ -95,13 +95,6 @@ add_boost_test( chain_test
    operation_tests/custom_authorities
    operation_tests/custom_json_authorities
    operation_tests/custom_binary_authorities
-   operation_tests/feed_publish_validate
-   operation_tests/feed_publish_authorities
-   operation_tests/feed_publish_apply
-   operation_tests/convert_validate
-   operation_tests/convert_authorities
-   operation_tests/convert_apply
-   operation_tests/fixture_convert_checks_balance
    operation_tests/account_recovery
    operation_tests/change_recovery_account
    operation_tests/escrow_transfer_validate
@@ -155,13 +148,10 @@ add_boost_test( chain_test
    operation_time_tests/vesting_withdrawals
    operation_time_tests/vesting_withdraw_route
    operation_time_tests/feed_publish_mean
-   operation_time_tests/convert_delay
    operation_time_tests/steem_inflation
    operation_time_tests/sbd_interest
    operation_time_tests/post_rate_limit
    operation_time_tests/comment_freeze
-   operation_time_tests/sbd_stability
-   operation_time_tests/sbd_price_feed_limit
    operation_time_tests/clear_null_account
    operation_time_tests/generate_account_subsidies
    operation_time_tests/account_subsidy_witness_limits

@@ -71,79 +71,78 @@ BOOST_AUTO_TEST_CASE( generating_payments )
    {
       BOOST_TEST_MESSAGE( "Testing: generating payments" );
 
-      ACTORS( (alice)(bob)(carol) )
-      generate_block();
+      BOOST_REQUIRE( false ); // fix this
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
-      //=====================preparing=====================
-      auto creator = "alice";
-      auto receiver = "bob";
-
-      auto start_date = db->head_block_time();
-      auto end_date = start_date + fc::days( 2 );
-
-      auto daily_pay = ASSET( "48.000 TBD" );
-      auto hourly_pay = ASSET( "1.996 TBD" );// hourly_pay != ASSET( "2.000 TBD" ) because lack of rounding
-
-      FUND( creator, ASSET( "160.000 TESTS" ) );
-      FUND( creator, ASSET( "80.000 TBD" ) );
-      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000.000 TBD" ) );
-
-      auto voter_01 = "carol";
-      //=====================preparing=====================
-
-      //Needed basic operations
-      int64_t id_proposal_00 = create_proposal( creator, receiver, start_date, end_date, daily_pay, alice_private_key );
-      generate_blocks( 1 );
-
-      vote_proposal( voter_01, { id_proposal_00 }, true/*approve*/, carol_private_key );
-      generate_blocks( 1 );
-
-      vest(STEEM_INIT_MINER_NAME, voter_01, ASSET( "1.000 TESTS" ));
-      generate_blocks( 1 );
-
-      //skipping interest generating is necessary
-      transfer( STEEM_INIT_MINER_NAME, receiver, ASSET( "0.001 TBD" ));
-      generate_block( 5 );
-      transfer( STEEM_INIT_MINER_NAME, STEEM_TREASURY_ACCOUNT, ASSET( "0.001 TBD" ) );
-      generate_block( 5 );
-
-      const auto& dgpo = db->get_dynamic_global_properties();
-      auto old_sbd_supply = dgpo.current_sbd_supply;
-
-
-      const account_object& _creator = db->get_account( creator );
-      const account_object& _receiver = db->get_account( receiver );
-      const account_object& _voter_01 = db->get_account( voter_01 );
-      const account_object& _treasury = db->get_account( STEEM_TREASURY_ACCOUNT );
-
-      {
-         BOOST_TEST_MESSAGE( "---Payment---" );
-
-         auto before_creator_sbd_balance = _creator.sbd_balance;
-         auto before_receiver_sbd_balance = _receiver.sbd_balance;
-         auto before_voter_01_sbd_balance = _voter_01.sbd_balance;
-         auto before_treasury_sbd_balance = _treasury.sbd_balance;
-
-         auto next_block = get_nr_blocks_until_maintenance_block();
-         generate_blocks( next_block - 1 );
-         generate_blocks( 1 );
-
-         auto treasury_sbd_inflation = dgpo.current_sbd_supply - old_sbd_supply;
-         auto after_creator_sbd_balance = _creator.sbd_balance;
-         auto after_receiver_sbd_balance = _receiver.sbd_balance;
-         auto after_voter_01_sbd_balance = _voter_01.sbd_balance;
-         auto after_treasury_sbd_balance = _treasury.sbd_balance;
-
-         BOOST_REQUIRE( before_creator_sbd_balance == after_creator_sbd_balance );
-         BOOST_REQUIRE( before_receiver_sbd_balance == after_receiver_sbd_balance - hourly_pay );
-         BOOST_REQUIRE( before_voter_01_sbd_balance == after_voter_01_sbd_balance );
-         BOOST_REQUIRE( before_treasury_sbd_balance == after_treasury_sbd_balance - treasury_sbd_inflation + hourly_pay );
-      }
-
-      validate_database();
+//      ACTORS( (alice)(bob)(carol) )
+//      generate_block();
+//
+//      //=====================preparing=====================
+//      auto creator = "alice";
+//      auto receiver = "bob";
+//
+//      auto start_date = db->head_block_time();
+//      auto end_date = start_date + fc::days( 2 );
+//
+//      auto daily_pay = ASSET( "48.000 TBD" );
+//      auto hourly_pay = ASSET( "1.996 TBD" );// hourly_pay != ASSET( "2.000 TBD" ) because lack of rounding
+//
+//      FUND( creator, ASSET( "160.000 TESTS" ) );
+//      FUND( creator, ASSET( "80.000 TBD" ) );
+//      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000.000 TBD" ) );
+//
+//      auto voter_01 = "carol";
+//      //=====================preparing=====================
+//
+//      //Needed basic operations
+//      int64_t id_proposal_00 = create_proposal( creator, receiver, start_date, end_date, daily_pay, alice_private_key );
+//      generate_blocks( 1 );
+//
+//      vote_proposal( voter_01, { id_proposal_00 }, true/*approve*/, carol_private_key );
+//      generate_blocks( 1 );
+//
+//      vest(STEEM_INIT_MINER_NAME, voter_01, ASSET( "1.000 TESTS" ));
+//      generate_blocks( 1 );
+//
+//      //skipping interest generating is necessary
+//      transfer( STEEM_INIT_MINER_NAME, receiver, ASSET( "0.001 TBD" ));
+//      generate_block( 5 );
+//      transfer( STEEM_INIT_MINER_NAME, STEEM_TREASURY_ACCOUNT, ASSET( "0.001 TBD" ) );
+//      generate_block( 5 );
+//
+//      const auto& dgpo = db->get_dynamic_global_properties();
+//      auto old_sbd_supply = dgpo.current_sbd_supply;
+//
+//
+//      const account_object& _creator = db->get_account( creator );
+//      const account_object& _receiver = db->get_account( receiver );
+//      const account_object& _voter_01 = db->get_account( voter_01 );
+//      const account_object& _treasury = db->get_account( STEEM_TREASURY_ACCOUNT );
+//
+//      {
+//         BOOST_TEST_MESSAGE( "---Payment---" );
+//
+//         auto before_creator_sbd_balance = _creator.sbd_balance;
+//         auto before_receiver_sbd_balance = _receiver.sbd_balance;
+//         auto before_voter_01_sbd_balance = _voter_01.sbd_balance;
+//         auto before_treasury_sbd_balance = _treasury.sbd_balance;
+//
+//         auto next_block = get_nr_blocks_until_maintenance_block();
+//         generate_blocks( next_block - 1 );
+//         generate_blocks( 1 );
+//
+//         auto treasury_sbd_inflation = dgpo.current_sbd_supply - old_sbd_supply;
+//         auto after_creator_sbd_balance = _creator.sbd_balance;
+//         auto after_receiver_sbd_balance = _receiver.sbd_balance;
+//         auto after_voter_01_sbd_balance = _voter_01.sbd_balance;
+//         auto after_treasury_sbd_balance = _treasury.sbd_balance;
+//
+//         BOOST_REQUIRE( before_creator_sbd_balance == after_creator_sbd_balance );
+//         BOOST_REQUIRE( before_receiver_sbd_balance == after_receiver_sbd_balance - hourly_pay );
+//         BOOST_REQUIRE( before_voter_01_sbd_balance == after_voter_01_sbd_balance );
+//         BOOST_REQUIRE( before_treasury_sbd_balance == after_treasury_sbd_balance - treasury_sbd_inflation + hourly_pay );
+//      }
+//
+//      validate_database();
    }
    FC_LOG_AND_RETHROW()
 }
@@ -155,9 +154,6 @@ BOOST_AUTO_TEST_CASE( generating_payments_01 )
       BOOST_TEST_MESSAGE( "Testing: generating payments" );
 
       ACTORS( (tester001)(tester002)(tester003)(tester004)(tester005) )
-      generate_block();
-
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
       generate_block();
 
       //=====================preparing=====================
@@ -182,7 +178,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_01 )
       for( auto item : inits )
       {
          FUND( item.account, ASSET( "400.000 TESTS" ) );
-         FUND( item.account, ASSET( "400.000 TBD" ) );
+//         FUND( item.account, ASSET( "400.000 TBD" ) );
          vest(STEEM_INIT_MINER_NAME, item.account, ASSET( "300.000 TESTS" ));
       }
 
@@ -190,10 +186,10 @@ BOOST_AUTO_TEST_CASE( generating_payments_01 )
       const auto end_time_shift = fc::hours( 5 );
       auto end_date = start_date + end_time_shift;
 
-      auto daily_pay = ASSET( "24.000 TBD" );
-      auto paid = ASSET( "4.990 TBD" );// paid != ASSET( "5.000 TBD" ) because lack of rounding
+      auto daily_pay = ASSET( "24.000 TESTS" );
+      auto paid = ASSET( "4.990 TESTS" );// paid != ASSET( "5.000 TBD" ) because lack of rounding
 
-      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TBD" ) );
+      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
       //=====================preparing=====================
       for( int32_t i = 0; i < nr_proposals; ++i )
       {
@@ -212,7 +208,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_01 )
       for( auto item : inits )
       {
          const account_object& account = db->get_account( item.account );
-         before_tbds[ item.account ] = account.sbd_balance;
+         before_tbds[ item.account ] = account.balance;
       }
 
       generate_blocks( start_date + end_time_shift + fc::seconds( 10 ), false );
@@ -220,7 +216,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_01 )
       for( auto item : inits )
       {
          const account_object& account = db->get_account( item.account );
-         auto after_tbd = account.sbd_balance;
+         auto after_tbd = account.balance;
          auto before_tbd = before_tbds[ item.account ];
          BOOST_REQUIRE( before_tbd == after_tbd - paid );
       }
@@ -243,9 +239,6 @@ BOOST_AUTO_TEST_CASE( generating_payments_02 )
                (a30)(a31)(a32)(a33)(a34)(a35)(a36)(a37)(a38)(a39)
                (a40)(a41)(a42)(a43)(a44)(a45)(a46)(a47)(a48)(a49)
             )
-      generate_block();
-
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
       generate_block();
 
       //=====================preparing=====================
@@ -273,7 +266,6 @@ BOOST_AUTO_TEST_CASE( generating_payments_02 )
       for( auto item : inits )
       {
          FUND( item.account, ASSET( "400.000 TESTS" ) );
-         FUND( item.account, ASSET( "400.000 TBD" ) );
          vest(STEEM_INIT_MINER_NAME, item.account, ASSET( "300.000 TESTS" ));
       }
 
@@ -285,10 +277,10 @@ BOOST_AUTO_TEST_CASE( generating_payments_02 )
 
       const auto block_interval = fc::seconds( STEEM_BLOCK_INTERVAL );
 
-      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TBD" ) );
+      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
       //=====================preparing=====================
       auto item_creator = inits[ 0 ];
-      create_proposal( item_creator.account, item_creator.account, start_date, end_date, ASSET( "24.000 TBD" ), item_creator.key );
+      create_proposal( item_creator.account, item_creator.account, start_date, end_date, ASSET( "24.000 TESTS" ), item_creator.key );
       generate_block();
 
       for( auto item : inits )
@@ -298,7 +290,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_02 )
          generate_block();
 
          const account_object& account = db->get_account( item.account );
-         before_tbds[ item.account ] = account.sbd_balance;
+         before_tbds[ item.account ] = account.balance;
       }
 
       generate_blocks( start_date, false );
@@ -323,7 +315,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_02 )
       for( auto item : inits )
       {
          const account_object& account = db->get_account( item.account );
-         auto after_tbd = account.sbd_balance;
+         auto after_tbd = account.balance;
          auto before_tbd = before_tbds[ item.account ];
          BOOST_REQUIRE( before_tbd == after_tbd );
       }
@@ -346,9 +338,6 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
       ACTORS( (tester00)(tester01)(tester02) )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       //=====================preparing=====================
       std::vector< int64_t > proposals_id;
       flat_map< std::string, asset > before_tbds;
@@ -363,13 +352,11 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
          if( item.first == tester02_account )
          {
             FUND( item.first, ASSET( "41.000 TESTS" ) );
-            FUND( item.first, ASSET( "41.000 TBD" ) );
             vest(STEEM_INIT_MINER_NAME, item.first, ASSET( "31.000 TESTS" ));
          }
          else
          {
             FUND( item.first, ASSET( "40.000 TESTS" ) );
-            FUND( item.first, ASSET( "40.000 TBD" ) );
             vest(STEEM_INIT_MINER_NAME, item.first, ASSET( "30.000 TESTS" ));
          }
       }
@@ -379,10 +366,10 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
       std::vector< fc::microseconds > end_time_shift = { fc::hours( 1 ), fc::hours( 2 ), fc::hours( 3 ), fc::hours( 4 ) };
       auto end_date = start_date + end_time_shift[ 3 ];
 
-      auto huge_daily_pay = ASSET( "50000001.000 TBD" );
-      auto daily_pay = ASSET( "24.000 TBD" );
+      auto huge_daily_pay = ASSET( "50000001.000 TESTS" );
+      auto daily_pay = ASSET( "24.000 TESTS" );
 
-      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TBD" ) );
+      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
       //=====================preparing=====================
       uint16_t i = 0;
       for( auto item : inits )
@@ -401,7 +388,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
       for( auto item : inits )
       {
          const account_object& account = db->get_account( item.first );
-         before_tbds[ item.first ] = account.sbd_balance;
+         before_tbds[ item.first ] = account.balance;
       }
 
       auto payment_checker = [&]( const std::vector< asset >& payouts )
@@ -412,7 +399,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
          for( const auto& item : inits )
          {
             const account_object& account = db->get_account( item.first );
-            auto after_tbd = account.sbd_balance;
+            auto after_tbd = account.balance;
             auto before_tbd = before_tbds[ item.first ];
             idump( (before_tbd) );
             idump( (after_tbd) );
@@ -436,7 +423,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
          `tester02` - no payout, because of lack of votes
       */
       ilog("");
-      payment_checker( { ASSET( "0.998 TBD" ), ASSET( "0.998 TBD" ), ASSET( "0.000 TBD" ) } );
+      payment_checker( { ASSET( "0.998 TESTS" ), ASSET( "0.998 TESTS" ), ASSET( "0.000 TESTS" ) } );
       //ideally: ASSET( "1.000 TBD" ), ASSET( "1.000 TBD" ), ASSET( "0.000 TBD" ) but there is lack of rounding
 
       {
@@ -459,7 +446,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
          `tester02` - no payout, because of lack of votes
       */
       ilog("");
-      payment_checker( { ASSET( "1.996 TBD" ), ASSET( "0.998 TBD" ), ASSET( "0.000 TBD" ) } );
+      payment_checker( { ASSET( "1.996 TESTS" ), ASSET( "0.998 TESTS" ), ASSET( "0.000 TESTS" ) } );
       //ideally: ASSET( "2.000 TBD" ), ASSET( "1.000 TBD" ), ASSET( "0.000 TBD" ) but there is lack of rounding
 
       vote_proposal( tester02_account, {2}, true/*approve*/, inits[ tester02_account ] );
@@ -472,7 +459,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
          `tester02` - got payout, because voted for his proposal
       */
       ilog("");
-      payment_checker( { ASSET( "2.994 TBD" ), ASSET( "0.998 TBD" ), ASSET( "2082.368 TBD" ) } );
+      payment_checker( { ASSET( "2.994 TESTS" ), ASSET( "0.998 TESTS" ), ASSET( "2082.368 TESTS" ) } );
       //ideally: ASSET( "3.000 TBD" ), ASSET( "1.000 TBD" ), ASSET( "2082.346 TBD" ) but there is lack of rounding
 
       {
@@ -495,7 +482,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
          `tester02` - got payout, because voted for his proposal
       */
       ilog("");
-      payment_checker( { ASSET( "2.994 TBD" ), ASSET( "0.998 TBD" ), ASSET( "4164.873 TBD" ) } );
+      payment_checker( { ASSET( "2.994 TESTS" ), ASSET( "0.998 TESTS" ), ASSET( "4164.873 TESTS" ) } );
       //ideally: ASSET( "3.000 TBD" ), ASSET( "1.000 TBD" ), ASSET( "4164.824 TBD" ) but there is lack of rounding
 
       validate_database();
@@ -510,9 +497,6 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance)
       BOOST_TEST_MESSAGE( "Testing: removing inactive proposals" );
 
       ACTORS( (alice)(bob) )
-      generate_block();
-
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
       generate_block();
 
       //=====================preparing=====================
@@ -530,9 +514,9 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance)
       auto start_date_02 = start_time + fc::seconds( 50 );
       auto end_date_02 = start_time + fc::minutes( 20 );
 
-      auto daily_pay = asset( 100, SBD_SYMBOL );
+      auto daily_pay = asset( 100, STEEM_SYMBOL );
 
-      FUND( creator, ASSET( "100.000 TBD" ) );
+      FUND( creator, ASSET( "100.000 TESTS" ) );
       //=====================preparing=====================
 
       int64_t id_proposal_00 = create_proposal( creator, receiver, start_date_00, end_date_00, daily_pay, alice_private_key );
@@ -587,10 +571,7 @@ BOOST_AUTO_TEST_CASE( proposal_object_apply )
       ACTORS( (alice)(bob) )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
-      auto fee = asset( STEEM_TREASURY_FEE, SBD_SYMBOL );
+      auto fee = asset( STEEM_TREASURY_FEE, STEEM_SYMBOL );
 
       auto creator = "alice";
       auto receiver = "bob";
@@ -598,14 +579,14 @@ BOOST_AUTO_TEST_CASE( proposal_object_apply )
       auto start_date = db->head_block_time() + fc::days( 1 );
       auto end_date = start_date + fc::days( 2 );
 
-      auto daily_pay = asset( 100, SBD_SYMBOL );
+      auto daily_pay = asset( 100, STEEM_SYMBOL );
 
       auto subject = "hello";
       auto permlink = "somethingpermlink";
 
       post_comment(creator, permlink, "title", "body", "test", alice_private_key);
 
-      FUND( creator, ASSET( "80.000 TBD" ) );
+      FUND( creator, ASSET( "80.000 TESTS" ) );
 
       signed_transaction tx;
 
@@ -613,9 +594,9 @@ BOOST_AUTO_TEST_CASE( proposal_object_apply )
       const account_object& before_alice_account = db->get_account( creator );
       const account_object& before_bob_account = db->get_account( receiver );
 
-      auto before_alice_sbd_balance = before_alice_account.sbd_balance;
-      auto before_bob_sbd_balance = before_bob_account.sbd_balance;
-      auto before_treasury_balance = before_treasury_account.sbd_balance;
+      auto before_alice_sbd_balance = before_alice_account.balance;
+      auto before_bob_sbd_balance = before_bob_account.balance;
+      auto before_treasury_balance = before_treasury_account.balance;
 
       create_proposal_operation op;
 
@@ -641,9 +622,9 @@ BOOST_AUTO_TEST_CASE( proposal_object_apply )
       const account_object& after_alice_account = db->get_account( creator );
       const account_object& after_bob_account = db->get_account( receiver );
 
-      auto after_alice_sbd_balance = after_alice_account.sbd_balance;
-      auto after_bob_sbd_balance = after_bob_account.sbd_balance;
-      auto after_treasury_balance = after_treasury_account.sbd_balance;
+      auto after_alice_sbd_balance = after_alice_account.balance;
+      auto after_bob_sbd_balance = after_bob_account.balance;
+      auto after_treasury_balance = after_treasury_account.balance;
 
       BOOST_REQUIRE( before_alice_sbd_balance == after_alice_sbd_balance + fee );
       BOOST_REQUIRE( before_bob_sbd_balance == after_bob_sbd_balance );
@@ -676,18 +657,15 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_apply )
       ACTORS( (alice)(bob)(carol)(dan) )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       auto creator = "alice";
       auto receiver = "bob";
 
       auto start_date = db->head_block_time() + fc::days( 1 );
       auto end_date = start_date + fc::days( 2 );
 
-      auto daily_pay = asset( 100, SBD_SYMBOL );
+      auto daily_pay = asset( 100, STEEM_SYMBOL );
 
-      FUND( creator, ASSET( "80.000 TBD" ) );
+      FUND( creator, ASSET( "80.000 TESTS" ) );
 
       int64_t id_proposal_00 = create_proposal( creator, receiver, start_date, end_date, daily_pay, alice_private_key );
 
@@ -748,20 +726,17 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
       ACTORS( (alice)(bob)(carol)(dan) )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       auto creator = "alice";
       auto receiver = "bob";
 
       auto start_date = db->head_block_time() + fc::days( 1 );
       auto end_date = start_date + fc::days( 2 );
 
-      auto daily_pay_00 = asset( 100, SBD_SYMBOL );
-      auto daily_pay_01 = asset( 101, SBD_SYMBOL );
-      auto daily_pay_02 = asset( 102, SBD_SYMBOL );
+      auto daily_pay_00 = asset( 100, STEEM_SYMBOL );
+      auto daily_pay_01 = asset( 101, STEEM_SYMBOL );
+      auto daily_pay_02 = asset( 102, STEEM_SYMBOL );
 
-      FUND( creator, ASSET( "80.000 TBD" ) );
+      FUND( creator, ASSET( "80.000 TESTS" ) );
 
       int64_t id_proposal_00 = create_proposal( creator, receiver, start_date, end_date, daily_pay_00, alice_private_key );
       int64_t id_proposal_01 = create_proposal( creator, receiver, start_date, end_date, daily_pay_01, alice_private_key );
@@ -1015,7 +990,7 @@ struct create_proposal_data {
          receiver   = "bob";
          start_date = _start     + fc::days( 1 );
          end_date   = start_date + fc::days( 2 );
-         daily_pay  = asset( 100, SBD_SYMBOL );
+         daily_pay  = asset( 100, STEEM_SYMBOL );
          subject    = "hello";
          url        = "http:://something.html";
       }
@@ -1028,16 +1003,13 @@ BOOST_AUTO_TEST_CASE( create_proposal_000 )
       ACTORS( (alice)(bob) )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       auto creator    = "alice";
       auto receiver   = "bob";
       auto start_date = db->head_block_time() + fc::days( 1 );
       auto end_date   = start_date + fc::days( 2 );
-      auto daily_pay  = asset( 100, SBD_SYMBOL );
+      auto daily_pay  = asset( 100, STEEM_SYMBOL );
 
-      FUND( creator, ASSET( "80.000 TBD" ) );
+      FUND( creator, ASSET( "80.000 TESTS" ) );
       {
          int64_t proposal = create_proposal( creator, receiver, start_date, end_date, daily_pay, alice_private_key );
          BOOST_REQUIRE( proposal >= 0 );
@@ -1055,7 +1027,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_001 )
          create_proposal_data cpd(db->head_block_time());
          ACTORS( (alice)(bob) )
          generate_block();
-         FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+         FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
          STEEM_REQUIRE_THROW( create_proposal( "", cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
 
       }
@@ -1072,7 +1044,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_002 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       STEEM_REQUIRE_THROW(create_proposal( cpd.creator, "", cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
       validate_database();
    }
@@ -1087,7 +1059,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_003 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       cpd.start_date = cpd.end_date + fc::days(2);
       STEEM_REQUIRE_THROW(create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
       validate_database();
@@ -1103,7 +1075,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_004 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       cpd.end_date = cpd.start_date - fc::days(2);
       STEEM_REQUIRE_THROW(create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
       validate_database();
@@ -1123,10 +1095,10 @@ BOOST_AUTO_TEST_CASE( create_proposal_005 )
       cpo.receiver   = "bob";
       cpo.start_date = db->head_block_time() + fc::days( 1 );
       cpo.end_date   = cpo.start_date + fc::days( 2 );
-      cpo.daily_pay  = asset( 100, SBD_SYMBOL );
+      cpo.daily_pay  = asset( 100, STEEM_SYMBOL );
       cpo.subject    = "";
       cpo.permlink        = "http:://something.html";
-      FUND( cpo.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpo.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       signed_transaction tx;
       tx.operations.push_back( cpo );
@@ -1152,10 +1124,10 @@ BOOST_AUTO_TEST_CASE( create_proposal_006 )
       cpo.receiver   = "bob";
       cpo.start_date = db->head_block_time() + fc::days( 1 );
       cpo.end_date   = cpo.start_date + fc::days( 2 );
-      cpo.daily_pay  = asset( 100, SBD_SYMBOL );
+      cpo.daily_pay  = asset( 100, STEEM_SYMBOL );
       cpo.subject    = "very very very very very very long long long long long long subject subject subject subject subject subject";
       cpo.permlink        = "http:://something.html";
-      FUND( cpo.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpo.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       signed_transaction tx;
       tx.operations.push_back( cpo );
@@ -1181,7 +1153,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_007 )
       cpo.receiver   = "bob";
       cpo.start_date = db->head_block_time() + fc::days( 1 );
       cpo.end_date   = cpo.start_date + fc::days( 2 );
-      cpo.daily_pay  = asset( 100, SBD_SYMBOL );
+      cpo.daily_pay  = asset( 100, STEEM_SYMBOL );
       cpo.subject    = "subject";
       cpo.permlink        = "http:://something.html";
 
@@ -1211,11 +1183,11 @@ BOOST_AUTO_TEST_CASE( create_proposal_008 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       generate_block();
       cpd.end_date = cpd.start_date + fc::days(20);
-      cpd.daily_pay = asset( -10, SBD_SYMBOL );
+      cpd.daily_pay = asset( -10, STEEM_SYMBOL );
       STEEM_REQUIRE_THROW(create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
       validate_database();
    }
@@ -1230,7 +1202,7 @@ BOOST_AUTO_TEST_CASE( update_proposal_votes_000 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob)(carol) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
@@ -1250,7 +1222,7 @@ BOOST_AUTO_TEST_CASE( update_proposal_votes_001 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob)(carol) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
@@ -1270,7 +1242,7 @@ BOOST_AUTO_TEST_CASE( update_proposal_votes_002 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob)(carol) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
@@ -1290,7 +1262,7 @@ BOOST_AUTO_TEST_CASE( update_proposal_votes_003 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob)(carol) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       std::vector< int64_t > proposals = {-1, -2, -3, -4, -5};
@@ -1308,7 +1280,7 @@ BOOST_AUTO_TEST_CASE( update_proposal_votes_004 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob)(carol) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
@@ -1328,7 +1300,7 @@ BOOST_AUTO_TEST_CASE( update_proposal_votes_005 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob)(carol) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       std::vector< int64_t > proposals;
@@ -1380,7 +1352,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_000 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
@@ -1411,7 +1383,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_001 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
 
@@ -1463,7 +1435,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_002 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal = -1;
@@ -1510,7 +1482,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_003 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal = -1;
@@ -1557,7 +1529,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_004 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal = -1;
@@ -1622,7 +1594,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_005 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
@@ -1659,7 +1631,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_006 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
@@ -1697,7 +1669,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_007 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob)(carol) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
 
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
@@ -1738,7 +1710,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_008 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       flat_set<int64_t> proposals = { 0 };
       remove_proposal(cpd.creator, proposals, alice_private_key);
@@ -1755,7 +1727,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_009 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
       flat_set<int64_t> proposals = { proposal_1 };
@@ -1773,7 +1745,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_010 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       flat_set<int64_t> proposals;
       STEEM_REQUIRE_THROW(remove_proposal(cpd.creator, proposals, bob_private_key), fc::exception);
@@ -1790,7 +1762,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_011 )
       create_proposal_data cpd(db->head_block_time());
       ACTORS( (alice)(bob) )
       generate_block();
-      FUND( cpd.creator, ASSET( "80.000 TBD" ) );
+      FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       flat_set<int64_t> proposals;
       for(int i = 0; i <= STEEM_PROPOSAL_MAX_IDS_NUMBER; i++) {
@@ -1840,9 +1812,6 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_01 )
       ACTORS( (a00)(a01)(a02)(a03)(a04) )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       //=====================preparing=====================
       auto receiver = "steem.dao";
 
@@ -1855,7 +1824,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_01 )
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
 
-      auto daily_pay = asset( 100, SBD_SYMBOL );
+      auto daily_pay = asset( 100, STEEM_SYMBOL );
 
       const auto nr_proposals = 200;
       std::vector< int64_t > proposals_id;
@@ -1876,7 +1845,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_01 )
 
       for( auto item : inits )
       {
-         FUND( item.account, ASSET( "10000.000 TBD" ) );
+         FUND( item.account, ASSET( "10000.000 TESTS" ) );
       }
       //=====================preparing=====================
 
@@ -1926,9 +1895,6 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_02 )
       ACTORS( (a00)(a01)(a02)(a03)(a04) )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       //=====================preparing=====================
       auto receiver = "steem.dao";
 
@@ -1941,7 +1907,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_02 )
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
 
-      auto daily_pay = asset( 100, SBD_SYMBOL );
+      auto daily_pay = asset( 100, STEEM_SYMBOL );
 
       const auto nr_proposals = 10;
       std::vector< int64_t > proposals_id;
@@ -1962,7 +1928,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_02 )
 
       for( auto item : inits ) 
       {
-         FUND( item.account, ASSET( "10000.000 TBD" ) );
+         FUND( item.account, ASSET( "10000.000 TESTS" ) );
       }
       //=====================preparing=====================
 
@@ -2030,9 +1996,6 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold )
       ACTORS( (a00)(a01)(a02)(a03)(a04) )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       //=====================preparing=====================
       auto receiver = "steem.dao";
 
@@ -2044,7 +2007,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold )
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
 
-      auto daily_pay = asset( 100, SBD_SYMBOL );
+      auto daily_pay = asset( 100, STEEM_SYMBOL );
 
       const auto nr_proposals = 5;
       std::vector< int64_t > proposals_id;
@@ -2065,7 +2028,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold )
 
       for( auto item : inits ) 
       {
-         FUND( item.account, ASSET( "10000.000 TBD" ) );
+         FUND( item.account, ASSET( "10000.000 TESTS" ) );
       }
       //=====================preparing=====================
 
@@ -2128,9 +2091,6 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_01 )
       ACTORS( (a00)(a01)(a02)(a03)(a04)(a05) )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       //=====================preparing=====================
       auto receiver = "steem.dao";
 
@@ -2142,7 +2102,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_01 )
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
 
-      auto daily_pay = asset( 100, SBD_SYMBOL );
+      auto daily_pay = asset( 100, STEEM_SYMBOL );
 
       const auto nr_proposals = 10;
       std::vector< int64_t > proposals_id;
@@ -2164,7 +2124,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_01 )
 
       for( auto item : inits )
       {
-         FUND( item.account, ASSET( "10000.000 TBD" ) );
+         FUND( item.account, ASSET( "10000.000 TESTS" ) );
       }
       //=====================preparing=====================
 
@@ -2372,9 +2332,6 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_02 )
             )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       //=====================preparing=====================
       auto receiver = "steem.dao";
 
@@ -2386,7 +2343,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_02 )
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
 
-      auto daily_pay = asset( 100, SBD_SYMBOL );
+      auto daily_pay = asset( 100, STEEM_SYMBOL );
 
       const auto nr_proposals = 5;
       std::vector< int64_t > proposals_id;
@@ -2412,7 +2369,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_02 )
 
       for( auto item : inits ) 
       {
-         FUND( item.account, ASSET( "10000.000 TBD" ) );
+         FUND( item.account, ASSET( "10000.000 TESTS" ) );
       }
       //=====================preparing=====================
 
@@ -2781,9 +2738,6 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_03 )
 
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       //=====================preparing=====================
       auto receiver = "steem.dao";
 
@@ -2796,7 +2750,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_03 )
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
 
-      auto daily_pay = asset( 100, SBD_SYMBOL );
+      auto daily_pay = asset( 100, STEEM_SYMBOL );
 
       const auto nr_proposals = 200;
       std::vector< int64_t > proposals_id;
@@ -2809,7 +2763,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_03 )
 
       for( auto item : inits )
       {
-         FUND( item.account, ASSET( "10000.000 TBD" ) );
+         FUND( item.account, ASSET( "10000.000 TESTS" ) );
       }
       //=====================preparing=====================
 
@@ -2885,9 +2839,6 @@ BOOST_AUTO_TEST_CASE( generating_payments )
 
       std::vector< initial_data > inits = generate_accounts( this, 30000 );
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-      generate_block();
-
       //=====================preparing=====================
       const auto nr_proposals = 5;
       std::vector< int64_t > proposals_id;
@@ -2908,7 +2859,7 @@ BOOST_AUTO_TEST_CASE( generating_payments )
       {
          if( i < 5 )
          {
-            FUND( item.account, ASSET( "11.000 TBD" ) );
+            FUND( item.account, ASSET( "11.000 TESTS" ) );
          }
          vest(STEEM_INIT_MINER_NAME, item.account, ASSET( "30.000 TESTS" ));
 
@@ -2924,10 +2875,10 @@ BOOST_AUTO_TEST_CASE( generating_payments )
       auto start_date = start_time + start_time_shift;
       auto end_date = start_date + end_time_shift;
 
-      auto daily_pay = ASSET( "24.000 TBD" );
-      auto paid = ASSET( "1.000 TBD" );//because only 1 hour
+      auto daily_pay = ASSET( "24.000 TESTS" );
+      auto paid = ASSET( "1.000 TESTS" );//because only 1 hour
 
-      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TBD" ) );
+      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
       //=====================preparing=====================
       for( int32_t i = 0; i < nr_proposals; ++i )
       {
@@ -2948,7 +2899,7 @@ BOOST_AUTO_TEST_CASE( generating_payments )
       {
          auto item = inits[ i % inits.size() ];
          const account_object& account = db->get_account( item.account );
-         before_tbds[ item.account ] = account.sbd_balance;
+         before_tbds[ item.account ] = account.balance;
       }
 
       generate_blocks( start_time + ( start_time_shift - block_interval ) );
@@ -2960,7 +2911,7 @@ BOOST_AUTO_TEST_CASE( generating_payments )
          auto item = inits[ i % inits.size() ];
          const account_object& account = db->get_account( item.account );
 
-         auto after_tbd = account.sbd_balance;
+         auto after_tbd = account.balance;
          auto before_tbd = before_tbds[ item.account ];
          BOOST_REQUIRE( before_tbd == after_tbd - paid );
       }

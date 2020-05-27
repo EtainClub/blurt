@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE( comment_payout_equalize )
       std::vector< voter_actor > voters;
 
       authors.emplace_back( "alice", alice_private_key );
-      authors.emplace_back( "bob"  , bob_private_key, ASSET( "0.000 TBD" ) );
+      authors.emplace_back( "bob"  , bob_private_key, ASSET( "0.000 TESTS" ) );
       authors.emplace_back( "dave" , dave_private_key );
       voters.emplace_back( "ulysses", ulysses_private_key, "alice");
       voters.emplace_back( "vivian" , vivian_private_key , "bob"  );
@@ -73,8 +73,6 @@ BOOST_AUTO_TEST_CASE( comment_payout_equalize )
       // U,V,W : voters
 
       // set a ridiculously high STEEM price ($1 / satoshi) to disable dust threshold
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "0.001 TESTS" ) ) );
-
       for( const auto& voter : voters )
       {
          fund( voter.name, 10000 );
@@ -133,26 +131,14 @@ BOOST_AUTO_TEST_CASE( comment_payout_equalize )
       //idump( (rf) );
 
       generate_blocks( db->get_comment( "alice", string( "mypost" ) ).cashout_time, true );
-      /*
-      for( const auto& author : authors )
-      {
-         const account_object& a = db->get_account(author.name);
-         ilog( "${n} : ${steem} ${sbd}", ("n", author.name)("steem", a.reward_steem_balance)("sbd", a.reward_sbd_balance) );
-      }
-      for( const auto& voter : voters )
-      {
-         const account_object& a = db->get_account(voter.name);
-         ilog( "${n} : ${steem} ${sbd}", ("n", voter.name)("steem", a.reward_steem_balance)("sbd", a.reward_sbd_balance) );
-      }
-      */
 
       const account_object& alice_account = db->get_account("alice");
       const account_object& bob_account   = db->get_account("bob");
       const account_object& dave_account  = db->get_account("dave");
 
-      BOOST_CHECK( alice_account.reward_sbd_balance == ASSET( "6075.000 TBD" ) );
-      BOOST_CHECK( bob_account.reward_sbd_balance == ASSET( "0.000 TBD" ) );
-      BOOST_CHECK( dave_account.reward_sbd_balance == alice_account.reward_sbd_balance );
+      BOOST_CHECK( alice_account.reward_vesting_steem.amount == 150 );
+      BOOST_CHECK( bob_account.reward_vesting_steem.amount == 0 );
+      BOOST_CHECK( dave_account.reward_vesting_steem == alice_account.reward_vesting_steem );
    }
    FC_LOG_AND_RETHROW()
 }
@@ -168,8 +154,6 @@ BOOST_AUTO_TEST_CASE( comment_payout_dust )
 
       vest( STEEM_INIT_MINER_NAME, "alice", ASSET( "10.000 TESTS" ) );
       vest( STEEM_INIT_MINER_NAME, "bob", ASSET( "10.000 TESTS" ) );
-
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
 
       generate_block();
       validate_database();
@@ -225,7 +209,7 @@ BOOST_AUTO_TEST_CASE( comment_payout_dust )
 
       // If comments are paid out independent of order, then the last satoshi of STEEM cannot be divided among them
       const auto rf = db->get< reward_fund_object, by_name >( STEEM_POST_REWARD_FUND_NAME );
-      BOOST_REQUIRE( rf.reward_balance == ASSET( "36.240 TESTS" ) );
+      BOOST_REQUIRE( rf.reward_balance == ASSET( "0.240 TESTS" ) );
 
       validate_database();
 
@@ -242,9 +226,6 @@ BOOST_AUTO_TEST_CASE( reward_funds )
       BOOST_TEST_MESSAGE( "Testing: reward_funds" );
 
       ACTORS( (alice)(bob) )
-      generate_block();
-
-      set_price_feed( price( ASSET( "1.000 TESTS" ), ASSET( "1.000 TBD" ) ) );
       generate_block();
 
       comment_operation comment;
@@ -314,9 +295,6 @@ BOOST_AUTO_TEST_CASE( recent_claims_decay )
    {
       BOOST_TEST_MESSAGE( "Testing: recent_rshares_2decay" );
       ACTORS( (alice)(bob) )
-      generate_block();
-
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
       generate_block();
 
       comment_operation comment;
@@ -405,9 +383,6 @@ BOOST_AUTO_TEST_CASE( comment_payout )
       vest( "sam", 8000 );
       fund( "dave", 5000 );
       vest( "dave", 5000 );
-
-      price exchange_rate( ASSET( "1.000 TESTS" ), ASSET( "1.000 TBD" ) );
-      set_price_feed( exchange_rate );
 
       signed_transaction tx;
 
@@ -573,9 +548,6 @@ BOOST_AUTO_TEST_CASE( comment_payout )
       vest( "sam", 8000 );
       fund( "dave", 5000 );
       vest( "dave", 5000 );
-
-      price exchange_rate( ASSET( "1.000 TESTS" ), ASSET( "1.000 TBD" ) );
-      set_price_feed( exchange_rate );
 
       auto gpo = db->get_dynamic_global_properties();
 
@@ -886,9 +858,6 @@ OOST_AUTO_TEST_CASE( nested_comments )
       vest( "sam", 10000 );
       fund( "dave", 10000 );
       vest( "dave", 10000 );
-
-      price exchange_rate( ASSET( "1.000 TESTS" ), ASSET( "1.000 TBD" ) );
-      set_price_feed( exchange_rate );
 
       signed_transaction tx;
       comment_operation comment_op;
@@ -1677,9 +1646,6 @@ BOOST_AUTO_TEST_CASE( comment_freeze )
       vest( "sam", 10000 );
       vest( "dave", 10000 );
 
-      auto exchange_rate = price( ASSET( "1.000 TBD" ), ASSET( "1.250 TESTS" ) );
-      set_price_feed( exchange_rate );
-
       signed_transaction tx;
 
       comment_operation comment;
@@ -1783,204 +1749,6 @@ BOOST_AUTO_TEST_CASE( comment_freeze )
    FC_LOG_AND_RETHROW()
 }
 
-// This test is too intensive without optimizations. Disable it when we build in debug
-BOOST_AUTO_TEST_CASE( sbd_stability )
-{
-   #ifndef DEBUG
-   try
-   {
-      db_plugin->debug_update( [=]( database& db )
-      {
-         db.modify( db.get_dynamic_global_properties(), [&]( dynamic_global_property_object& gpo )
-         {
-            gpo.sps_fund_percent = 0;
-            gpo.content_reward_percent = 75 * STEEM_1_PERCENT;
-         });
-      }, database::skip_witness_signature );
-
-      resize_shared_mem( 1024 * 1024 * 512 ); // Due to number of blocks in the test, it requires a large file. (64 MB)
-
-      auto debug_key = "5JdouSvkK75TKWrJixYufQgePT21V7BAVWbNUWt3ktqhPmy8Z78"; //get_dev_key debug node
-
-      ACTORS( (alice)(bob)(sam)(dave)(greg) );
-
-      fund( "alice", 10000 );
-      fund( "bob", 10000 );
-
-      vest( "alice", 10000 );
-      vest( "bob", 10000 );
-
-      auto exchange_rate = price( ASSET( "1.000 TBD" ), ASSET( "10.000 TESTS" ) );
-      set_price_feed( exchange_rate );
-
-      BOOST_REQUIRE( db->get_dynamic_global_properties().sbd_print_rate == STEEM_100_PERCENT );
-
-      comment_operation comment;
-      comment.author = "alice";
-      comment.permlink = "test";
-      comment.parent_permlink = "test";
-      comment.title = "test";
-      comment.body = "test";
-
-      signed_transaction tx;
-      tx.operations.push_back( comment );
-      tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
-      sign( tx, alice_private_key );
-      db->push_transaction( tx, 0 );
-
-      vote_operation vote;
-      vote.voter = "bob";
-      vote.author = "alice";
-      vote.permlink = "test";
-      vote.weight = STEEM_100_PERCENT;
-
-      tx.operations.clear();
-      tx.signatures.clear();
-
-      tx.operations.push_back( vote );
-      sign( tx, bob_private_key );
-      db->push_transaction( tx, 0 );
-
-      BOOST_TEST_MESSAGE( "Generating blocks up to comment payout" );
-
-      db_plugin->debug_generate_blocks_until( debug_key, fc::time_point_sec( db->get_comment( comment.author, comment.permlink ).cashout_time.sec_since_epoch() - 2 * STEEM_BLOCK_INTERVAL ), true, database::skip_witness_signature );
-
-      auto& gpo = db->get_dynamic_global_properties();
-
-      BOOST_TEST_MESSAGE( "Changing sam and gpo to set up market cap conditions" );
-
-      asset sbd_balance = asset( ( gpo.virtual_supply.amount * ( gpo.sbd_stop_percent + 112 ) ) / STEEM_100_PERCENT, STEEM_SYMBOL ) * exchange_rate;
-      db_plugin->debug_update( [=]( database& db )
-      {
-         db.modify( db.get_account( "sam" ), [&]( account_object& a )
-         {
-            a.sbd_balance = sbd_balance;
-         });
-      }, database::skip_witness_signature );
-
-      db_plugin->debug_update( [=]( database& db )
-      {
-         db.modify( db.get_dynamic_global_properties(), [&]( dynamic_global_property_object& gpo )
-         {
-            gpo.current_sbd_supply = sbd_balance + db.get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance;
-            gpo.virtual_supply = gpo.virtual_supply + sbd_balance * exchange_rate;
-         });
-      }, database::skip_witness_signature );
-
-      validate_database();
-
-      db_plugin->debug_generate_blocks( debug_key, 1, database::skip_witness_signature );
-
-      auto comment_reward = ( gpo.total_reward_fund_steem.amount + 2000 ) - ( ( gpo.total_reward_fund_steem.amount + 2000 ) * 25 * STEEM_1_PERCENT ) / STEEM_100_PERCENT ;
-      comment_reward /= 2;
-      auto sbd_reward = ( comment_reward * gpo.sbd_print_rate ) / STEEM_100_PERCENT;
-      auto alice_sbd = db->get_account( "alice" ).sbd_balance + db->get_account( "alice" ).reward_sbd_balance + asset( sbd_reward, STEEM_SYMBOL ) * exchange_rate;
-      auto alice_steem = db->get_account( "alice" ).balance + db->get_account( "alice" ).reward_steem_balance ;
-
-      BOOST_TEST_MESSAGE( "Checking printing SBD has slowed" );
-      BOOST_REQUIRE( db->get_dynamic_global_properties().sbd_print_rate < STEEM_100_PERCENT );
-
-      BOOST_TEST_MESSAGE( "Pay out comment and check rewards are paid as STEEM" );
-      db_plugin->debug_generate_blocks( debug_key, 1, database::skip_witness_signature );
-
-      validate_database();
-
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance + db->get_account( "alice" ).reward_sbd_balance == alice_sbd );
-      BOOST_REQUIRE( db->get_account( "alice" ).balance + db->get_account( "alice" ).reward_steem_balance > alice_steem );
-
-      BOOST_TEST_MESSAGE( "Letting percent market cap fall to sbd_start_percent to verify printing of SBD turns back on" );
-
-      // Get close to sbd_start_percent for printing SBD to start again, but not all the way
-      db_plugin->debug_update( [=]( database& db )
-      {
-         db.modify( db.get_account( "sam" ), [&]( account_object& a )
-         {
-            a.sbd_balance = asset( ( ( gpo.sbd_start_percent - 9 ) * sbd_balance.amount ) / gpo.sbd_stop_percent, SBD_SYMBOL );
-         });
-      }, database::skip_witness_signature );
-
-      auto current_sbd_supply = alice_sbd + asset( ( ( gpo.sbd_start_percent - 9 ) * sbd_balance.amount ) / gpo.sbd_stop_percent, SBD_SYMBOL ) + db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance;
-
-      db_plugin->debug_update( [=]( database& db )
-      {
-         db.modify( db.get_dynamic_global_properties(), [&]( dynamic_global_property_object& gpo )
-         {
-            gpo.current_sbd_supply = current_sbd_supply;
-         });
-      }, database::skip_witness_signature );
-
-      db_plugin->debug_generate_blocks( debug_key, 1, database::skip_witness_signature );
-      validate_database();
-
-      BOOST_REQUIRE( db->get_dynamic_global_properties().sbd_print_rate < STEEM_100_PERCENT );
-
-      auto last_print_rate = db->get_dynamic_global_properties().sbd_print_rate;
-
-      // Keep producing blocks until printing SBD is back
-      while( ( db->get_dynamic_global_properties().current_sbd_supply * exchange_rate ).amount >= ( db->get_dynamic_global_properties().virtual_supply.amount * db->get_dynamic_global_properties().sbd_start_percent ) / STEEM_100_PERCENT )
-      {
-         auto& gpo = db->get_dynamic_global_properties();
-         BOOST_REQUIRE( gpo.sbd_print_rate >= last_print_rate );
-         last_print_rate = gpo.sbd_print_rate;
-         db_plugin->debug_generate_blocks( debug_key, 1, database::skip_witness_signature );
-         if( db->head_block_num() % 1000 == 0 )
-            validate_database();
-      }
-
-      validate_database();
-
-      BOOST_REQUIRE( db->get_dynamic_global_properties().sbd_print_rate == STEEM_100_PERCENT );
-   }
-   FC_LOG_AND_RETHROW()
-   #endif
-}
-
-BOOST_AUTO_TEST_CASE( sbd_price_feed_limit )
-{
-   try
-   {
-      ACTORS( (alice) );
-      generate_block();
-      vest( STEEM_INIT_MINER_NAME, "alice", ASSET( "10.000 TESTS" ) );
-
-      price exchange_rate( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) );
-      set_price_feed( exchange_rate );
-
-      comment_operation comment;
-      comment.author = "alice";
-      comment.permlink = "test";
-      comment.parent_permlink = "test";
-      comment.title = "test";
-      comment.body = "test";
-
-      vote_operation vote;
-      vote.voter = "alice";
-      vote.author = "alice";
-      vote.permlink = "test";
-      vote.weight = STEEM_100_PERCENT;
-
-      signed_transaction tx;
-      tx.operations.push_back( comment );
-      tx.operations.push_back( vote );
-      tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
-      sign( tx, alice_private_key );
-      db->push_transaction( tx, 0 );
-
-      generate_blocks( db->get_comment( "alice", string( "test" ) ).cashout_time, true );
-
-      BOOST_TEST_MESSAGE( "Setting SBD percent to greater than 10% market cap." );
-
-      db->skip_price_feed_limit_check = false;
-      const auto& gpo = db->get_dynamic_global_properties();
-      auto new_exchange_rate = price( gpo.current_sbd_supply, asset( ( STEEM_100_PERCENT ) * gpo.current_supply.amount, STEEM_SYMBOL ) );
-      set_price_feed( new_exchange_rate );
-      set_price_feed( new_exchange_rate );
-
-      BOOST_REQUIRE( db->get_feed_history().current_median_history > new_exchange_rate && db->get_feed_history().current_median_history < exchange_rate );
-   }
-   FC_LOG_AND_RETHROW()
-}
-
 BOOST_AUTO_TEST_CASE( clear_null_account )
 {
    try
@@ -1990,20 +1758,12 @@ BOOST_AUTO_TEST_CASE( clear_null_account )
       ACTORS( (alice) );
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-
       fund( "alice", ASSET( "10.000 TESTS" ) );
-      fund( "alice", ASSET( "10.000 TBD" ) );
 
       transfer_operation transfer1;
       transfer1.from = "alice";
       transfer1.to = STEEM_NULL_ACCOUNT;
       transfer1.amount = ASSET( "1.000 TESTS" );
-
-      transfer_operation transfer2;
-      transfer2.from = "alice";
-      transfer2.to = STEEM_NULL_ACCOUNT;
-      transfer2.amount = ASSET( "2.000 TBD" );
 
       transfer_to_vesting_operation vest;
       vest.from = "alice";
@@ -2015,19 +1775,13 @@ BOOST_AUTO_TEST_CASE( clear_null_account )
       save1.to = STEEM_NULL_ACCOUNT;
       save1.amount = ASSET( "4.000 TESTS" );
 
-      transfer_to_savings_operation save2;
-      save2.from = "alice";
-      save2.to = STEEM_NULL_ACCOUNT;
-      save2.amount = ASSET( "5.000 TBD" );
 
       BOOST_TEST_MESSAGE( "--- Transferring to NULL Account" );
 
       signed_transaction tx;
       tx.operations.push_back( transfer1 );
-      tx.operations.push_back( transfer2 );
       tx.operations.push_back( vest );
       tx.operations.push_back( save1);
-      tx.operations.push_back( save2 );
       tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
       sign( tx, alice_private_key );
       db->push_transaction( tx, 0 );
@@ -2038,7 +1792,6 @@ BOOST_AUTO_TEST_CASE( clear_null_account )
          db.modify( db.get_account( STEEM_NULL_ACCOUNT ), [&]( account_object& a )
          {
             a.reward_steem_balance = ASSET( "1.000 TESTS" );
-            a.reward_sbd_balance = ASSET( "1.000 TBD" );
             a.reward_vesting_balance = ASSET( "1.000000 VESTS" );
             a.reward_vesting_steem = ASSET( "1.000 TESTS" );
          });
@@ -2046,8 +1799,6 @@ BOOST_AUTO_TEST_CASE( clear_null_account )
          db.modify( db.get_dynamic_global_properties(), [&]( dynamic_global_property_object& gpo )
          {
             gpo.current_supply += ASSET( "2.000 TESTS" );
-            gpo.virtual_supply += ASSET( "3.000 TESTS" );
-            gpo.current_sbd_supply += ASSET( "1.000 TBD" );
             gpo.pending_rewarded_vesting_shares += ASSET( "1.000000 VESTS" );
             gpo.pending_rewarded_vesting_steem += ASSET( "1.000 TESTS" );
          });
@@ -2056,32 +1807,24 @@ BOOST_AUTO_TEST_CASE( clear_null_account )
       validate_database();
 
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).balance == ASSET( "1.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).sbd_balance == ASSET( "2.000 TBD" ) );
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).vesting_shares > ASSET( "0.000000 VESTS" ) );
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).savings_balance == ASSET( "4.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).savings_sbd_balance == ASSET( "5.000 TBD" ) );
-      BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).reward_sbd_balance == ASSET( "1.000 TBD" ) );
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).reward_steem_balance == ASSET( "1.000 TESTS" ) );
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).reward_vesting_balance == ASSET( "1.000000 VESTS" ) );
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).reward_vesting_steem == ASSET( "1.000 TESTS" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "2.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == ASSET( "3.000 TBD" ) );
 
       BOOST_TEST_MESSAGE( "--- Generating block to clear balances" );
       generate_block();
       validate_database();
 
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).balance == ASSET( "0.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).sbd_balance == ASSET( "0.000 TBD" ) );
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).vesting_shares == ASSET( "0.000000 VESTS" ) );
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).savings_balance == ASSET( "0.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).savings_sbd_balance == ASSET( "0.000 TBD" ) );
-      BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).reward_sbd_balance == ASSET( "0.000 TBD" ) );
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).reward_steem_balance == ASSET( "0.000 TESTS" ) );
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).reward_vesting_balance == ASSET( "0.000000 VESTS" ) );
       BOOST_REQUIRE( db->get_account( STEEM_NULL_ACCOUNT ).reward_vesting_steem == ASSET( "0.000 TESTS" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "2.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == ASSET( "3.000 TBD" ) );
    }
    FC_LOG_AND_RETHROW()
 }
@@ -2147,8 +1890,6 @@ BOOST_AUTO_TEST_CASE( account_subsidy_witness_limits )
 
       ACTORS( (alice) )
       generate_block();
-
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
 
       claim_account_operation op;
       signed_transaction tx;
