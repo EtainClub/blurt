@@ -1364,6 +1364,26 @@ void database::process_proposals( const block_notification& note )
    sps.run( note );
 }
 
+void database::process_regent_account()
+{
+   if( (head_block_num() % 864000) == 0 ) { // 864000 ~ 1 month
+      const auto& dgpo = get_dynamic_global_properties();
+      auto step = dgpo.regent_init_vesting_shares.amount / 24;
+      auto new_regent_vesting_shares = dgpo.regent_vesting_shares.amount - step;
+
+      if (new_regent_vesting_shares >= 0) {
+         auto delta = dgpo.regent_vesting_shares.amount - new_regent_vesting_shares;
+         const auto& regent_account = this->get_account(STEEM_REGENT_ACCOUNT);
+
+         modify( dgpo, [&]( dynamic_global_property_object& p )
+         {
+            p.regent_vesting_shares = asset(new_regent_vesting_shares, VESTS_SYMBOL);
+            adjust_proxied_witness_votes( regent_account, -delta );
+         } );
+      }
+   }
+}
+
 /**
  * This method updates total_reward_shares2 on DGPO, and children_rshares2 on comments, when a comment's rshares2 changes
  * from old_rshares2 to new_rshares2.  Maintaining invariants that children_rshares2 is the sum of all descendants' rshares2,
@@ -2383,12 +2403,12 @@ void database::init_genesis( uint64_t init_supply )
       { // create regent account
          create< account_object >( [&]( account_object& a )
          {
-            a.name = "regent";
+            a.name = STEEM_REGENT_ACCOUNT;
             a.memo_key = init_public_key;
          } );
          create< account_authority_object >( [&]( account_authority_object& auth )
          {
-            auth.account = "regent";
+            auth.account = STEEM_REGENT_ACCOUNT;
             auth.owner.add_authority( init_public_key, 1 );
             auth.owner.weight_threshold = 1;
             auth.active  = auth.owner;
@@ -2407,6 +2427,8 @@ void database::init_genesis( uint64_t init_supply )
          p.reverse_auction_seconds = STEEM_REVERSE_AUCTION_WINDOW_SECONDS_HF6;
          p.next_maintenance_time = STEEM_GENESIS_TIME;
          p.last_budget_time = STEEM_GENESIS_TIME;
+         p.regent_init_vesting_shares = asset(init_supply / 2, STEEM_SYMBOL) * p.get_vesting_share_price(); // 50% of the init_supply
+         p.regent_vesting_shares = p.regent_init_vesting_shares;
       } );
 
       for( int i = 0; i < 0x10000; i++ )
@@ -3047,6 +3069,8 @@ void database::_apply_block( const signed_block& next_block )
    expire_escrow_ratification();
    process_decline_voting_rights();
    process_proposals( note );
+
+   process_regent_account();
 
    process_hardforks();
 

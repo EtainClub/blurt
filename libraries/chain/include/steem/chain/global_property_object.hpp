@@ -124,6 +124,13 @@ namespace steem { namespace chain {
          uint16_t sps_fund_percent = STEEM_PROPOSAL_FUND_PERCENT_HF0;
 
          asset sps_interval_ledger = asset( 0, STEEM_SYMBOL );
+
+         /**
+          * For regent account
+          */
+         asset regent_init_vesting_shares = asset( 0, VESTS_SYMBOL );   // init
+         asset regent_vesting_shares      = asset( 0, VESTS_SYMBOL );   // current
+
    };
 
    typedef multi_index_container<
@@ -176,5 +183,7 @@ FC_REFLECT( steem::chain::dynamic_global_property_object,
              (vesting_reward_percent)
              (sps_fund_percent)
              (sps_interval_ledger)
+             (regent_init_vesting_shares)
+             (regent_vesting_shares)
           )
 CHAINBASE_SET_INDEX_TYPE( steem::chain::dynamic_global_property_object, steem::chain::dynamic_global_property_index )

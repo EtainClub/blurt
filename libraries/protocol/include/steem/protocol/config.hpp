@@ -317,6 +317,8 @@
 #define STEEM_ROOT_POST_PARENT                (account_name_type())
 /// Represents the account with NO authority which holds resources for payouts according to given proposals
 #define STEEM_TREASURY_ACCOUNT                "steem.dao"
+/// This regent account controls the chain within 2 years
+#define STEEM_REGENT_ACCOUNT                  "regent"
 ///@}
 
 /// STEEM PROPOSAL SYSTEM support
