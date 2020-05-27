@@ -2380,6 +2380,22 @@ void database::init_genesis( uint64_t init_supply )
          } );
       }
 
+      { // create regent account
+         create< account_object >( [&]( account_object& a )
+         {
+            a.name = "regent";
+            a.memo_key = init_public_key;
+         } );
+         create< account_authority_object >( [&]( account_authority_object& auth )
+         {
+            auth.account = "regent";
+            auth.owner.add_authority( init_public_key, 1 );
+            auth.owner.weight_threshold = 1;
+            auth.active  = auth.owner;
+            auth.posting = auth.active;
+         });
+      }
+
       create< dynamic_global_property_object >( [&]( dynamic_global_property_object& p )
       {
          p.current_witness = STEEM_INIT_MINER_NAME;
