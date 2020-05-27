@@ -146,7 +146,6 @@ void clean_database_fixture::resize_shared_mem( uint64_t size )
       args.data_dir = data_dir->path();
       args.shared_mem_dir = args.data_dir;
       args.initial_supply = INITIAL_TEST_SUPPLY;
-      args.sbd_initial_supply = SBD_INITIAL_TEST_SUPPLY;
       args.shared_file_size = size;
       args.database_cfg = steem::utilities::default_database_configuration();
       db->open( args );
@@ -247,7 +246,6 @@ void database_fixture::open_database( uint16_t shared_file_size_in_mb )
       args.data_dir = data_dir->path();
       args.shared_mem_dir = args.data_dir;
       args.initial_supply = INITIAL_TEST_SUPPLY;
-      args.sbd_initial_supply = SBD_INITIAL_TEST_SUPPLY;
       args.shared_file_size = 1024 * 1024 * shared_file_size_in_mb; // 8MB(default) or more:  file for testing
       args.database_cfg = steem::utilities::default_database_configuration();
       args.sps_remove_threshold = 20;
@@ -410,58 +408,17 @@ void database_fixture::fund(
          {
             if( amount.symbol == STEEM_SYMBOL )
                a.balance += amount;
-            else if( amount.symbol == SBD_SYMBOL )
-            {
-               a.sbd_balance += amount;
-               a.sbd_seconds_last_update = db.head_block_time();
-            }
          });
 
          db.modify( db.get_dynamic_global_properties(), [&]( dynamic_global_property_object& gpo )
          {
             if( amount.symbol == STEEM_SYMBOL )
                gpo.current_supply += amount;
-            else if( amount.symbol == SBD_SYMBOL )
-               gpo.current_sbd_supply += amount;
          });
 
-         if( amount.symbol == SBD_SYMBOL )
-         {
-            const auto& median_feed = db.get_feed_history();
-            if( median_feed.current_median_history.is_null() )
-               db.modify( median_feed, [&]( feed_history_object& f )
-               {
-                  f.current_median_history = price( asset( 1, SBD_SYMBOL ), asset( 1, STEEM_SYMBOL ) );
-               });
-         }
-
-         db.update_virtual_supply();
       }, default_skip );
    }
    FC_CAPTURE_AND_RETHROW( (account_name)(amount) )
-}
-
-void database_fixture::convert(
-   const string& account_name,
-   const asset& amount )
-{
-   try
-   {
-      if ( amount.symbol == STEEM_SYMBOL )
-      {
-         db->adjust_balance( account_name, -amount );
-         db->adjust_balance( account_name, db->to_sbd( amount ) );
-         db->adjust_supply( -amount );
-         db->adjust_supply( db->to_sbd( amount ) );
-      }
-      else if ( amount.symbol == SBD_SYMBOL )
-      {
-         db->adjust_balance( account_name, -amount );
-         db->adjust_balance( account_name, db->to_steem( amount ) );
-         db->adjust_supply( -amount );
-         db->adjust_supply( db->to_steem( amount ) );
-      }
-   } FC_CAPTURE_AND_RETHROW( (account_name)(amount) )
 }
 
 void database_fixture::transfer(
@@ -551,31 +508,6 @@ void database_fixture::proxy( const string& account, const string& proxy )
       db->push_transaction( trx, ~0 );
       trx.clear();
    } FC_CAPTURE_AND_RETHROW( (account)(proxy) )
-}
-
-void database_fixture::set_price_feed( const price& new_price )
-{
-   for( size_t i = 1; i < 8; i++ )
-   {
-      witness_set_properties_operation op;
-      op.owner = STEEM_INIT_MINER_NAME + fc::to_string( i );
-      op.props[ "sbd_exchange_rate" ] = fc::raw::pack_to_vector( new_price );
-      op.props[ "key" ] = fc::raw::pack_to_vector( init_account_pub_key );
-
-      trx.operations.push_back( op );
-      trx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
-      db->push_transaction( trx, ~0 );
-      trx.clear();
-   }
-
-   generate_blocks( STEEM_BLOCKS_PER_HOUR );
-
-   BOOST_REQUIRE(
-#ifdef IS_TEST_NET
-      !db->skip_price_feed_limit_check ||
-#endif
-      db->get(feed_history_id_type()).current_median_history == new_price
-   );
 }
 
 void database_fixture::set_witness_props( const flat_map< string, vector< char > >& props )

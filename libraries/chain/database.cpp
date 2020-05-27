@@ -1874,7 +1874,7 @@ void database::process_funds()
    // below subtraction cannot underflow int64_t because inflation_rate_adjustment is <2^32
    int64_t current_inflation_rate = std::max( start_inflation_rate - inflation_rate_adjustment, inflation_rate_floor );
 
-   auto new_steem = ( props.virtual_supply.amount * current_inflation_rate ) / ( int64_t( STEEM_100_PERCENT ) * int64_t( STEEM_BLOCKS_PER_YEAR ) );
+   auto new_steem = ( props.current_supply.amount * current_inflation_rate ) / ( int64_t( STEEM_100_PERCENT ) * int64_t( STEEM_BLOCKS_PER_YEAR ) );
    auto content_reward = ( new_steem * props.content_reward_percent ) / STEEM_100_PERCENT;
    content_reward = pay_reward_funds( content_reward );
    auto vesting_reward = ( new_steem * props.vesting_reward_percent ) / STEEM_100_PERCENT;
@@ -1905,7 +1905,7 @@ void database::process_funds()
    modify( props, [&]( dynamic_global_property_object& p )
    {
       p.total_vesting_fund_steem += asset( vesting_reward, STEEM_SYMBOL );
-      p.current_supply      += asset( new_steem, STEEM_SYMBOL );
+      p.current_supply      += asset( new_steem + sps_fund, STEEM_SYMBOL );
       p.sps_interval_ledger += asset( sps_fund, STEEM_SYMBOL );
    });
 
@@ -1966,7 +1966,7 @@ asset database::get_content_reward()const
 {
    const auto& props = get_dynamic_global_properties();
    static_assert( STEEM_BLOCK_INTERVAL == 3, "this code assumes a 3-second time interval" );
-   asset percent( protocol::calc_percent_reward_per_block< STEEM_CONTENT_APR_PERCENT >( props.virtual_supply.amount ), STEEM_SYMBOL );
+   asset percent( protocol::calc_percent_reward_per_block< STEEM_CONTENT_APR_PERCENT >( props.current_supply.amount ), STEEM_SYMBOL );
    return std::max( percent, STEEM_MIN_CONTENT_REWARD );
 }
 
@@ -1974,7 +1974,7 @@ asset database::get_curation_reward()const
 {
    const auto& props = get_dynamic_global_properties();
    static_assert( STEEM_BLOCK_INTERVAL == 3, "this code assumes a 3-second time interval" );
-   asset percent( protocol::calc_percent_reward_per_block< STEEM_CURATE_APR_PERCENT >( props.virtual_supply.amount ), STEEM_SYMBOL);
+   asset percent( protocol::calc_percent_reward_per_block< STEEM_CURATE_APR_PERCENT >( props.current_supply.amount ), STEEM_SYMBOL);
    return std::max( percent, STEEM_MIN_CURATE_REWARD );
 }
 
@@ -1982,7 +1982,7 @@ asset database::get_producer_reward()
 {
    const auto& props = get_dynamic_global_properties();
    static_assert( STEEM_BLOCK_INTERVAL == 3, "this code assumes a 3-second time interval" );
-   asset percent( protocol::calc_percent_reward_per_block< STEEM_PRODUCER_APR_PERCENT >( props.virtual_supply.amount ), STEEM_SYMBOL);
+   asset percent( protocol::calc_percent_reward_per_block< STEEM_PRODUCER_APR_PERCENT >( props.current_supply.amount ), STEEM_SYMBOL);
    auto pay = std::max( percent, STEEM_MIN_PRODUCER_REWARD );
    const auto& witness_account = get_account( props.current_witness );
 
@@ -2022,7 +2022,7 @@ asset database::get_pow_reward()const
 
    static_assert( STEEM_BLOCK_INTERVAL == 3, "this code assumes a 3-second time interval" );
    static_assert( STEEM_MAX_WITNESSES == 21, "this code assumes 21 per round" );
-   asset percent( calc_percent_reward_per_round< STEEM_POW_APR_PERCENT >( props.virtual_supply.amount ), STEEM_SYMBOL);
+   asset percent( calc_percent_reward_per_round< STEEM_POW_APR_PERCENT >( props.current_supply.amount ), STEEM_SYMBOL);
    return std::max( percent, STEEM_MIN_POW_REWARD );
 }
 
@@ -2387,7 +2387,6 @@ void database::init_genesis( uint64_t init_supply )
          p.recent_slots_filled = fc::uint128::max_value();
          p.participation_count = 128;
          p.current_supply = asset( init_supply, STEEM_SYMBOL );
-         p.virtual_supply = p.current_supply;
          p.maximum_block_size = STEEM_MAX_BLOCK_SIZE;
          p.reverse_auction_seconds = STEEM_REVERSE_AUCTION_WINDOW_SECONDS_HF6;
          p.next_maintenance_time = STEEM_GENESIS_TIME;
@@ -3732,7 +3731,6 @@ void database::adjust_supply( const asset& delta, bool adjust_vesting )
          {
             asset new_vesting( (adjust_vesting && delta.amount > 0) ? delta.amount * 9 : 0, STEEM_SYMBOL );
             props.current_supply += delta + new_vesting;
-            props.virtual_supply += delta + new_vesting;
             props.total_vesting_fund_steem += new_vesting;
             FC_ASSERT( props.current_supply.amount.value >= 0 );
             break;

@@ -306,7 +306,6 @@ struct extended_dynamic_global_properties
       current_witness( o.current_witness ),
       total_pow( o.total_pow ),
       num_pow_witnesses( o.num_pow_witnesses ),
-      virtual_supply( legacy_asset::from_asset( o.virtual_supply ) ),
       current_supply( legacy_asset::from_asset( o.current_supply ) ),
       confidential_supply( legacy_asset::from_asset( o.confidential_supply ) ),
       total_vesting_fund_steem( legacy_asset::from_asset( o.total_vesting_fund_steem ) ),
@@ -341,7 +340,6 @@ struct extended_dynamic_global_properties
 
    uint32_t          num_pow_witnesses = 0;
 
-   legacy_asset      virtual_supply;
    legacy_asset      current_supply;
    legacy_asset      confidential_supply;
    legacy_asset      total_vesting_fund_steem;
@@ -1032,7 +1030,7 @@ FC_REFLECT( steem::plugins::condenser_api::api_comment_object,
 FC_REFLECT( steem::plugins::condenser_api::extended_dynamic_global_properties,
             (head_block_number)(head_block_id)(time)
             (current_witness)(total_pow)(num_pow_witnesses)
-            (virtual_supply)(current_supply)(confidential_supply)
+            (current_supply)(confidential_supply)
             (total_vesting_fund_steem)(total_vesting_shares)
             (total_reward_fund_steem)(total_reward_shares2)(pending_rewarded_vesting_shares)(pending_rewarded_vesting_steem)
             (maximum_block_size)(current_aslot)(recent_slots_filled)(participation_count)(last_irreversible_block_num)

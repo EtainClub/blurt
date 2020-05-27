@@ -302,7 +302,7 @@ namespace steem { namespace protocol {
       validate_account_name( to );
       validate_account_name( agent );
       FC_ASSERT( fee.amount >= 0, "fee cannot be negative" );
-      FC_ASSERT( steem_amount.amount >= 0, "steem amount cannot be negative" );
+      FC_ASSERT( steem_amount.amount > 0, "steem amount cannot be negative" );
       FC_ASSERT( from != agent && to != agent, "agent must be a third party" );
       FC_ASSERT( fee.symbol == STEEM_SYMBOL, "fee must be STEEM" );
       FC_ASSERT( steem_amount.symbol == STEEM_SYMBOL, "steem amount must contain STEEM" );
@@ -341,7 +341,7 @@ namespace steem { namespace protocol {
       validate_account_name( receiver );
       FC_ASSERT( who == from || who == to || who == agent, "who must be from or to or agent" );
       FC_ASSERT( receiver == from || receiver == to, "receiver must be from or to" );
-      FC_ASSERT( steem_amount.amount >= 0, "steem amount cannot be negative" );
+      FC_ASSERT( steem_amount.amount > 0, "steem amount cannot be negative" );
       FC_ASSERT( steem_amount.symbol == STEEM_SYMBOL, "steem amount must contain STEEM" );
    }
 

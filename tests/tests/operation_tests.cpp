@@ -82,8 +82,6 @@ BOOST_AUTO_TEST_CASE( account_create_apply )
    {
       BOOST_TEST_MESSAGE( "Testing: account_create_apply" );
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-
       db_plugin->debug_update( [=]( database& db )
       {
          db.modify( db.get_witness_schedule_object(), [&]( witness_schedule_object& wso )
@@ -134,7 +132,6 @@ BOOST_AUTO_TEST_CASE( account_create_apply )
       BOOST_REQUIRE( acct.proxy == "" );
       BOOST_REQUIRE( acct.created == db->head_block_time() );
       BOOST_REQUIRE( acct.balance.amount.value == ASSET( "0.000 TESTS" ).amount.value );
-      BOOST_REQUIRE( acct.sbd_balance.amount.value == ASSET( "0.000 TBD" ).amount.value );
       BOOST_REQUIRE( acct.id._id == acct_auth.id._id );
 
       BOOST_REQUIRE( acct.vesting_shares.amount.value == 0 );
@@ -153,7 +150,6 @@ BOOST_AUTO_TEST_CASE( account_create_apply )
       BOOST_REQUIRE( acct.proxy == "" );
       BOOST_REQUIRE( acct.created == db->head_block_time() );
       BOOST_REQUIRE( acct.balance.amount.value == ASSET( "0.000 TESTS " ).amount.value );
-      BOOST_REQUIRE( acct.sbd_balance.amount.value == ASSET( "0.000 TBD" ).amount.value );
       BOOST_REQUIRE( acct.vesting_shares.amount.value == 0 );
       BOOST_REQUIRE( acct.vesting_withdraw_rate.amount.value == ASSET( "0.000000 VESTS" ).amount.value );
       BOOST_REQUIRE( acct.proxied_vsf_votes_total().value == 0 );
@@ -470,8 +466,6 @@ BOOST_AUTO_TEST_CASE( comment_delete_apply )
       vest( STEEM_INIT_MINER_NAME, "alice", ASSET( "1000.000 TESTS" ) );
 
       generate_block();
-
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
 
       signed_transaction tx;
       comment_operation comment;
@@ -1166,7 +1160,7 @@ BOOST_AUTO_TEST_CASE( transfer_apply )
       ACTORS( (alice)(bob) )
       generate_block();
       fund( "alice", 10000 );
-      fund( "bob", ASSET( "1.000 TBD" ) );
+//      fund( "bob", ASSET( "1.000 TESTS" ) );
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance.amount.value == ASSET( "10.000 TESTS" ).amount.value );
       BOOST_REQUIRE( db->get_account( "bob" ).balance.amount.value == ASSET(" 0.000 TESTS" ).amount.value );
@@ -1222,7 +1216,8 @@ BOOST_AUTO_TEST_CASE( transfer_apply )
       BOOST_REQUIRE( new_bob.balance.amount.value == ASSET( "10.000 TESTS" ).amount.value );
       validate_database();
 
-      BOOST_TEST_MESSAGE( "--- Test failure transfering STEEM to steem.dao" );
+      BOOST_TEST_MESSAGE( "--- Test transfering to steem.dao" );
+      auto treasury_sbd_balance = db->get_account( STEEM_TREASURY_ACCOUNT ).balance;
       op.from = "bob";
       op.to = STEEM_TREASURY_ACCOUNT;
       op.amount = ASSET( "1.000 TESTS" );
@@ -1230,23 +1225,10 @@ BOOST_AUTO_TEST_CASE( transfer_apply )
       tx.operations.clear();
       tx.operations.push_back( op );
       sign( tx, bob_private_key );
-      STEEM_REQUIRE_THROW( db->push_transaction( tx ), fc::exception );
-
-      BOOST_REQUIRE( db->get_account( "bob" ).balance == ASSET( "10.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( STEEM_TREASURY_ACCOUNT ).balance == ASSET( "0.000 TESTS" ) );
-      validate_database();
-
-      BOOST_TEST_MESSAGE( "--- Test transfering SBD to steem.dao" );
-      auto treasury_sbd_balance = db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance;
-      op.amount = ASSET( "1.000 TBD" );
-      tx.signatures.clear();
-      tx.operations.clear();
-      tx.operations.push_back( op );
-      sign( tx, bob_private_key );
       db->push_transaction( tx );
 
-      BOOST_REQUIRE( db->get_account( "bob" ).sbd_balance == ASSET( "0.000 TBD" ) );
-      BOOST_REQUIRE( db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance == treasury_sbd_balance + ASSET( "1.000 TBD" ) );
+      BOOST_REQUIRE( db->get_account( "bob" ).balance == ASSET( "9.000 TESTS" ) );
+      BOOST_REQUIRE( db->get_account( STEEM_TREASURY_ACCOUNT ).balance == treasury_sbd_balance + ASSET( "1.000 TESTS" ) );
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -1330,17 +1312,11 @@ BOOST_AUTO_TEST_CASE( transfer_to_vesting_apply )
 
       transfer_to_vesting_operation op;
       op.from = "alice";
-      op.to = STEEM_TREASURY_ACCOUNT;
+      op.to = "";
       op.amount = ASSET( "7.500 TESTS" );
 
       signed_transaction tx;
-      tx.operations.push_back( op );
       tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
-      sign( tx, alice_private_key );
-      STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
-
-      op.to = "";
-      tx.clear();
       tx.operations.push_back( op );
       sign( tx, alice_private_key );
       db->push_transaction( tx, 0 );
@@ -1561,8 +1537,6 @@ BOOST_AUTO_TEST_CASE( withdraw_vesting_apply )
             gpo.current_supply += wso.median_props.account_creation_fee - ASSET( "0.001 TESTS" ) - gpo.total_vesting_fund_steem;
             gpo.total_vesting_fund_steem = wso.median_props.account_creation_fee - ASSET( "0.001 TESTS" );
          });
-
-         db.update_virtual_supply();
       }, database::skip_witness_signature );
 
       withdraw_vesting_operation op;
@@ -2671,7 +2645,6 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_validate )
       escrow_transfer_operation op;
       op.from = "alice";
       op.to = "bob";
-      op.sbd_amount = ASSET( "1.000 TBD" );
       op.steem_amount = ASSET( "1.000 TESTS" );
       op.escrow_id = 0;
       op.agent = "sam";
@@ -2680,33 +2653,21 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_validate )
       op.ratification_deadline = db->head_block_time() + 100;
       op.escrow_expiration = db->head_block_time() + 200;
 
-      BOOST_TEST_MESSAGE( "--- failure when sbd symbol != SBD" );
-      op.sbd_amount.symbol = STEEM_SYMBOL;
-      STEEM_REQUIRE_THROW( op.validate(), fc::exception );
-
       BOOST_TEST_MESSAGE( "--- failure when steem symbol != STEEM" );
-      op.sbd_amount.symbol = SBD_SYMBOL;
-      op.steem_amount.symbol = SBD_SYMBOL;
+      op.steem_amount.symbol = VESTS_SYMBOL;
       STEEM_REQUIRE_THROW( op.validate(), fc::exception );
 
-      BOOST_TEST_MESSAGE( "--- failure when fee symbol != SBD and fee symbol != STEEM" );
+      BOOST_TEST_MESSAGE( "--- failure when fee symbol != STEEM" );
       op.steem_amount.symbol = STEEM_SYMBOL;
       op.fee.symbol = VESTS_SYMBOL;
       STEEM_REQUIRE_THROW( op.validate(), fc::exception );
 
-      BOOST_TEST_MESSAGE( "--- failure when sbd == 0 and steem == 0" );
+      BOOST_TEST_MESSAGE( "--- failure when steem == 0" );
       op.fee.symbol = STEEM_SYMBOL;
-      op.sbd_amount.amount = 0;
       op.steem_amount.amount = 0;
       STEEM_REQUIRE_THROW( op.validate(), fc::exception );
 
-      BOOST_TEST_MESSAGE( "--- failure when sbd < 0" );
-      op.sbd_amount.amount = -100;
-      op.steem_amount.amount = 1000;
-      STEEM_REQUIRE_THROW( op.validate(), fc::exception );
-
       BOOST_TEST_MESSAGE( "--- failure when steem < 0" );
-      op.sbd_amount.amount = 1000;
       op.steem_amount.amount = -100;
       STEEM_REQUIRE_THROW( op.validate(), fc::exception );
 
@@ -2740,7 +2701,6 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_authorities )
       escrow_transfer_operation op;
       op.from = "alice";
       op.to = "bob";
-      op.sbd_amount = ASSET( "1.000 TBD" );
       op.steem_amount = ASSET( "1.000 TESTS" );
       op.escrow_id = 0;
       op.agent = "sam";
@@ -2775,10 +2735,10 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_apply )
 
       fund( "alice", 10000 );
 
+      signed_transaction tx;
       escrow_transfer_operation op;
       op.from = "alice";
       op.to = "bob";
-      op.sbd_amount = ASSET( "1.000 TBD" );
       op.steem_amount = ASSET( "1.000 TESTS" );
       op.escrow_id = 0;
       op.agent = "sam";
@@ -2787,19 +2747,12 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_apply )
       op.ratification_deadline = db->head_block_time() + 100;
       op.escrow_expiration = db->head_block_time() + 200;
 
-      BOOST_TEST_MESSAGE( "--- failure when from cannot cover sbd amount" );
-      signed_transaction tx;
-      tx.operations.push_back( op );
-      tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
-      sign( tx, alice_private_key );
-      STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
-
-      BOOST_TEST_MESSAGE( "--- falure when from cannot cover amount + fee" );
-      op.sbd_amount.amount = 0;
+      BOOST_TEST_MESSAGE( "--- failure when from cannot cover amount + fee" );
       op.steem_amount.amount = 10000;
       tx.operations.clear();
       tx.signatures.clear();
       tx.operations.push_back( op );
+      tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
       sign( tx, alice_private_key );
       STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
 
@@ -2829,11 +2782,8 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_apply )
       sign( tx, alice_private_key );
 
       auto alice_steem_balance = alice.balance - op.steem_amount - op.fee;
-      auto alice_sbd_balance = alice.sbd_balance - op.sbd_amount;
       auto bob_steem_balance = bob.balance;
-      auto bob_sbd_balance = bob.sbd_balance;
       auto sam_steem_balance = sam.balance;
-      auto sam_sbd_balance = sam.sbd_balance;
 
       db->push_transaction( tx, 0 );
 
@@ -2845,18 +2795,14 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_apply )
       BOOST_REQUIRE( escrow.agent == op.agent );
       BOOST_REQUIRE( escrow.ratification_deadline == op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == op.escrow_expiration );
-      BOOST_REQUIRE( escrow.sbd_balance == op.sbd_amount );
       BOOST_REQUIRE( escrow.steem_balance == op.steem_amount );
       BOOST_REQUIRE( escrow.pending_fee == op.fee );
       BOOST_REQUIRE( !escrow.to_approved );
       BOOST_REQUIRE( !escrow.agent_approved );
       BOOST_REQUIRE( !escrow.disputed );
       BOOST_REQUIRE( alice.balance == alice_steem_balance );
-      BOOST_REQUIRE( alice.sbd_balance == alice_sbd_balance );
       BOOST_REQUIRE( bob.balance == bob_steem_balance );
-      BOOST_REQUIRE( bob.sbd_balance == bob_sbd_balance );
       BOOST_REQUIRE( sam.balance == sam_steem_balance );
-      BOOST_REQUIRE( sam.sbd_balance == sam_sbd_balance );
 
       validate_database();
    }
@@ -3000,7 +2946,6 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.sbd_balance == ASSET( "0.000 TBD" ) );
       BOOST_REQUIRE( escrow.steem_balance == ASSET( "1.000 TESTS" ) );
       BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.100 TESTS" ) );
       BOOST_REQUIRE( escrow.to_approved );
@@ -3019,7 +2964,6 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.sbd_balance == ASSET( "0.000 TBD" ) );
       BOOST_REQUIRE( escrow.steem_balance == ASSET( "1.000 TESTS" ) );
       BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.100 TESTS" ) );
       BOOST_REQUIRE( escrow.to_approved );
@@ -3041,7 +2985,6 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.sbd_balance == ASSET( "0.000 TBD" ) );
       BOOST_REQUIRE( escrow.steem_balance == ASSET( "1.000 TESTS" ) );
       BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.100 TESTS" ) );
       BOOST_REQUIRE( escrow.to_approved );
@@ -3157,7 +3100,6 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
          BOOST_REQUIRE( escrow.agent == "sam" );
          BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
          BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-         BOOST_REQUIRE( escrow.sbd_balance == ASSET( "0.000 TBD" ) );
          BOOST_REQUIRE( escrow.steem_balance == ASSET( "1.000 TESTS" ) );
          BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
          BOOST_REQUIRE( escrow.to_approved );
@@ -3178,7 +3120,6 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
          BOOST_REQUIRE( escrow.agent == "sam" );
          BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
          BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-         BOOST_REQUIRE( escrow.sbd_balance == ASSET( "0.000 TBD" ) );
          BOOST_REQUIRE( escrow.steem_balance == ASSET( "1.000 TESTS" ) );
          BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
          BOOST_REQUIRE( escrow.to_approved );
@@ -3302,7 +3243,6 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.sbd_balance == et_op.sbd_amount );
       BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
       BOOST_REQUIRE( escrow.pending_fee == et_op.fee );
       BOOST_REQUIRE( escrow.to_approved );
@@ -3336,7 +3276,6 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.sbd_balance == et_op.sbd_amount );
       BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
       BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
       BOOST_REQUIRE( escrow.to_approved );
@@ -3358,7 +3297,6 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.sbd_balance == et_op.sbd_amount );
       BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
       BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
       BOOST_REQUIRE( escrow.to_approved );
@@ -3383,7 +3321,6 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
          BOOST_REQUIRE( escrow.agent == "sam" );
          BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
          BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-         BOOST_REQUIRE( escrow.sbd_balance == et_op.sbd_amount );
          BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
          BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
          BOOST_REQUIRE( escrow.to_approved );
@@ -3422,7 +3359,6 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
          BOOST_REQUIRE( escrow.agent == "sam" );
          BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
          BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-         BOOST_REQUIRE( escrow.sbd_balance == et_op.sbd_amount );
          BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
          BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
          BOOST_REQUIRE( escrow.to_approved );
@@ -3445,7 +3381,6 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
          BOOST_REQUIRE( escrow.agent == "sam" );
          BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
          BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-         BOOST_REQUIRE( escrow.sbd_balance == et_op.sbd_amount );
          BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
          BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
          BOOST_REQUIRE( escrow.to_approved );
@@ -3473,28 +3408,9 @@ BOOST_AUTO_TEST_CASE( escrow_release_validate )
       op.steem_amount.amount = -1;
       STEEM_REQUIRE_THROW( op.validate(), fc::exception );
 
-
-      BOOST_TEST_MESSAGE( "--- failure when sbd < 0" );
-      op.steem_amount.amount = 0;
-      op.sbd_amount.amount = -1;
-      STEEM_REQUIRE_THROW( op.validate(), fc::exception );
-
-
-      BOOST_TEST_MESSAGE( "--- failure when steem == 0 and sbd == 0" );
-      op.sbd_amount.amount = 0;
-      STEEM_REQUIRE_THROW( op.validate(), fc::exception );
-
-
-      BOOST_TEST_MESSAGE( "--- failure when sbd is not sbd symbol" );
-      op.sbd_amount = ASSET( "1.000 TESTS" );
-      STEEM_REQUIRE_THROW( op.validate(), fc::exception );
-
-
       BOOST_TEST_MESSAGE( "--- failure when steem is not steem symbol" );
-      op.sbd_amount.symbol = SBD_SYMBOL;
-      op.steem_amount = ASSET( "1.000 TBD" );
+      op.steem_amount = asset( 1000, VESTS_SYMBOL );
       STEEM_REQUIRE_THROW( op.validate(), fc::exception );
-
 
       BOOST_TEST_MESSAGE( "--- success" );
       op.steem_amount.symbol = STEEM_SYMBOL;
@@ -3747,7 +3663,6 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
 
       BOOST_TEST_MESSAGE( "--- failure when releasing less steem than available" );
       op.steem_amount = ASSET( "0.000 TESTS" );
-      op.sbd_amount = ASSET( "1.000 TBD" );
 
       tx.clear();
       tx.operations.push_back( op );
@@ -3772,7 +3687,6 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       op.receiver = et_op.from;
       op.who = et_op.to;
       op.steem_amount = ASSET( "0.100 TESTS" );
-      op.sbd_amount = ASSET( "0.000 TBD" );
       tx.operations.push_back( op );
       sign( tx, bob_private_key );
       STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
@@ -4038,11 +3952,6 @@ BOOST_AUTO_TEST_CASE( transfer_to_savings_validate )
       STEEM_REQUIRE_THROW( op.validate(), fc::exception );
 
 
-      BOOST_TEST_MESSAGE( "success when amount is SBD" );
-      op.amount = ASSET( "1.000 TBD" );
-      op.validate();
-
-
       BOOST_TEST_MESSAGE( "success when amount is STEEM" );
       op.amount = ASSET( "1.000 TESTS" );
       op.validate();
@@ -4094,10 +4003,8 @@ BOOST_AUTO_TEST_CASE( transfer_to_savings_apply )
       generate_block();
 
       fund( "alice", ASSET( "10.000 TESTS" ) );
-      fund( "alice", ASSET( "10.000 TBD" ) );
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "10.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == ASSET( "10.000 TBD" ) );
 
       transfer_to_savings_operation op;
       signed_transaction tx;
@@ -4124,23 +4031,6 @@ BOOST_AUTO_TEST_CASE( transfer_to_savings_apply )
       STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
       validate_database();
 
-      BOOST_TEST_MESSAGE( "--- Failure when transferring to steem.dao" );
-
-      op.to = STEEM_TREASURY_ACCOUNT;
-      tx.clear();
-      tx.operations.push_back( op );
-      sign( tx, alice_private_key );
-      STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
-      validate_database();
-
-      op.amount = ASSET( "1.000 TBD" );
-      tx.clear();
-      tx.operations.push_back( op );
-      sign( tx, alice_private_key );
-      STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
-      validate_database();
-
-
       BOOST_TEST_MESSAGE( "--- success transferring STEEM to self" );
       op.to = "alice";
       op.amount = ASSET( "1.000 TESTS" );
@@ -4155,19 +4045,6 @@ BOOST_AUTO_TEST_CASE( transfer_to_savings_apply )
       validate_database();
 
 
-      BOOST_TEST_MESSAGE( "--- success transferring SBD to self" );
-      op.amount = ASSET( "1.000 TBD" );
-
-      tx.clear();
-      tx.operations.push_back( op );
-      sign( tx, alice_private_key );
-      db->push_transaction( tx, 0 );
-
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == ASSET( "9.000 TBD" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).savings_sbd_balance == ASSET( "1.000 TBD" ) );
-      validate_database();
-
-
       BOOST_TEST_MESSAGE( "--- success transferring STEEM to other" );
       op.to = "bob";
       op.amount = ASSET( "1.000 TESTS" );
@@ -4179,19 +4056,6 @@ BOOST_AUTO_TEST_CASE( transfer_to_savings_apply )
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "8.000 TESTS" ) );
       BOOST_REQUIRE( db->get_account( "bob" ).savings_balance == ASSET( "1.000 TESTS" ) );
-      validate_database();
-
-
-      BOOST_TEST_MESSAGE( "--- success transferring SBD to other" );
-      op.amount = ASSET( "1.000 TBD" );
-
-      tx.clear();
-      tx.operations.push_back( op );
-      sign( tx, alice_private_key );
-      db->push_transaction( tx, 0 );
-
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == ASSET( "8.000 TBD" ) );
-      BOOST_REQUIRE( db->get_account( "bob" ).savings_sbd_balance == ASSET( "1.000 TBD" ) );
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -4230,11 +4094,6 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_validate )
       op.to = "alice";
       op.amount = ASSET( "1.000000 VESTS" );
       STEEM_REQUIRE_THROW( op.validate(), fc::exception );
-
-
-      BOOST_TEST_MESSAGE( "success when amount is SBD" );
-      op.amount = ASSET( "1.000 TBD" );
-      op.validate();
 
 
       BOOST_TEST_MESSAGE( "success when amount is STEEM" );
@@ -4288,7 +4147,6 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_apply )
       generate_block();
 
       fund( "alice", ASSET( "10.000 TESTS" ) );
-      fund( "alice", ASSET( "10.000 TBD" ) );
 
       transfer_to_savings_operation save;
       save.from = "alice";
@@ -4298,12 +4156,6 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_apply )
       signed_transaction tx;
       tx.operations.push_back( save );
       tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
-      sign( tx, alice_private_key );
-      db->push_transaction( tx, 0 );
-
-      save.amount = ASSET( "10.000 TBD" );
-      tx.clear();
-      tx.operations.push_back( save );
       sign( tx, alice_private_key );
       db->push_transaction( tx, 0 );
 
@@ -4330,25 +4182,15 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_apply )
       sign( tx, alice_private_key );
       STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
 
-      BOOST_TEST_MESSAGE( "--- Failure withdrawing TESTS to steem.dao" );
+      BOOST_TEST_MESSAGE( "--- Success withdrawing TESTS to steem.dao" );
 
       op.to = STEEM_TREASURY_ACCOUNT;
 
       tx.clear();
       tx.operations.push_back( op );
       sign( tx, alice_private_key );
-      STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
-      validate_database();
-
-      BOOST_TEST_MESSAGE( "--- Success withdrawing TBD to steem.dao" );
-
-      op.amount = ASSET( "1.000 TBD" );
-
-      tx.clear();
-      tx.operations.push_back( op );
-      sign( tx, alice_private_key );
       db->push_transaction( tx, 0 );
-      BOOST_REQUIRE( db->get_account( "alice" ).savings_sbd_balance == ASSET( "9.000 TBD" ) );
+      BOOST_REQUIRE( db->get_account( "alice" ).savings_balance == ASSET( "9.000 TESTS" ) );
       validate_database();
 
       BOOST_TEST_MESSAGE( "--- success withdrawing STEEM to self" );
@@ -4362,28 +4204,7 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_apply )
       db->push_transaction( tx, 0 );
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "0.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).savings_balance == ASSET( "9.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).savings_withdraw_requests == op.request_id + 1 );
-      BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).from == op.from );
-      BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).to == op.to );
-      BOOST_REQUIRE( to_string( db->get_savings_withdraw( "alice", op.request_id ).memo ) == op.memo );
-      BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).request_id == op.request_id );
-      BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).amount == op.amount );
-      BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).complete == db->head_block_time() + STEEM_SAVINGS_WITHDRAW_TIME );
-      validate_database();
-
-
-      BOOST_TEST_MESSAGE( "--- success withdrawing SBD to self" );
-      op.amount = ASSET( "1.000 TBD" );
-      op.request_id++;
-
-      tx.clear();
-      tx.operations.push_back( op );
-      sign( tx, alice_private_key );
-      db->push_transaction( tx, 0 );
-
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == ASSET( "0.000 TBD" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).savings_sbd_balance == ASSET( "8.000 TBD" ) );
+      BOOST_REQUIRE( db->get_account( "alice" ).savings_balance == ASSET( "8.000 TESTS" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).savings_withdraw_requests == op.request_id + 1 );
       BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).from == op.from );
       BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).to == op.to );
@@ -4406,7 +4227,7 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_apply )
       BOOST_TEST_MESSAGE( "--- success withdrawing STEEM to other" );
       op.to = "bob";
       op.amount = ASSET( "1.000 TESTS" );
-      op.request_id = 3;
+      op.request_id++;
 
       tx.clear();
       tx.operations.push_back( op );
@@ -4414,28 +4235,7 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_apply )
       db->push_transaction( tx, 0 );
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "0.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).savings_balance == ASSET( "8.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).savings_withdraw_requests == op.request_id + 1 );
-      BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).from == op.from );
-      BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).to == op.to );
-      BOOST_REQUIRE( to_string( db->get_savings_withdraw( "alice", op.request_id ).memo ) == op.memo );
-      BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).request_id == op.request_id );
-      BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).amount == op.amount );
-      BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).complete == db->head_block_time() + STEEM_SAVINGS_WITHDRAW_TIME );
-      validate_database();
-
-
-      BOOST_TEST_MESSAGE( "--- success withdrawing SBD to other" );
-      op.amount = ASSET( "1.000 TBD" );
-      op.request_id = 4;
-
-      tx.clear();
-      tx.operations.push_back( op );
-      sign( tx, alice_private_key );
-      db->push_transaction( tx, 0 );
-
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == ASSET( "0.000 TBD" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).savings_sbd_balance == ASSET( "7.000 TBD" ) );
+      BOOST_REQUIRE( db->get_account( "alice" ).savings_balance == ASSET( "7.000 TESTS" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).savings_withdraw_requests == op.request_id + 1 );
       BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).from == op.from );
       BOOST_REQUIRE( db->get_savings_withdraw( "alice", op.request_id ).to == op.to );
@@ -4450,18 +4250,14 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_apply )
       generate_blocks( db->head_block_time() + STEEM_SAVINGS_WITHDRAW_TIME - fc::seconds( STEEM_BLOCK_INTERVAL ), true );
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "0.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == ASSET( "0.000 TBD" ) );
       BOOST_REQUIRE( db->get_account( "bob" ).balance == ASSET( "0.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "bob" ).sbd_balance == ASSET( "0.000 TBD" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).savings_withdraw_requests == op.request_id + 1 );
       validate_database();
 
       generate_block();
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "1.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == ASSET( "1.000 TBD" ) );
       BOOST_REQUIRE( db->get_account( "bob" ).balance == ASSET( "1.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "bob" ).sbd_balance == ASSET( "1.000 TBD" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).savings_withdraw_requests == 0 );
       validate_database();
 
@@ -4796,7 +4592,6 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_validate )
       claim_reward_balance_operation op;
       op.account = "alice";
       op.reward_steem = ASSET( "0.000 TESTS" );
-      op.reward_sbd = ASSET( "0.000 TBD" );
       op.reward_vests = ASSET( "0.000000 VESTS" );
 
 
@@ -4806,39 +4601,34 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_validate )
 
       BOOST_TEST_MESSAGE( "Testing single reward claims" );
       op.reward_steem.amount = 1000;
+      op.reward_vests.amount = 0;
       op.validate();
 
       op.reward_steem.amount = 0;
-      op.reward_sbd.amount = 1000;
+      op.reward_vests.amount = 1000;
       op.validate();
 
-      op.reward_sbd.amount = 0;
+      op.reward_steem.amount = 1000;
       op.reward_vests.amount = 1000;
       op.validate();
 
       op.reward_vests.amount = 0;
 
-
       BOOST_TEST_MESSAGE( "Testing wrong STEEM symbol" );
-      op.reward_steem = ASSET( "1.000 TBD" );
-      STEEM_REQUIRE_THROW( op.validate(), fc::assert_exception );
-
-
-      BOOST_TEST_MESSAGE( "Testing wrong SBD symbol" );
-      op.reward_steem = ASSET( "1.000 TESTS" );
-      op.reward_sbd = ASSET( "1.000 TESTS" );
+      op.reward_steem = asset(1000, VESTS_SYMBOL);
+      op.reward_vests.amount = 0;
       STEEM_REQUIRE_THROW( op.validate(), fc::assert_exception );
 
 
       BOOST_TEST_MESSAGE( "Testing wrong VESTS symbol" );
-      op.reward_sbd = ASSET( "1.000 TBD" );
+      op.reward_vests.amount = 0;
       op.reward_vests = ASSET( "1.000 TESTS" );
       STEEM_REQUIRE_THROW( op.validate(), fc::assert_exception );
 
 
       BOOST_TEST_MESSAGE( "Testing a single negative amount" );
-      op.reward_steem.amount = 1000;
-      op.reward_sbd.amount = -1000;
+      op.reward_steem.amount = -1000;
+      op.reward_vests.amount = 0;
       STEEM_REQUIRE_THROW( op.validate(), fc::assert_exception );
    }
    FC_LOG_AND_RETHROW()
@@ -4879,14 +4669,11 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
       ACTORS( (alice) )
       generate_block();
 
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
-
       db_plugin->debug_update( []( database& db )
       {
          db.modify( db.get_account( "alice" ), []( account_object& a )
          {
             a.reward_steem_balance = ASSET( "10.000 TESTS" );
-            a.reward_sbd_balance = ASSET( "10.000 TBD" );
             a.reward_vesting_balance = ASSET( "10.000000 VESTS" );
             a.reward_vesting_steem = ASSET( "10.000 TESTS" );
          });
@@ -4894,8 +4681,6 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
          db.modify( db.get_dynamic_global_properties(), []( dynamic_global_property_object& gpo )
          {
             gpo.current_supply += ASSET( "20.000 TESTS" );
-            gpo.current_sbd_supply += ASSET( "10.000 TBD" );
-            gpo.virtual_supply += ASSET( "20.000 TESTS" );
             gpo.pending_rewarded_vesting_shares += ASSET( "10.000000 VESTS" );
             gpo.pending_rewarded_vesting_steem += ASSET( "10.000 TESTS" );
          });
@@ -4905,7 +4690,6 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
       validate_database();
 
       auto alice_steem = db->get_account( "alice" ).balance;
-      auto alice_sbd = db->get_account( "alice" ).sbd_balance;
       auto alice_vests = db->get_account( "alice" ).vesting_shares;
 
 
@@ -4916,7 +4700,6 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
 
       op.account = "alice";
       op.reward_steem = ASSET( "20.000 TESTS" );
-      op.reward_sbd = ASSET( "0.000 TBD" );
       op.reward_vests = ASSET( "0.000000 VESTS" );
 
       tx.operations.push_back( op );
@@ -4936,8 +4719,6 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == alice_steem + op.reward_steem );
       BOOST_REQUIRE( db->get_account( "alice" ).reward_steem_balance == ASSET( "10.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == alice_sbd + op.reward_sbd );
-      BOOST_REQUIRE( db->get_account( "alice" ).reward_sbd_balance == ASSET( "10.000 TBD" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).vesting_shares == alice_vests + op.reward_vests );
       BOOST_REQUIRE( db->get_account( "alice" ).reward_vesting_balance == ASSET( "5.000000 VESTS" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).reward_vesting_steem == ASSET( "5.000 TESTS" ) );
@@ -4949,7 +4730,6 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
       BOOST_TEST_MESSAGE( "--- Claiming the full reward balance" );
 
       op.reward_steem = ASSET( "10.000 TESTS" );
-      op.reward_sbd = ASSET( "10.000 TBD" );
       tx.clear();
       tx.operations.push_back( op );
       sign( tx, alice_private_key );
@@ -4957,8 +4737,6 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == alice_steem + op.reward_steem );
       BOOST_REQUIRE( db->get_account( "alice" ).reward_steem_balance == ASSET( "0.000 TESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).sbd_balance == alice_sbd + op.reward_sbd );
-      BOOST_REQUIRE( db->get_account( "alice" ).reward_sbd_balance == ASSET( "0.000 TBD" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).vesting_shares == alice_vests + op.reward_vests );
       BOOST_REQUIRE( db->get_account( "alice" ).reward_vesting_balance == ASSET( "0.000000 VESTS" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).reward_vesting_steem == ASSET( "0.000 TESTS" ) );
@@ -5517,11 +5295,9 @@ BOOST_AUTO_TEST_CASE( comment_beneficiaries_apply )
 
          db.modify( db.get_account( STEEM_TREASURY_ACCOUNT ), [=]( account_object& a )
          {
-            a.sbd_balance.amount.value = 0;
+            a.balance.amount.value = 0;
          });
       });
-
-      set_price_feed( price( ASSET( "1.000 TBD" ), ASSET( "1.000 TESTS" ) ) );
 
       comment_operation comment;
       vote_operation vote;
@@ -5626,11 +5402,11 @@ BOOST_AUTO_TEST_CASE( comment_beneficiaries_apply )
 
       generate_block();
 
-      BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_steem.amount + db->get_account( "bob" ).reward_sbd_balance.amount + db->get_account( "sam" ).reward_vesting_steem.amount + db->get_account( "sam" ).reward_sbd_balance.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance.amount == db->get_comment( "alice", string( "test" ) ).beneficiary_payout_value.amount );
-      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_sbd_balance.amount + db->get_account( "alice" ).reward_vesting_steem.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance.amount ) == db->get_account( "bob" ).reward_vesting_steem.amount + db->get_account( "bob" ).reward_sbd_balance.amount );
-      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_sbd_balance.amount + db->get_account( "alice" ).reward_vesting_steem.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).sbd_balance.amount ) == ( db->get_account( "sam" ).reward_vesting_steem.amount + db->get_account( "sam" ).reward_sbd_balance.amount ) / 2 );
-      BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_steem.amount == db->get_account( "bob" ).reward_sbd_balance.amount + 1);
-      BOOST_REQUIRE( db->get_account( "sam" ).reward_vesting_steem.amount == db->get_account( "sam" ).reward_sbd_balance.amount );
+      BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_steem.amount + db->get_account( "sam" ).reward_vesting_steem.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).balance.amount == db->get_comment( "alice", string( "test" ) ).beneficiary_payout_value.amount );
+      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_vesting_steem.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).balance.amount ) == db->get_account( "bob" ).reward_vesting_steem.amount );
+      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_vesting_steem.amount + db->get_account( STEEM_TREASURY_ACCOUNT ).balance.amount ) == ( db->get_account( "sam" ).reward_vesting_steem.amount ) / 2 );
+      BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_steem.amount == 45);
+      BOOST_REQUIRE( db->get_account( "sam" ).reward_vesting_steem.amount == 90 );
    }
    FC_LOG_AND_RETHROW()
 }
@@ -5670,7 +5446,7 @@ BOOST_AUTO_TEST_CASE( witness_set_properties_validate )
       prop_op.validate();
 
       BOOST_TEST_MESSAGE( "--- failure when setting account_creation_fee with incorrect symbol" );
-      prop_op.props[ "account_creation_fee" ] = fc::raw::pack_to_vector( ASSET( "2.000 TBD" ) );
+      prop_op.props[ "account_creation_fee" ] = fc::raw::pack_to_vector( asset(2000, VESTS_SYMBOL) );
       STEEM_REQUIRE_THROW( prop_op.validate(), fc::assert_exception );
 
       BOOST_TEST_MESSAGE( "--- failure when setting maximum_block_size below STEEM_MIN_BLOCK_SIZE_LIMIT" );
@@ -5678,23 +5454,7 @@ BOOST_AUTO_TEST_CASE( witness_set_properties_validate )
       prop_op.props[ "maximum_block_size" ] = fc::raw::pack_to_vector( STEEM_MIN_BLOCK_SIZE_LIMIT - 1 );
       STEEM_REQUIRE_THROW( prop_op.validate(), fc::assert_exception );
 
-      BOOST_TEST_MESSAGE( "--- failure when setting sbd_interest_rate with negative number" );
-      prop_op.props.erase( "maximum_block_size" );
-      prop_op.props[ "sbd_interest_rate" ] = fc::raw::pack_to_vector( -700 );
-      STEEM_REQUIRE_THROW( prop_op.validate(), fc::assert_exception );
-
-      BOOST_TEST_MESSAGE( "--- failure when setting sbd_interest_rate to STEEM_100_PERCENT + 1" );
-      prop_op.props[ "sbd_interest_rate" ].clear();
-      prop_op.props[ "sbd_interest_rate" ] = fc::raw::pack_to_vector( STEEM_100_PERCENT + 1 );
-      STEEM_REQUIRE_THROW( prop_op.validate(), fc::assert_exception );
-
-      BOOST_TEST_MESSAGE( "--- failure when setting new sbd_exchange_rate with SBD / STEEM" );
-      prop_op.props.erase( "sbd_interest_rate" );
-      prop_op.props[ "sbd_exchange_rate" ] = fc::raw::pack_to_vector( price( ASSET( "1.000 TESTS" ), ASSET( "10.000 TBD" ) ) );
-      STEEM_REQUIRE_THROW( prop_op.validate(), fc::assert_exception );
-
       BOOST_TEST_MESSAGE( "--- failure when setting new url with length of zero" );
-      prop_op.props.erase( "sbd_exchange_rate" );
       prop_op.props[ "url" ] = fc::raw::pack_to_vector( "" );
       STEEM_REQUIRE_THROW( prop_op.validate(), fc::assert_exception );
 
@@ -5856,20 +5616,11 @@ BOOST_AUTO_TEST_CASE( witness_set_properties_apply )
       db->push_transaction( tx, 0 );
       BOOST_REQUIRE( alice_witness.props.maximum_block_size == STEEM_MIN_BLOCK_SIZE_LIMIT + 1 );
 
-      // Setting sbd_interest_rate
-      prop_op.props.erase( "maximum_block_size" );
-      prop_op.props[ "sbd_interest_rate" ] = fc::raw::pack_to_vector( 700 );
-      tx.clear();
-      tx.operations.push_back( prop_op );
-      sign( tx, signing_key );
-      db->push_transaction( tx, 0 );
-      BOOST_REQUIRE( alice_witness.props.sbd_interest_rate == 700 );
-
       // Setting new signing_key
+      prop_op.props.erase( "maximum_block_size" );
       private_key_type old_signing_key = signing_key;
       signing_key = generate_private_key( "new_key" );
       public_key_type alice_pub = signing_key.get_public_key();
-      prop_op.props.erase( "sbd_interest_rate" );
       prop_op.props[ "new_signing_key" ] = fc::raw::pack_to_vector( alice_pub );
       tx.clear();
       tx.operations.push_back( prop_op );
@@ -5877,20 +5628,9 @@ BOOST_AUTO_TEST_CASE( witness_set_properties_apply )
       db->push_transaction( tx, 0 );
       BOOST_REQUIRE( alice_witness.signing_key == alice_pub );
 
-      // Setting new sbd_exchange_rate
-      prop_op.props.erase( "new_signing_key" );
-      prop_op.props[ "key" ].clear();
-      prop_op.props[ "key" ] = fc::raw::pack_to_vector( signing_key.get_public_key() );
-      prop_op.props[ "sbd_exchange_rate" ] = fc::raw::pack_to_vector( price( ASSET(" 1.000 TBD" ), ASSET( "100.000 TESTS" ) ) );
-      tx.clear();
-      tx.operations.push_back( prop_op );
-      sign( tx, signing_key );
-      db->push_transaction( tx, 0 );
-      BOOST_REQUIRE( alice_witness.sbd_exchange_rate == price( ASSET( "1.000 TBD" ), ASSET( "100.000 TESTS" ) ) );
-      BOOST_REQUIRE( alice_witness.last_sbd_exchange_update == db->head_block_time() );
-
       // Setting new url
-      prop_op.props.erase( "sbd_exchange_rate" );
+      prop_op.props.erase( "new_signing_key" );
+      prop_op.props[ "key" ] = fc::raw::pack_to_vector( signing_key.get_public_key() );
       prop_op.props[ "url" ] = fc::raw::pack_to_vector( "foo.bar" );
       tx.clear();
       tx.operations.push_back( prop_op );
@@ -5899,7 +5639,6 @@ BOOST_AUTO_TEST_CASE( witness_set_properties_apply )
       BOOST_REQUIRE( alice_witness.url == "foo.bar" );
 
       // Setting new extranious_property
-      prop_op.props.erase( "sbd_exchange_rate" );
       prop_op.props[ "extraneous_property" ] = fc::raw::pack_to_vector( "foo" );
       tx.clear();
       tx.operations.push_back( prop_op );
@@ -5956,7 +5695,7 @@ BOOST_AUTO_TEST_CASE( claim_account_validate )
 
       BOOST_TEST_MESSAGE( "--- Test failure with invalid fee symbol" );
       op.creator = "alice";
-      op.fee = ASSET( "1.000 TBD" );
+      op.fee = asset(1000, VESTS_SYMBOL);
       BOOST_REQUIRE_THROW( op.validate(), fc::assert_exception );
 
       BOOST_TEST_MESSAGE( "--- Test failure with negative fee" );
@@ -6362,7 +6101,6 @@ BOOST_AUTO_TEST_CASE( create_claimed_account_apply )
       BOOST_REQUIRE( bob.recovery_account == "alice" );
       BOOST_REQUIRE( bob.created == db->head_block_time() );
       BOOST_REQUIRE( bob.balance.amount.value == ASSET( "0.000 TESTS" ).amount.value );
-      BOOST_REQUIRE( bob.sbd_balance.amount.value == ASSET( "0.000 TBD" ).amount.value );
       BOOST_REQUIRE( bob.vesting_shares.amount.value == ASSET( "0.000000 VESTS" ).amount.value );
       BOOST_REQUIRE( bob.id._id == bob_auth.id._id );
 
