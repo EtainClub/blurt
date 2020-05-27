@@ -1216,7 +1216,7 @@ BOOST_AUTO_TEST_CASE( transfer_apply )
       BOOST_REQUIRE( new_bob.balance.amount.value == ASSET( "10.000 TESTS" ).amount.value );
       validate_database();
 
-      BOOST_TEST_MESSAGE( "--- Test transfering to steem.dao" );
+      BOOST_TEST_MESSAGE( "--- Test transfering to STEEM_TREASURY_ACCOUNT" );
       auto treasury_sbd_balance = db->get_account( STEEM_TREASURY_ACCOUNT ).balance;
       op.from = "bob";
       op.to = STEEM_TREASURY_ACCOUNT;
@@ -4182,7 +4182,7 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_apply )
       sign( tx, alice_private_key );
       STEEM_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
 
-      BOOST_TEST_MESSAGE( "--- Success withdrawing TESTS to steem.dao" );
+      BOOST_TEST_MESSAGE( "--- Success withdrawing TESTS to STEEM_TREASURY_ACCOUNT" );
 
       op.to = STEEM_TREASURY_ACCOUNT;
 

@@ -1813,7 +1813,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_01 )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = "steem.dao";
+      auto receiver = STEEM_TREASURY_ACCOUNT;
 
       auto start_time = db->head_block_time();
 
@@ -1896,7 +1896,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_02 )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = "steem.dao";
+      auto receiver = STEEM_TREASURY_ACCOUNT;
 
       auto start_time = db->head_block_time();
 
@@ -1997,7 +1997,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = "steem.dao";
+      auto receiver = STEEM_TREASURY_ACCOUNT;
 
       auto start_time = db->head_block_time();
 
@@ -2092,18 +2092,13 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_01 )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = "steem.dao";
-
+      auto receiver = STEEM_TREASURY_ACCOUNT;
       auto start_time = db->head_block_time();
-
       const auto start_time_shift = fc::days( 100 );
       const auto end_time_shift = fc::days( 101 );
-
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
-
       auto daily_pay = asset( 100, STEEM_SYMBOL );
-
       const auto nr_proposals = 10;
       std::vector< int64_t > proposals_id;
 
@@ -2333,18 +2328,13 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_02 )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = "steem.dao";
-
+      auto receiver = STEEM_TREASURY_ACCOUNT;
       auto start_time = db->head_block_time();
-
       const auto start_time_shift = fc::days( 100 );
       const auto end_time_shift = fc::days( 101 );
-
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
-
       auto daily_pay = asset( 100, STEEM_SYMBOL );
-
       const auto nr_proposals = 5;
       std::vector< int64_t > proposals_id;
 
@@ -2739,19 +2729,14 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_03 )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = "steem.dao";
-
+      auto receiver = STEEM_TREASURY_ACCOUNT;
       auto start_time = db->head_block_time();
-
       const auto start_time_shift = fc::hours( 20 );
       const auto end_time_shift = fc::hours( 6 );
       const auto block_interval = fc::seconds( STEEM_BLOCK_INTERVAL );
-
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
-
       auto daily_pay = asset( 100, STEEM_SYMBOL );
-
       const auto nr_proposals = 200;
       std::vector< int64_t > proposals_id;
 
