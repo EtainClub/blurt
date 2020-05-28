@@ -47,9 +47,9 @@
 
 #define BLURT_BLOCKCHAIN_VERSION              ( version(0, 0, 0) )
 
-#define BLURT_INIT_PUBLIC_KEY_STR             "STM8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"
+#define BLURT_INIT_PUBLIC_KEY_STR             "BLT8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"
 #define BLURT_CHAIN_ID fc::sha256()
-#define BLURT_ADDRESS_PREFIX                  "STM"
+#define BLURT_ADDRESS_PREFIX                  "BLT"
 
 #define BLURT_GENESIS_TIME                    (fc::time_point_sec(1458835200))
 #define BLURT_MINING_TIME                     (fc::time_point_sec(1458838800))

@@ -75,7 +75,7 @@ tests = [
    },
    {
       "method": "condenser_api.get_key_references",
-      "params": [["STM8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"]]
+      "params": [["BLT8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"]]
    },
    {
       "method": "condenser_api.get_accounts",
@@ -176,7 +176,7 @@ tests = [
    },
    {
       "method": "condenser_api.verify_account_authority",
-      "params": ["temp",["STM8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"]]
+      "params": ["temp",["BLT8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"]]
    },
    {
       "method": "condenser_api.get_active_votes",
@@ -330,7 +330,7 @@ tests = [
    },
    {
       "method": "account_by_key_api.get_key_references",
-      "params": {"keys":["STM8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"]}
+      "params": {"keys":["BLT8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"]}
    },
    {
       "method": "account_history_api.get_ops_in_block",
