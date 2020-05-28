@@ -76,7 +76,7 @@ struct bucket_object : public object< bucket_object_type, bucket_object >
    uint32_t             operations = 0;                              ///< Operations evaluated
    uint32_t             transactions = 0;                            ///< Transactions processed
    uint32_t             transfers = 0;                               ///< Account to account transfers
-   share_type           steem_transferred = 0;                       ///< STEEM transferred from account to account
+   share_type           steem_transferred = 0;                       ///< BLURT transferred from account to account
    uint32_t             paid_accounts_created = 0;                   ///< Accounts created with fee
    uint32_t             mined_accounts_created = 0;                  ///< Accounts mined for free
    uint32_t             root_comments = 0;                           ///< Top level root comments
@@ -92,16 +92,16 @@ struct bucket_object : public object< bucket_object_type, bucket_object >
    uint32_t             payouts = 0;                                 ///< Number of comment payouts
    share_type           vests_paid_to_authors = 0;                   ///< Ammount of VESS paid to authors
    share_type           vests_paid_to_curators = 0;                  ///< Ammount of VESTS paid to curators
-   uint32_t             transfers_to_vesting = 0;                    ///< Transfers of STEEM into VESTS
-   share_type           steem_vested = 0;                            ///< Ammount of STEEM vested
+   uint32_t             transfers_to_vesting = 0;                    ///< Transfers of BLURT into VESTS
+   share_type           steem_vested = 0;                            ///< Ammount of BLURT vested
    uint32_t             new_vesting_withdrawal_requests = 0;         ///< New vesting withdrawal requests
    uint32_t             modified_vesting_withdrawal_requests = 0;    ///< Changes to vesting withdrawal requests
    share_type           vesting_withdraw_rate_delta = 0;
    uint32_t             vesting_withdrawals_processed = 0;           ///< Number of vesting withdrawals
    uint32_t             finished_vesting_withdrawals = 0;            ///< Processed vesting withdrawals that are now finished
-   share_type           vests_withdrawn = 0;                         ///< Ammount of VESTS withdrawn to STEEM
+   share_type           vests_withdrawn = 0;                         ///< Ammount of VESTS withdrawn to BLURT
    share_type           vests_transferred = 0;                       ///< Ammount of VESTS transferred to another account
-   share_type           steem_converted = 0;                         ///< Amount of STEEM that was converted
+   share_type           steem_converted = 0;                         ///< Amount of BLURT that was converted
    uint32_t             total_pow = 0;                               ///< POW submitted
    uint128_t            estimated_hashpower = 0;                     ///< Estimated average hashpower over interval
 };

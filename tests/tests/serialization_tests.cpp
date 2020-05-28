@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE( asset_test )
       BOOST_CHECK_EQUAL( steem.amount.value, 123456 );
       BOOST_CHECK_EQUAL( steem.symbol.decimals(), 3 );
       BOOST_CHECK_EQUAL( fc::json::to_string( steem ), "{\"amount\":\"123456\",\"precision\":3,\"nai\":\"@@000000021\"}" );
-      BOOST_CHECK( steem.symbol.asset_num == BLURT_ASSET_NUM_STEEM );
+      BOOST_CHECK( steem.symbol.asset_num == BLURT_ASSET_NUM_BLURT );
       BOOST_CHECK_EQUAL( fc::json::to_string( asset( 50, BLURT_SYMBOL ) ), "{\"amount\":\"50\",\"precision\":3,\"nai\":\"@@000000021\"}" );
       BOOST_CHECK_EQUAL( fc::json::to_string( asset( 50000, BLURT_SYMBOL ) ), "{\"amount\":\"50000\",\"precision\":3,\"nai\":\"@@000000021\"}" );
 
@@ -287,7 +287,7 @@ BOOST_AUTO_TEST_CASE( asset_raw_test )
 
 /*      asset steem = asset::from_string( "0.001 TESTS" );
 #define VESTS_SYMBOL  (uint64_t(6) | (uint64_t('V') << 8) | (uint64_t('E') << 16) | (uint64_t('S') << 24) | (uint64_t('T') << 32) | (uint64_t('S') << 40)) ///< VESTS with 6 digits of precision
-#define BLURT_SYMBOL  (uint64_t(3) | (uint64_t('T') << 8) | (uint64_t('E') << 16) | (uint64_t('S') << 24) | (uint64_t('T') << 32) | (uint64_t('S') << 40)) ///< STEEM with 3 digits of precision
+#define BLURT_SYMBOL  (uint64_t(3) | (uint64_t('T') << 8) | (uint64_t('E') << 16) | (uint64_t('S') << 24) | (uint64_t('T') << 32) | (uint64_t('S') << 40)) ///< BLURT with 3 digits of precision
 */
       std::vector< asset_symbol_type > symbols;
 
@@ -574,13 +574,13 @@ BOOST_AUTO_TEST_CASE( asset_symbol_type_test )
       BOOST_REQUIRE( symbol.get_paired_symbol() == asset_symbol_type::from_asset_num( asset_num ^ SMT_ASSET_NUM_VESTING_MASK ) );
       BOOST_REQUIRE( asset_symbol_type::from_nai( symbol.to_nai(), 3 ) == symbol );
 
-      asset_symbol_type steem = asset_symbol_type::from_asset_num( BLURT_ASSET_NUM_STEEM );
+      asset_symbol_type steem = asset_symbol_type::from_asset_num( BLURT_ASSET_NUM_BLURT );
       asset_symbol_type vests = asset_symbol_type::from_asset_num( BLURT_ASSET_NUM_VESTS );
 
       BOOST_REQUIRE( steem.space() == asset_symbol_type::asset_symbol_space::legacy_space );
       BOOST_REQUIRE( vests.space() == asset_symbol_type::asset_symbol_space::legacy_space );
 
-      BOOST_REQUIRE( asset_symbol_type::from_nai( steem.to_nai(), BLURT_PRECISION_STEEM ) == steem );
+      BOOST_REQUIRE( asset_symbol_type::from_nai( steem.to_nai(), BLURT_PRECISION_BLURT ) == steem );
       BOOST_REQUIRE( asset_symbol_type::from_nai( vests.to_nai(), BLURT_PRECISION_VESTS ) == vests );
 
       BLURT_REQUIRE_THROW( asset_symbol_type::from_nai_string( "@@100000006", BLURT_ASSET_MAX_DECIMALS + 1 ), fc::assert_exception ); // More than max decimals

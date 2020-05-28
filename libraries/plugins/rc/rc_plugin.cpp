@@ -18,7 +18,7 @@
 #include <boost/algorithm/string.hpp>
 
 #define BLURT_RC_REGEN_TIME   (60*60*24*5)
-// 2020.748973 VESTS == 1.000 STEEM when HF20 occurred on mainnet
+// 2020.748973 VESTS == 1.000 BLURT when HF20 occurred on mainnet
 // TODO: What should this value be for testnet?
 
 
@@ -261,7 +261,7 @@ void use_account_rcs(
          if( db.is_producing() )
          {
             BLURT_ASSERT( has_mana, plugin_exception,
-               "Account: ${account} has ${rc_current} RC, needs ${rc_needed} RC. Please wait to transact, or power up STEEM.",
+               "Account: ${account} has ${rc_current} RC, needs ${rc_needed} RC. Please wait to transact, or power up BLURT.",
                ("account", account_name)
                ("rc_needed", rc)
                ("rc_current", rca.rc_manabar.current_mana)

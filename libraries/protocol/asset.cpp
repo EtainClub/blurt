@@ -117,9 +117,9 @@ uint32_t asset_symbol_type::asset_num_from_nai( uint32_t nai, uint8_t decimal_pl
 
    switch( nai_data_digits )
    {
-      case BLURT_NAI_STEEM:
-         FC_ASSERT( decimal_places == BLURT_PRECISION_STEEM );
-         return BLURT_ASSET_NUM_STEEM;
+      case BLURT_NAI_BLURT:
+         FC_ASSERT( decimal_places == BLURT_PRECISION_BLURT );
+         return BLURT_ASSET_NUM_BLURT;
       case BLURT_NAI_VESTS:
          FC_ASSERT( decimal_places == BLURT_PRECISION_VESTS );
          return BLURT_ASSET_NUM_VESTS;
@@ -136,8 +136,8 @@ uint32_t asset_symbol_type::to_nai()const
    // Can be replaced with some clever bitshifting
    switch( asset_num )
    {
-      case BLURT_ASSET_NUM_STEEM:
-         nai_data_digits = BLURT_NAI_STEEM;
+      case BLURT_ASSET_NUM_BLURT:
+         nai_data_digits = BLURT_NAI_BLURT;
          break;
       case BLURT_ASSET_NUM_VESTS:
          nai_data_digits = BLURT_NAI_VESTS;
@@ -159,7 +159,7 @@ bool asset_symbol_type::is_vesting() const
       {
          switch( asset_num )
          {
-            case BLURT_ASSET_NUM_STEEM:
+            case BLURT_ASSET_NUM_BLURT:
                return false;
             case BLURT_ASSET_NUM_VESTS:
                return true;
@@ -183,10 +183,10 @@ asset_symbol_type asset_symbol_type::get_paired_symbol() const
       {
          switch( asset_num )
          {
-            case BLURT_ASSET_NUM_STEEM:
+            case BLURT_ASSET_NUM_BLURT:
                return from_asset_num( BLURT_ASSET_NUM_VESTS );
             case BLURT_ASSET_NUM_VESTS:
-               return from_asset_num( BLURT_ASSET_NUM_STEEM );
+               return from_asset_num( BLURT_ASSET_NUM_BLURT );
             default:
                FC_ASSERT( false, "Unknown asset symbol" );
          }
@@ -207,7 +207,7 @@ asset_symbol_type::asset_symbol_space asset_symbol_type::space()const
    asset_symbol_type::asset_symbol_space s = legacy_space;
    switch( asset_num )
    {
-      case BLURT_ASSET_NUM_STEEM:
+      case BLURT_ASSET_NUM_BLURT:
       case BLURT_ASSET_NUM_VESTS:
          s = legacy_space;
          break;
@@ -221,7 +221,7 @@ void asset_symbol_type::validate()const
 {
    switch( asset_num )
    {
-      case BLURT_ASSET_NUM_STEEM:
+      case BLURT_ASSET_NUM_BLURT:
       case BLURT_ASSET_NUM_VESTS:
          break;
       default:

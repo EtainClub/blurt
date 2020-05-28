@@ -56,7 +56,7 @@ void info()
       std::cerr << "------------------------------------------------------\n";
 #else
       std::cerr << "------------------------------------------------------\n\n";
-      std::cerr << "            STARTING STEEM NETWORK\n\n";
+      std::cerr << "            STARTING BLURT NETWORK\n\n";
       std::cerr << "------------------------------------------------------\n";
       std::cerr << "initminer public key: " << BLURT_INIT_PUBLIC_KEY_STR << "\n";
       std::cerr << "chain id: " << std::string( BLURT_CHAIN_ID ) << "\n";

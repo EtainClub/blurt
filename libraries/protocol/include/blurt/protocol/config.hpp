@@ -43,7 +43,7 @@
 
 #define BLURT_VOTE_DUST_THRESHOLD             (0)
 
-#else // IS LIVE STEEM NETWORK
+#else // IS LIVE BLURT NETWORK
 
 #define BLURT_BLOCKCHAIN_VERSION              ( version(0, 0, 0) )
 
@@ -77,7 +77,7 @@
 #endif
 
 #define VESTS_SYMBOL  (blurt::protocol::asset_symbol_type::from_asset_num( BLURT_ASSET_NUM_VESTS ) )
-#define BLURT_SYMBOL  (blurt::protocol::asset_symbol_type::from_asset_num( BLURT_ASSET_NUM_STEEM ) )
+#define BLURT_SYMBOL  (blurt::protocol::asset_symbol_type::from_asset_num( BLURT_ASSET_NUM_BLURT ) )
 
 #define BLURT_BLOCKCHAIN_HARDFORK_VERSION     ( hardfork_version( BLURT_BLOCKCHAIN_VERSION ) )
 
@@ -321,7 +321,7 @@
 #define BLURT_REGENT_ACCOUNT                  "regent"
 ///@}
 
-/// STEEM PROPOSAL SYSTEM support
+/// BLURT PROPOSAL SYSTEM support
 
 #define BLURT_TREASURY_FEE                         (10 * BLURT_BLOCKCHAIN_PRECISION)
 #define BLURT_PROPOSAL_MAINTENANCE_PERIOD          3600

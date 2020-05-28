@@ -14,16 +14,16 @@
 #define SMT_MAX_NAI_POOL_COUNT               10
 #define SMT_MAX_NAI_GENERATION_TRIES         100
 
-#define BLURT_PRECISION_STEEM (3)
+#define BLURT_PRECISION_BLURT (3)
 #define BLURT_PRECISION_VESTS (6)
 
 // One's place is used for check digit, which means NAI 0-9 all have NAI data of 0 which is invalid
 // This space is safe to use because it would alwasys result in failure to convert from NAI
-#define BLURT_NAI_STEEM (2)
+#define BLURT_NAI_BLURT (2)
 #define BLURT_NAI_VESTS (3)
 
-#define BLURT_ASSET_NUM_STEEM \
-  (uint32_t(((SMT_MAX_NAI + BLURT_NAI_STEEM) << BLURT_NAI_SHIFT) | BLURT_PRECISION_STEEM))
+#define BLURT_ASSET_NUM_BLURT \
+  (uint32_t(((SMT_MAX_NAI + BLURT_NAI_BLURT) << BLURT_NAI_SHIFT) | BLURT_PRECISION_BLURT))
 #define BLURT_ASSET_NUM_VESTS \
   (uint32_t(((SMT_MAX_NAI + BLURT_NAI_VESTS) << BLURT_NAI_SHIFT) | BLURT_PRECISION_VESTS))
 
@@ -35,12 +35,12 @@
 #else
 
 #define VESTS_SYMBOL_U64  (uint64_t('V') | (uint64_t('E') << 8) | (uint64_t('S') << 16) | (uint64_t('T') << 24) | (uint64_t('S') << 32))
-#define BLURT_SYMBOL_U64  (uint64_t('S') | (uint64_t('T') << 8) | (uint64_t('E') << 16) | (uint64_t('E') << 24) | (uint64_t('M') << 32))
+#define BLURT_SYMBOL_U64  (uint64_t('B') | (uint64_t('L') << 8) | (uint64_t('U') << 16) | (uint64_t('R') << 24) | (uint64_t('T') << 32))
 
 #endif
 
 #define VESTS_SYMBOL_SER  (uint64_t(6) | (VESTS_SYMBOL_U64 << 8)) ///< VESTS|VESTS with 6 digits of precision
-#define BLURT_SYMBOL_SER  (uint64_t(3) | (BLURT_SYMBOL_U64 << 8)) ///< STEEM|TESTS with 3 digits of precision
+#define BLURT_SYMBOL_SER  (uint64_t(3) | (BLURT_SYMBOL_U64 << 8)) ///< BLURT|TESTS with 3 digits of precision
 
 #define BLURT_ASSET_MAX_DECIMALS 12
 
@@ -149,7 +149,7 @@ inline void pack( Stream& s, const blurt::protocol::asset_symbol_type& sym )
          uint64_t ser = 0;
          switch( sym.asset_num )
          {
-            case BLURT_ASSET_NUM_STEEM:
+            case BLURT_ASSET_NUM_BLURT:
                ser = BLURT_SYMBOL_SER;
                break;
             case BLURT_ASSET_NUM_VESTS:
@@ -180,7 +180,7 @@ inline void unpack( Stream& s, blurt::protocol::asset_symbol_type& sym, uint32_t
       case BLURT_SYMBOL_SER & 0xFFFFFFFF:
          s.read( ((char*) &ser)+4, 4 );
          FC_ASSERT( ser == BLURT_SYMBOL_SER, "invalid asset bits" );
-         sym.asset_num = BLURT_ASSET_NUM_STEEM;
+         sym.asset_num = BLURT_ASSET_NUM_BLURT;
          break;
       case VESTS_SYMBOL_SER & 0xFFFFFFFF:
          s.read( ((char*) &ser)+4, 4 );

@@ -2653,11 +2653,11 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_validate )
       op.ratification_deadline = db->head_block_time() + 100;
       op.escrow_expiration = db->head_block_time() + 200;
 
-      BOOST_TEST_MESSAGE( "--- failure when steem symbol != STEEM" );
+      BOOST_TEST_MESSAGE( "--- failure when steem symbol != BLURT" );
       op.steem_amount.symbol = VESTS_SYMBOL;
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
 
-      BOOST_TEST_MESSAGE( "--- failure when fee symbol != STEEM" );
+      BOOST_TEST_MESSAGE( "--- failure when fee symbol != BLURT" );
       op.steem_amount.symbol = BLURT_SYMBOL;
       op.fee.symbol = VESTS_SYMBOL;
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
@@ -3952,7 +3952,7 @@ BOOST_AUTO_TEST_CASE( transfer_to_savings_validate )
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
 
 
-      BOOST_TEST_MESSAGE( "success when amount is STEEM" );
+      BOOST_TEST_MESSAGE( "success when amount is BLURT" );
       op.amount = ASSET( "1.000 TESTS" );
       op.validate();
    }
@@ -4031,7 +4031,7 @@ BOOST_AUTO_TEST_CASE( transfer_to_savings_apply )
       BLURT_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
       validate_database();
 
-      BOOST_TEST_MESSAGE( "--- success transferring STEEM to self" );
+      BOOST_TEST_MESSAGE( "--- success transferring BLURT to self" );
       op.to = "alice";
       op.amount = ASSET( "1.000 TESTS" );
 
@@ -4045,7 +4045,7 @@ BOOST_AUTO_TEST_CASE( transfer_to_savings_apply )
       validate_database();
 
 
-      BOOST_TEST_MESSAGE( "--- success transferring STEEM to other" );
+      BOOST_TEST_MESSAGE( "--- success transferring BLURT to other" );
       op.to = "bob";
       op.amount = ASSET( "1.000 TESTS" );
 
@@ -4096,7 +4096,7 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_validate )
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
 
 
-      BOOST_TEST_MESSAGE( "success when amount is STEEM" );
+      BOOST_TEST_MESSAGE( "success when amount is BLURT" );
       op.amount = ASSET( "1.000 TESTS" );
       op.validate();
    }
@@ -4193,7 +4193,7 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_apply )
       BOOST_REQUIRE( db->get_account( "alice" ).savings_balance == ASSET( "9.000 TESTS" ) );
       validate_database();
 
-      BOOST_TEST_MESSAGE( "--- success withdrawing STEEM to self" );
+      BOOST_TEST_MESSAGE( "--- success withdrawing BLURT to self" );
       op.to = "alice";
       op.amount = ASSET( "1.000 TESTS" );
       op.request_id++;
@@ -4224,7 +4224,7 @@ BOOST_AUTO_TEST_CASE( transfer_from_savings_apply )
       BLURT_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
 
 
-      BOOST_TEST_MESSAGE( "--- success withdrawing STEEM to other" );
+      BOOST_TEST_MESSAGE( "--- success withdrawing BLURT to other" );
       op.to = "bob";
       op.amount = ASSET( "1.000 TESTS" );
       op.request_id++;
@@ -4614,7 +4614,7 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_validate )
 
       op.reward_vests.amount = 0;
 
-      BOOST_TEST_MESSAGE( "Testing wrong STEEM symbol" );
+      BOOST_TEST_MESSAGE( "Testing wrong BLURT symbol" );
       op.reward_steem = asset(1000, VESTS_SYMBOL);
       op.reward_vests.amount = 0;
       BLURT_REQUIRE_THROW( op.validate(), fc::assert_exception );
@@ -4693,7 +4693,7 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
       auto alice_vests = db->get_account( "alice" ).vesting_shares;
 
 
-      BOOST_TEST_MESSAGE( "--- Attempting to claim more STEEM than exists in the reward balance." );
+      BOOST_TEST_MESSAGE( "--- Attempting to claim more BLURT than exists in the reward balance." );
 
       claim_reward_balance_operation op;
       signed_transaction tx;

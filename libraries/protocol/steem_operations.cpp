@@ -18,7 +18,7 @@ namespace blurt { namespace protocol {
    void account_create_operation::validate() const
    {
       validate_account_name( new_account_name );
-      FC_ASSERT( is_asset_type( fee, BLURT_SYMBOL ), "Account creation fee must be STEEM" );
+      FC_ASSERT( is_asset_type( fee, BLURT_SYMBOL ), "Account creation fee must be BLURT" );
       owner.validate();
       active.validate();
 
@@ -120,7 +120,7 @@ namespace blurt { namespace protocol {
    void claim_account_operation::validate()const
    {
       validate_account_name( creator );
-      FC_ASSERT( is_asset_type( fee, BLURT_SYMBOL ), "Account creation fee must be STEEM" );
+      FC_ASSERT( is_asset_type( fee, BLURT_SYMBOL ), "Account creation fee must be BLURT" );
       FC_ASSERT( fee >= asset( 0, BLURT_SYMBOL ), "Account creation fee cannot be negative" );
       FC_ASSERT( fee <= asset( BLURT_MAX_ACCOUNT_CREATION_FEE, BLURT_SYMBOL ), "Account creation fee cannot be too large" );
 
@@ -151,7 +151,7 @@ namespace blurt { namespace protocol {
    {
       validate_account_name( voter );
       validate_account_name( author );\
-      FC_ASSERT( abs(weight) <= BLURT_100_PERCENT, "Weight is not a STEEMIT percentage" );
+      FC_ASSERT( abs(weight) <= BLURT_100_PERCENT, "Weight is not a BLURTIT percentage" );
       validate_permlink( permlink );
    }
 
@@ -170,7 +170,7 @@ namespace blurt { namespace protocol {
       validate_account_name( from );
       FC_ASSERT( amount.symbol == BLURT_SYMBOL ||
                  ( amount.symbol.space() == asset_symbol_type::smt_nai_space && amount.symbol.is_vesting() == false ),
-                 "Amount must be STEEM or SMT liquid" );
+                 "Amount must be BLURT or SMT liquid" );
       if ( to != account_name_type() ) validate_account_name( to );
       FC_ASSERT( amount.amount > 0, "Must transfer a nonzero amount" );
    }
@@ -212,7 +212,7 @@ namespace blurt { namespace protocol {
       {
          asset account_creation_fee;
          fc::raw::unpack_from_vector( itr->second, account_creation_fee );
-         FC_ASSERT( account_creation_fee.symbol == BLURT_SYMBOL, "account_creation_fee must be in STEEM" );
+         FC_ASSERT( account_creation_fee.symbol == BLURT_SYMBOL, "account_creation_fee must be in BLURT" );
          FC_ASSERT( account_creation_fee.amount >= BLURT_MIN_ACCOUNT_CREATION_FEE, "account_creation_fee smaller than minimum account creation fee" );
       }
 
@@ -304,8 +304,8 @@ namespace blurt { namespace protocol {
       FC_ASSERT( fee.amount >= 0, "fee cannot be negative" );
       FC_ASSERT( steem_amount.amount > 0, "amount cannot be negative" );
       FC_ASSERT( from != agent && to != agent, "agent must be a third party" );
-      FC_ASSERT( fee.symbol == BLURT_SYMBOL, "fee must be STEEM" );
-      FC_ASSERT( steem_amount.symbol == BLURT_SYMBOL, "amount must contain STEEM" );
+      FC_ASSERT( fee.symbol == BLURT_SYMBOL, "fee must be BLURT" );
+      FC_ASSERT( steem_amount.symbol == BLURT_SYMBOL, "amount must contain BLURT" );
       FC_ASSERT( ratification_deadline < escrow_expiration, "ratification deadline must be before escrow expiration" );
       if ( json_meta.size() > 0 )
       {
@@ -342,7 +342,7 @@ namespace blurt { namespace protocol {
       FC_ASSERT( who == from || who == to || who == agent, "who must be from or to or agent" );
       FC_ASSERT( receiver == from || receiver == to, "receiver must be from or to" );
       FC_ASSERT( steem_amount.amount > 0, "amount cannot be negative" );
-      FC_ASSERT( steem_amount.symbol == BLURT_SYMBOL, "amount must contain STEEM" );
+      FC_ASSERT( steem_amount.symbol == BLURT_SYMBOL, "amount must contain BLURT" );
    }
 
    void request_account_recovery_operation::validate()const
@@ -415,7 +415,7 @@ namespace blurt { namespace protocol {
    void claim_reward_balance_operation::validate()const
    {
       validate_account_name( account );
-      FC_ASSERT( is_asset_type( reward_steem, BLURT_SYMBOL ), "Reward Steem must be STEEM" );
+      FC_ASSERT( is_asset_type( reward_steem, BLURT_SYMBOL ), "Reward Steem must be BLURT" );
       FC_ASSERT( is_asset_type( reward_vests, VESTS_SYMBOL ), "Reward Steem must be VESTS" );
       FC_ASSERT( reward_steem.amount >= 0, "Cannot claim a negative amount" );
       FC_ASSERT( reward_vests.amount >= 0, "Cannot claim a negative amount" );

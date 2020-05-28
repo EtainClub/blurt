@@ -1121,7 +1121,7 @@ asset create_vesting2( database& db, const account_object& to_account, asset liq
 
 /**
  * @param to_account - the account to receive the new vesting shares
- * @param liquid     - STEEM or liquid SMT to be converted to vesting shares
+ * @param liquid     - BLURT or liquid SMT to be converted to vesting shares
  */
 asset database::create_vesting( const account_object& to_account, asset liquid, bool to_reward_balance )
 {
@@ -2068,7 +2068,7 @@ share_type database::pay_reward_funds( share_type reward )
 
       used_rewards += r;
 
-      // Sanity check to ensure we aren't printing more STEEM than has been allocated through inflation
+      // Sanity check to ensure we aren't printing more BLURT than has been allocated through inflation
       FC_ASSERT( used_rewards <= reward );
    }
 
@@ -3628,11 +3628,11 @@ void database::modify_balance( const account_object& a, const asset& delta, bool
    {
       switch( delta.symbol.asset_num )
       {
-         case BLURT_ASSET_NUM_STEEM:
+         case BLURT_ASSET_NUM_BLURT:
             acnt.balance += delta;
             if( check_balance )
             {
-               FC_ASSERT( acnt.balance.amount.value >= 0, "Insufficient STEEM funds" );
+               FC_ASSERT( acnt.balance.amount.value >= 0, "Insufficient BLURT funds" );
             }
             break;
          case BLURT_ASSET_NUM_VESTS:
@@ -3654,13 +3654,13 @@ void database::modify_reward_balance( const account_object& a, const asset& valu
    {
       switch( value_delta.symbol.asset_num )
       {
-         case BLURT_ASSET_NUM_STEEM:
+         case BLURT_ASSET_NUM_BLURT:
             if( share_delta.amount.value == 0 )
             {
                acnt.reward_steem_balance += value_delta;
                if( check_balance )
                {
-                  FC_ASSERT( acnt.reward_steem_balance.amount.value >= 0, "Insufficient reward STEEM funds" );
+                  FC_ASSERT( acnt.reward_steem_balance.amount.value >= 0, "Insufficient reward BLURT funds" );
                }
             }
             else
@@ -3731,9 +3731,9 @@ void database::adjust_savings_balance( const account_object& a, const asset& del
    {
       switch( delta.symbol.asset_num )
       {
-         case BLURT_ASSET_NUM_STEEM:
+         case BLURT_ASSET_NUM_BLURT:
             acnt.savings_balance += delta;
-            FC_ASSERT( acnt.savings_balance.amount.value >= 0, "Insufficient savings STEEM funds" );
+            FC_ASSERT( acnt.savings_balance.amount.value >= 0, "Insufficient savings BLURT funds" );
             break;
          default:
             FC_ASSERT( !"invalid symbol" );
@@ -3767,7 +3767,7 @@ void database::adjust_supply( const asset& delta, bool adjust_vesting )
    {
       switch( delta.symbol.asset_num )
       {
-         case BLURT_ASSET_NUM_STEEM:
+         case BLURT_ASSET_NUM_BLURT:
          {
             asset new_vesting( (adjust_vesting && delta.amount > 0) ? delta.amount * 9 : 0, BLURT_SYMBOL );
             props.current_supply += delta + new_vesting;
@@ -3786,7 +3786,7 @@ asset database::get_balance( const account_object& a, asset_symbol_type symbol )
 {
    switch( symbol.asset_num )
    {
-      case BLURT_ASSET_NUM_STEEM:
+      case BLURT_ASSET_NUM_BLURT:
          return a.balance;
       default:
       {
@@ -3804,7 +3804,7 @@ asset database::get_savings_balance( const account_object& a, asset_symbol_type 
 {
    switch( symbol.asset_num )
    {
-      case BLURT_ASSET_NUM_STEEM:
+      case BLURT_ASSET_NUM_BLURT:
          return a.savings_balance;
       default: // Note no savings balance for SMT per comments in issue 1682.
          FC_ASSERT( !"invalid symbol" );
@@ -3943,7 +3943,7 @@ void database::validate_invariants()const
          if( itr->pending_fee.symbol == BLURT_SYMBOL )
             total_supply += itr->pending_fee;
          else
-            FC_ASSERT( false, "found escrow pending fee that is not STEEM" );
+            FC_ASSERT( false, "found escrow pending fee that is not BLURT" );
       }
 
       const auto& savings_withdraw_idx = get_index< savings_withdraw_index >().indices().get< by_id >();
@@ -3953,7 +3953,7 @@ void database::validate_invariants()const
          if( itr->amount.symbol == BLURT_SYMBOL )
             total_supply += itr->amount;
          else
-            FC_ASSERT( false, "found savings withdraw that is not STEEM" );
+            FC_ASSERT( false, "found savings withdraw that is not BLURT" );
       }
 
       const auto& reward_idx = get_index< reward_fund_index, by_id >();

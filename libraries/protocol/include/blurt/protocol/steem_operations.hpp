@@ -165,7 +165,7 @@ namespace blurt { namespace protocol {
    /**
     * @ingroup operations
     *
-    * @brief Transfers STEEM from one account to another.
+    * @brief Transfers BLURT from one account to another.
     */
    struct transfer_operation : public base_operation
    {
@@ -288,7 +288,7 @@ namespace blurt { namespace protocol {
 
 
    /**
-    *  This operation converts liquid token (STEEM or liquid SMT) into VFS (Vesting Fund Shares,
+    *  This operation converts liquid token (BLURT or liquid SMT) into VFS (Vesting Fund Shares,
     *  VESTS or vesting SMT) at the current exchange rate. With this operation it is possible to
     *  give another account vesting shares so that faucets can pre-fund new accounts with vesting shares.
     */
@@ -296,7 +296,7 @@ namespace blurt { namespace protocol {
    {
       account_name_type from;
       account_name_type to;      ///< if null, then same as from
-      asset             amount;  ///< must be STEEM or liquid variant of SMT
+      asset             amount;  ///< must be BLURT or liquid variant of SMT
 
       void validate()const;
       void get_required_active_authorities( flat_set<account_name_type>& a )const{ a.insert(from); }
@@ -351,7 +351,7 @@ namespace blurt { namespace protocol {
    struct legacy_chain_properties
    {
       /**
-       *  This fee, paid in STEEM, is converted into VESTING SHARES for the new account. Accounts
+       *  This fee, paid in BLURT, is converted into VESTING SHARES for the new account. Accounts
        *  without vesting shares cannot earn usage rations and therefore are powerless. This minimum
        *  fee requires all accounts to have some kind of commitment to the network that includes the
        *  ability to vote and make transactions.

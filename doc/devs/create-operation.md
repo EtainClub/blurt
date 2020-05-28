@@ -1,5 +1,5 @@
 
-This is developer documentation for creating brand-new operations on the STEEM blockchain.
+This is developer documentation for creating brand-new operations on the BLURT blockchain.
 
 - (1) Define `smt_elevate_account_operation` structure in `smt_operations.hpp`
 - (2) Create `FC_REFLECT` definition for the operation struct.

@@ -44,7 +44,7 @@ uint32_t string_to_asset_num( const char* p, uint8_t decimals )
          {
             case BLURT_SYMBOL_U64:
                FC_ASSERT( decimals == 3, "Incorrect decimal places" );
-               asset_num = BLURT_ASSET_NUM_STEEM;
+               asset_num = BLURT_ASSET_NUM_BLURT;
                break;
             case VESTS_SYMBOL_U64:
                FC_ASSERT( decimals == 6, "Incorrect decimal places" );
@@ -83,11 +83,11 @@ std::string asset_num_to_string( uint32_t asset_num )
    switch( asset_num )
    {
 #ifdef IS_TEST_NET
-      case BLURT_ASSET_NUM_STEEM:
+      case BLURT_ASSET_NUM_BLURT:
          return "TESTS";
 #else
-      case BLURT_ASSET_NUM_STEEM:
-         return "STEEM";
+      case BLURT_ASSET_NUM_BLURT:
+         return "BLURT";
 #endif
       case BLURT_ASSET_NUM_VESTS:
          return "VESTS";
@@ -151,7 +151,7 @@ legacy_asset legacy_asset::from_string( const string& from )
 
          int64_t prec = precision( result.symbol );
 
-         //Max amount = 9223372036854775.807 STEEM/SBD
+         //Max amount = 9223372036854775.807 BLURT/SBD
          //`inpart` * `prec` can cause overflow, better is to emulate multiplication using additional zeros
          auto _prec = std::to_string( prec );
          if( !_prec.empty() )

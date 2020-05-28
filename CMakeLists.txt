@@ -310,7 +310,7 @@ endif(ENABLE_INSTALLER)
 if( BUILD_BLURT_TESTNET )
   MESSAGE( STATUS "\n\n             CONFIGURED FOR TEST NETWORK             \n\n" )
 else()
-  MESSAGE( STATUS "\n\n             CONFIGURED FOR STEEM NETWORK             \n\n" )
+  MESSAGE( STATUS "\n\n             CONFIGURED FOR BLURT NETWORK             \n\n" )
 endif()
 
 if( ENABLE_MIRA )

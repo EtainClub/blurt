@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE( comment_payout_equalize )
       // A,B,D : posters
       // U,V,W : voters
 
-      // set a ridiculously high STEEM price ($1 / satoshi) to disable dust threshold
+      // set a ridiculously high BLURT price ($1 / satoshi) to disable dust threshold
       for( const auto& voter : voters )
       {
          fund( voter.name, 10000 );
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE( comment_payout_dust )
 
       generate_blocks( db->get_comment( "alice", string( "test" ) ).cashout_time );
 
-      // If comments are paid out independent of order, then the last satoshi of STEEM cannot be divided among them
+      // If comments are paid out independent of order, then the last satoshi of BLURT cannot be divided among them
       const auto rf = db->get< reward_fund_object, by_name >( BLURT_POST_REWARD_FUND_NAME );
       BOOST_REQUIRE( rf.reward_balance == ASSET( "0.240 TESTS" ) );
 
@@ -1372,7 +1372,7 @@ BOOST_AUTO_TEST_CASE( steem_inflation )
    try
    {
    /*
-      BOOST_TEST_MESSAGE( "Testing STEEM Inflation until the vesting start block" );
+      BOOST_TEST_MESSAGE( "Testing BLURT Inflation until the vesting start block" );
 
       auto gpo = db->get_dynamic_global_properties();
       auto virtual_supply = gpo.virtual_supply;
