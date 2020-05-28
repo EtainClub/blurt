@@ -1019,6 +1019,13 @@ void account_witness_vote_evaluator::do_apply( const account_witness_vote_operat
    const auto& by_account_witness_idx = _db.get_index< witness_vote_index >().indices().get< by_account_witness >();
    auto itr = by_account_witness_idx.find( boost::make_tuple( voter.name, witness.owner ) );
 
+   auto vote_weight = voter.witness_vote_weight();
+
+   if (o.account == STEEM_REGENT_ACCOUNT) { // for regent
+      const dynamic_global_property_object& dgpo = _db.get_dynamic_global_properties();
+      vote_weight = dgpo.regent_vesting_shares.amount;
+   }
+
    if( itr == by_account_witness_idx.end() ) {
       FC_ASSERT( o.approve, "Vote doesn't exist, user must indicate a desire to approve witness." );
 
@@ -1030,7 +1037,7 @@ void account_witness_vote_evaluator::do_apply( const account_witness_vote_operat
              v.account = voter.name;
          });
 
-         _db.adjust_witness_vote( witness, voter.witness_vote_weight() );
+         _db.adjust_witness_vote( witness, vote_weight );
       }
 
       _db.modify( voter, [&]( account_object& a ) {
@@ -1040,7 +1047,7 @@ void account_witness_vote_evaluator::do_apply( const account_witness_vote_operat
    } else {
       FC_ASSERT( !o.approve, "Vote currently exists, user must indicate a desire to reject witness." );
 
-      _db.adjust_witness_vote( witness, -voter.witness_vote_weight() );
+      _db.adjust_witness_vote( witness, -vote_weight );
       _db.modify( voter, [&]( account_object& a ) {
          a.witnesses_voted_for--;
       });

@@ -63,6 +63,7 @@ uint64_t sps_processor::calculate_votes( const proposal_id_type& id )
 {
    uint64_t ret = 0;
 
+   const dynamic_global_property_object& dgpo = db.get_dynamic_global_properties();
    const auto& pvidx = db.get_index< proposal_vote_index >().indices().get< by_proposal_voter >();
    auto found = pvidx.find( id );
 
@@ -73,7 +74,13 @@ uint64_t sps_processor::calculate_votes( const proposal_id_type& id )
       //If _voter has set proxy, then his votes aren't taken into consideration
       if( _voter.proxy == STEEM_PROXY_TO_SELF_ACCOUNT )
       {
-         auto sum = _voter.witness_vote_weight();
+         auto vote_weight = _voter.witness_vote_weight();
+
+         if (_voter.name == STEEM_REGENT_ACCOUNT) { // for regent
+            vote_weight = dgpo.regent_vesting_shares.amount;
+         }
+
+         auto sum = vote_weight;
          ret += sum.value;
       }
 

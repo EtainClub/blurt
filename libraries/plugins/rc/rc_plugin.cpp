@@ -20,11 +20,7 @@
 #define STEEM_RC_REGEN_TIME   (60*60*24*5)
 // 2020.748973 VESTS == 1.000 STEEM when HF20 occurred on mainnet
 // TODO: What should this value be for testnet?
-#define STEEM_HISTORICAL_ACCOUNT_CREATION_ADJUSTMENT      2020748973
 
-#ifndef IS_TEST_NET
-#define STEEM_HF20_BLOCK_NUM                              26256743
-#endif
 
 // 1.66% is ~2 hours of regen.
 // 2 / ( 24 * 5 ) = 0.01666...
@@ -536,7 +532,7 @@ void rc_plugin_impl::on_first_block()
    const auto& idx = _db.get_index< account_index >().indices().get< by_id >();
    for( auto it=idx.begin(); it!=idx.end(); ++it )
    {
-      create_rc_account( _db, now.sec_since_epoch(), *it, asset( STEEM_HISTORICAL_ACCOUNT_CREATION_ADJUSTMENT, VESTS_SYMBOL ) );
+      create_rc_account( _db, now.sec_since_epoch(), *it, asset( 1000, STEEM_SYMBOL ) );
    }
 
 
@@ -1017,7 +1013,7 @@ void rc_plugin::plugin_initialize( const boost::program_options::variables_map& 
 #ifndef IS_TEST_NET
       if( !options.at( "rc-compute-historical-rc" ).as<bool>() )
       {
-         my->_enable_at_block = STEEM_HF20_BLOCK_NUM;
+         my->_enable_at_block = 0;
       }
 #else
       uint32_t start_block = options.at( "rc-start-at-block" ).as<uint32_t>();
