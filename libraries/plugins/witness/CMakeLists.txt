@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/plugins/witness/*.hpp")
+file(GLOB HEADERS "include/blurt/plugins/witness/*.hpp")
 
 add_library( witness_plugin
              witness_plugin.cpp

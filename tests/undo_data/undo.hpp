@@ -1,9 +1,9 @@
 #pragma once
 
-#include <steem/chain/database.hpp>
+#include <blurt/chain/database.hpp>
 #include <fstream>
 
-namespace steem { namespace chain {
+namespace blurt { namespace chain {
 
    namespace u_types
    {

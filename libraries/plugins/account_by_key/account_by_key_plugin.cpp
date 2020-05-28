@@ -1,14 +1,14 @@
 
-#include <steem/chain/steem_fwd.hpp>
+#include <blurt/chain/steem_fwd.hpp>
 
-#include <steem/plugins/account_by_key/account_by_key_plugin.hpp>
-#include <steem/plugins/account_by_key/account_by_key_objects.hpp>
+#include <blurt/plugins/account_by_key/account_by_key_plugin.hpp>
+#include <blurt/plugins/account_by_key/account_by_key_objects.hpp>
 
-#include <steem/chain/account_object.hpp>
-#include <steem/chain/database.hpp>
-#include <steem/chain/index.hpp>
+#include <blurt/chain/account_object.hpp>
+#include <blurt/chain/database.hpp>
+#include <blurt/chain/index.hpp>
 
-namespace steem { namespace plugins { namespace account_by_key {
+namespace blurt { namespace plugins { namespace account_by_key {
 
 namespace detail {
 
@@ -16,7 +16,7 @@ class account_by_key_plugin_impl
 {
    public:
       account_by_key_plugin_impl( account_by_key_plugin& _plugin ) :
-         _db( appbase::app().get_plugin< steem::plugins::chain::chain_plugin >().db() ),
+         _db( appbase::app().get_plugin< blurt::plugins::chain::chain_plugin >().db() ),
          _self( _plugin ) {}
 
       void on_pre_apply_operation( const operation_notification& note );
@@ -185,12 +185,12 @@ void account_by_key_plugin::plugin_initialize( const boost::program_options::var
    try
    {
       ilog( "Initializing account_by_key plugin" );
-      chain::database& db = appbase::app().get_plugin< steem::plugins::chain::chain_plugin >().db();
+      chain::database& db = appbase::app().get_plugin< blurt::plugins::chain::chain_plugin >().db();
 
       my->_pre_apply_operation_conn = db.add_pre_apply_operation_handler( [&]( const operation_notification& note ){ my->on_pre_apply_operation( note ); }, *this, 0 );
       my->_post_apply_operation_conn = db.add_post_apply_operation_handler( [&]( const operation_notification& note ){ my->on_post_apply_operation( note ); }, *this, 0 );
 
-      STEEM_ADD_PLUGIN_INDEX(db, key_lookup_index);
+      BLURT_ADD_PLUGIN_INDEX(db, key_lookup_index);
 
       appbase::app().get_plugin< chain::chain_plugin >().report_state_options( name(), fc::variant_object() );
    }
@@ -205,4 +205,4 @@ void account_by_key_plugin::plugin_shutdown()
    chain::util::disconnect_signal( my->_post_apply_operation_conn );
 }
 
-} } } // steem::plugins::account_by_key
+} } } // blurt::plugins::account_by_key

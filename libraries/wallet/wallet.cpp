@@ -1,17 +1,17 @@
-#include <steem/chain/steem_fwd.hpp>
+#include <blurt/chain/steem_fwd.hpp>
 
-#include <steem/utilities/git_revision.hpp>
-#include <steem/utilities/key_conversion.hpp>
-#include <steem/utilities/words.hpp>
+#include <blurt/utilities/git_revision.hpp>
+#include <blurt/utilities/key_conversion.hpp>
+#include <blurt/utilities/words.hpp>
 
-#include <steem/protocol/base.hpp>
-#include <steem/protocol/sps_operations.hpp>
-#include <steem/wallet/wallet.hpp>
-#include <steem/wallet/api_documentation.hpp>
-#include <steem/wallet/reflect_util.hpp>
-#include <steem/wallet/remote_node_api.hpp>
+#include <blurt/protocol/base.hpp>
+#include <blurt/protocol/sps_operations.hpp>
+#include <blurt/wallet/wallet.hpp>
+#include <blurt/wallet/api_documentation.hpp>
+#include <blurt/wallet/reflect_util.hpp>
+#include <blurt/wallet/remote_node_api.hpp>
 
-#include <steem/plugins/follow/follow_operations.hpp>
+#include <blurt/plugins/follow/follow_operations.hpp>
 
 #include <algorithm>
 #include <cctype>
@@ -62,9 +62,9 @@
 
 #define BRAIN_KEY_WORD_COUNT 16
 
-namespace steem { namespace wallet {
+namespace blurt { namespace wallet {
 
-using steem::plugins::condenser_api::legacy_asset;
+using blurt::plugins::condenser_api::legacy_asset;
 
 namespace detail {
 
@@ -222,7 +222,7 @@ class wallet_api_impl
 
 public:
    wallet_api& self;
-   wallet_api_impl( wallet_api& s, const wallet_data& initial_data, const steem::protocol::chain_id_type& _steem_chain_id, fc::api< remote_node_api > rapi )
+   wallet_api_impl( wallet_api& s, const wallet_data& initial_data, const blurt::protocol::chain_id_type& _steem_chain_id, fc::api< remote_node_api > rapi )
       : self( s ),
         _remote_api( rapi )
    {
@@ -297,22 +297,22 @@ public:
                                                                           " old");
       result["participation"] = (100*dynamic_props.recent_slots_filled.popcount()) / 128.0;
       result["account_creation_fee"] = _remote_api->get_chain_properties().account_creation_fee;
-      result["post_reward_fund"] = fc::variant(_remote_api->get_reward_fund( STEEM_POST_REWARD_FUND_NAME )).get_object();
+      result["post_reward_fund"] = fc::variant(_remote_api->get_reward_fund( BLURT_POST_REWARD_FUND_NAME )).get_object();
       return result;
    }
 
    variant_object about() const
    {
-      string client_version( steem::utilities::git_revision_description );
+      string client_version( blurt::utilities::git_revision_description );
       const size_t pos = client_version.find( '/' );
       if( pos != string::npos && client_version.size() > pos )
          client_version = client_version.substr( pos + 1 );
 
       fc::mutable_variant_object result;
-      result["blockchain_version"]       = STEEM_BLOCKCHAIN_VERSION;
+      result["blockchain_version"]       = BLURT_BLOCKCHAIN_VERSION;
       result["client_version"]           = client_version;
-      result["steem_revision"]           = steem::utilities::git_revision_sha;
-      result["steem_revision_age"]       = fc::get_approximate_relative_time_string( fc::time_point_sec( steem::utilities::git_revision_unix_timestamp ) );
+      result["steem_revision"]           = blurt::utilities::git_revision_sha;
+      result["steem_revision_age"]       = fc::get_approximate_relative_time_string( fc::time_point_sec( blurt::utilities::git_revision_unix_timestamp ) );
       result["fc_revision"]              = fc::git_revision_sha;
       result["fc_revision_age"]          = fc::get_approximate_relative_time_string( fc::time_point_sec( fc::git_revision_unix_timestamp ) );
       result["compile_date"]             = "compiled on " __DATE__ " at " __TIME__;
@@ -388,7 +388,7 @@ public:
       fc::optional<fc::ecc::private_key> optional_private_key = wif_to_key(wif_key);
       if (!optional_private_key)
          FC_THROW("Invalid private key");
-      steem::chain::public_key_type wif_pub_key = optional_private_key->get_public_key();
+      blurt::chain::public_key_type wif_pub_key = optional_private_key->get_public_key();
 
       _keys[wif_pub_key] = wif_key;
       return true;
@@ -459,7 +459,7 @@ public:
       for (int key_index = 0; ; ++key_index)
       {
          fc::ecc::private_key derived_private_key = derive_private_key(key_to_wif(parent_key), key_index);
-         steem::chain::public_key_type derived_public_key = derived_private_key.get_public_key();
+         blurt::chain::public_key_type derived_public_key = derived_private_key.get_public_key();
          if( _keys.find(derived_public_key) == _keys.end() )
          {
             if (number_of_consecutive_unused_keys)
@@ -495,9 +495,9 @@ public:
          int memo_key_index = find_first_unused_derived_key_index(active_privkey);
          fc::ecc::private_key memo_privkey = derive_private_key( key_to_wif(active_privkey), memo_key_index);
 
-         steem::chain::public_key_type owner_pubkey = owner_privkey.get_public_key();
-         steem::chain::public_key_type active_pubkey = active_privkey.get_public_key();
-         steem::chain::public_key_type memo_pubkey = memo_privkey.get_public_key();
+         blurt::chain::public_key_type owner_pubkey = owner_privkey.get_public_key();
+         blurt::chain::public_key_type active_pubkey = active_privkey.get_public_key();
+         blurt::chain::public_key_type memo_pubkey = memo_privkey.get_public_key();
 
          account_create_operation account_create_op;
 
@@ -544,7 +544,7 @@ public:
 
    void set_transaction_expiration( uint32_t tx_expiration_seconds )
    {
-      FC_ASSERT( tx_expiration_seconds < STEEM_MAX_TIME_UNTIL_EXPIRATION );
+      FC_ASSERT( tx_expiration_seconds < BLURT_MAX_TIME_UNTIL_EXPIRATION );
       _tx_expiration_seconds = tx_expiration_seconds;
    }
 
@@ -714,9 +714,9 @@ public:
 
             return null_auth;
          },
-         STEEM_MAX_SIG_CHECK_DEPTH,
-         STEEM_MAX_AUTHORITY_MEMBERSHIP,
-         STEEM_MAX_SIG_CHECK_ACCOUNTS,
+         BLURT_MAX_SIG_CHECK_DEPTH,
+         BLURT_MAX_AUTHORITY_MEMBERSHIP,
+         BLURT_MAX_SIG_CHECK_ACCOUNTS,
          fc::ecc::fc_canonical
          );
 
@@ -833,7 +833,7 @@ public:
 
    string                                  _wallet_filename;
    wallet_data                             _wallet;
-   steem::protocol::chain_id_type          steem_chain_id;
+   blurt::protocol::chain_id_type          steem_chain_id;
 
    map<public_key_type,string>             _keys;
    fc::sha512                              _checksum;
@@ -850,13 +850,13 @@ public:
    const string _wallet_filename_extension = ".wallet";
 };
 
-} } } // steem::wallet::detail
+} } } // blurt::wallet::detail
 
 
 
-namespace steem { namespace wallet {
+namespace blurt { namespace wallet {
 
-wallet_api::wallet_api(const wallet_data& initial_data, const steem::protocol::chain_id_type& _steem_chain_id, fc::api< remote_node_api > rapi)
+wallet_api::wallet_api(const wallet_data& initial_data, const blurt::protocol::chain_id_type& _steem_chain_id, fc::api< remote_node_api > rapi)
    : my(new detail::wallet_api_impl(*this, initial_data, _steem_chain_id, rapi))
 {}
 
@@ -926,11 +926,11 @@ brain_key_info wallet_api::suggest_brain_key()const
 
    for( int i=0; i<BRAIN_KEY_WORD_COUNT; i++ )
    {
-      fc::bigint choice = entropy % steem::words::word_list_size;
-      entropy /= steem::words::word_list_size;
+      fc::bigint choice = entropy % blurt::words::word_list_size;
+      entropy /= blurt::words::word_list_size;
       if( i > 0 )
          brain_key += " ";
-      brain_key += steem::words::word_list[ choice.to_int64() ];
+      brain_key += blurt::words::word_list[ choice.to_int64() ];
    }
 
    brain_key = normalize_brain_key(brain_key);
@@ -2135,7 +2135,7 @@ condenser_api::legacy_signed_transaction wallet_api::vote(
    op.voter = voter;
    op.author = author;
    op.permlink = permlink;
-   op.weight = weight * STEEM_1_PERCENT;
+   op.weight = weight * BLURT_1_PERCENT;
 
    signed_transaction tx;
    tx.operations.push_back( op );
@@ -2273,4 +2273,4 @@ condenser_api::legacy_signed_transaction wallet_api::follow( string follower, st
       return my->sign_transaction( trx, broadcast );
    }
 
-} } // steem::wallet
+} } // blurt::wallet

@@ -50,9 +50,9 @@ if __name__ == '__main__':
     parser.add_argument("treasury", help = "Treasury account")
     parser.add_argument("wif", help="Private key for creator account")
     parser.add_argument("--node-url", dest="node_url", default="http://127.0.0.1:8090", help="Url of working steem node")
-    parser.add_argument("--run-steemd", dest="steemd_path", help = "Path to steemd executable. Warning: using this option will erase contents of selected steemd working directory.")
-    parser.add_argument("--working_dir", dest="steemd_working_dir", default="/tmp/steemd-data/", help = "Path to steemd working directory")
-    parser.add_argument("--config_path", dest="steemd_config_path", default="./steem_utils/resources/config.ini.in",help = "Path to source config.ini file")
+    parser.add_argument("--run-blurtd", dest="blurtd_path", help = "Path to blurtd executable. Warning: using this option will erase contents of selected blurtd working directory.")
+    parser.add_argument("--working_dir", dest="blurtd_working_dir", default="/tmp/blurtd-data/", help = "Path to blurtd working directory")
+    parser.add_argument("--config_path", dest="blurtd_config_path", default="./steem_utils/resources/config.ini.in",help = "Path to source config.ini file")
     parser.add_argument("--no-erase-proposal", action='store_false', dest = "no_erase_proposal", help = "Do not erase proposal created with this test")
 
 
@@ -60,16 +60,16 @@ if __name__ == '__main__':
 
     node = None
 
-    if args.steemd_path:
-        logger.info("Running steemd via {} in {} with config {}".format(args.steemd_path, 
-            args.steemd_working_dir, 
-            args.steemd_config_path)
+    if args.blurtd_path:
+        logger.info("Running blurtd via {} in {} with config {}".format(args.blurtd_path,
+            args.blurtd_working_dir,
+            args.blurtd_config_path)
         )
         
         node = steem_utils.steem_runner.SteemNode(
-            args.steemd_path, 
-            args.steemd_working_dir, 
-            args.steemd_config_path
+            args.blurtd_path,
+            args.blurtd_working_dir,
+            args.blurtd_config_path
         )
     
     node_url = args.node_url

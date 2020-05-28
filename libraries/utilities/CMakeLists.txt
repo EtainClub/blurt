@@ -1,13 +1,13 @@
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/libraries/fc/GitVersionGen" )
 include( GetGitRevisionDescription )
-get_git_head_revision(GIT_REFSPEC STEEM_GIT_REVISION_SHA)
-get_git_unix_timestamp(STEEM_GIT_REVISION_UNIX_TIMESTAMP)
-git_describe(STEEM_GIT_REVISION_DESCRIPTION --tags)
-if(NOT STEEM_GIT_REVISION_DESCRIPTION)
-    set(STEEM_GIT_REVISION_DESCRIPTION "unknown")
-endif(NOT STEEM_GIT_REVISION_DESCRIPTION)
+get_git_head_revision(GIT_REFSPEC BLURT_GIT_REVISION_SHA)
+get_git_unix_timestamp(BLURT_GIT_REVISION_UNIX_TIMESTAMP)
+git_describe(BLURT_GIT_REVISION_DESCRIPTION --tags)
+if(NOT BLURT_GIT_REVISION_DESCRIPTION)
+    set(BLURT_GIT_REVISION_DESCRIPTION "unknown")
+endif(NOT BLURT_GIT_REVISION_DESCRIPTION)
 
-file(GLOB HEADERS "include/steem/utilities/*.hpp")
+file(GLOB HEADERS "include/blurt/utilities/*.hpp")
 
 set(sources
    benchmark_dumper.cpp
@@ -47,4 +47,4 @@ install( TARGETS
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
 )
-install( FILES ${HEADERS} DESTINATION "include/steem/utilities" )
+install( FILES ${HEADERS} DESTINATION "include/blurt/utilities" )

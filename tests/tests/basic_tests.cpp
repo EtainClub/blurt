@@ -24,15 +24,15 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <steem/chain/steem_fwd.hpp>
+#include <blurt/chain/steem_fwd.hpp>
 
-#include <steem/chain/database.hpp>
-#include <steem/protocol/protocol.hpp>
+#include <blurt/chain/database.hpp>
+#include <blurt/protocol/protocol.hpp>
 
-#include <steem/protocol/steem_operations.hpp>
-#include <steem/chain/account_object.hpp>
+#include <blurt/protocol/steem_operations.hpp>
+#include <blurt/chain/account_object.hpp>
 
-#include <steem/chain/util/reward.hpp>
+#include <blurt/chain/util/reward.hpp>
 
 #include <fc/crypto/digest.hpp>
 #include <fc/crypto/hex.hpp>
@@ -41,9 +41,9 @@
 #include <algorithm>
 #include <random>
 
-using namespace steem;
-using namespace steem::chain;
-using namespace steem::protocol;
+using namespace blurt;
+using namespace blurt::chain;
+using namespace blurt::protocol;
 
 BOOST_FIXTURE_TEST_SUITE( basic_tests, clean_database_fixture )
 
@@ -337,15 +337,15 @@ BOOST_AUTO_TEST_CASE( adjust_balance_test )
 
    BOOST_TEST_MESSAGE( "Testing adjust_balance" );
 
-   BOOST_TEST_MESSAGE( " --- Testing adding STEEM_SYMBOL" );
-   db->adjust_balance( "alice", asset( 50000, STEEM_SYMBOL ) );
-   BOOST_REQUIRE( db->get_balance( "alice", STEEM_SYMBOL ) == asset( 50000, STEEM_SYMBOL ) );
+   BOOST_TEST_MESSAGE( " --- Testing adding BLURT_SYMBOL" );
+   db->adjust_balance( "alice", asset( 50000, BLURT_SYMBOL ) );
+   BOOST_REQUIRE( db->get_balance( "alice", BLURT_SYMBOL ) == asset( 50000, BLURT_SYMBOL ) );
 
-   BOOST_TEST_MESSAGE( " --- Testing deducting STEEM_SYMBOL" );
-   STEEM_REQUIRE_THROW( db->adjust_balance( "alice", asset( -50001, STEEM_SYMBOL ) ), fc::assert_exception );
-   db->adjust_balance( "alice", asset( -30000, STEEM_SYMBOL ) );
-   db->adjust_balance( "alice", asset( -20000, STEEM_SYMBOL ) );
-   BOOST_REQUIRE( db->get_balance( "alice", STEEM_SYMBOL ) == asset( 0, STEEM_SYMBOL ) );
+   BOOST_TEST_MESSAGE( " --- Testing deducting BLURT_SYMBOL" );
+   BLURT_REQUIRE_THROW( db->adjust_balance( "alice", asset( -50001, BLURT_SYMBOL ) ), fc::assert_exception );
+   db->adjust_balance( "alice", asset( -30000, BLURT_SYMBOL ) );
+   db->adjust_balance( "alice", asset( -20000, BLURT_SYMBOL ) );
+   BOOST_REQUIRE( db->get_balance( "alice", BLURT_SYMBOL ) == asset( 0, BLURT_SYMBOL ) );
 }
 
 uint8_t find_msb( const uint128_t& u )

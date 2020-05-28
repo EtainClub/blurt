@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/plugins/block_log_info/*.hpp")
+file(GLOB HEADERS "include/blurt/plugins/block_log_info/*.hpp")
 
 add_library( block_log_info_plugin
              block_log_info_plugin.cpp

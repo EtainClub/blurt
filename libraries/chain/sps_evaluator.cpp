@@ -1,17 +1,17 @@
-#include <steem/chain/steem_fwd.hpp>
+#include <blurt/chain/steem_fwd.hpp>
 
-#include <steem/protocol/sps_operations.hpp>
+#include <blurt/protocol/sps_operations.hpp>
 
-#include <steem/chain/database.hpp>
-#include <steem/chain/steem_evaluator.hpp>
-#include <steem/chain/sps_objects.hpp>
+#include <blurt/chain/database.hpp>
+#include <blurt/chain/steem_evaluator.hpp>
+#include <blurt/chain/sps_objects.hpp>
 
-#include <steem/chain/util/sps_helper.hpp>
+#include <blurt/chain/util/sps_helper.hpp>
 
 
-namespace steem { namespace chain {
+namespace blurt { namespace chain {
 
-using steem::chain::create_proposal_evaluator;
+using blurt::chain::create_proposal_evaluator;
 
 void create_proposal_evaluator::do_apply( const create_proposal_operation& o )
 {
@@ -23,10 +23,10 @@ void create_proposal_evaluator::do_apply( const create_proposal_operation& o )
       */
       FC_ASSERT(o.end_date > _db.head_block_time(), "Can't create inactive proposals...");
 
-      asset fee( STEEM_TREASURY_FEE, STEEM_SYMBOL );
+      asset fee( BLURT_TREASURY_FEE, BLURT_SYMBOL );
 
       //treasury account must exist, also we need it later to change its balance
-      const auto& treasury_account =_db.get_account( STEEM_TREASURY_ACCOUNT );
+      const auto& treasury_account =_db.get_account( BLURT_TREASURY_ACCOUNT );
 
       const auto& owner_account = _db.get_account( o.creator );
       const auto* receiver_account = _db.find_account( o.receiver );
@@ -109,7 +109,7 @@ void remove_proposal_evaluator::do_apply(const remove_proposal_operation& op)
 
       /*
          Because of performance removing proposals are restricted due to the `sps_remove_threshold` threshold.
-         Therefore all proposals are marked with flag `removed` and `end_date` is moved beyond 'head_time + STEEM_PROPOSAL_MAINTENANCE_CLEANUP`
+         Therefore all proposals are marked with flag `removed` and `end_date` is moved beyond 'head_time + BLURT_PROPOSAL_MAINTENANCE_CLEANUP`
          flag `removed` - it's information for 'sps_api' plugin
          moving `end_date` - triggers the algorithm in `sps_processor::remove_proposals`
 
@@ -128,7 +128,7 @@ void remove_proposal_evaluator::do_apply(const remove_proposal_operation& op)
             proposal.removed = true;
 
             auto head_date = _db.head_block_time();
-            auto new_end_date = head_date - fc::seconds( STEEM_PROPOSAL_MAINTENANCE_CLEANUP );
+            auto new_end_date = head_date - fc::seconds( BLURT_PROPOSAL_MAINTENANCE_CLEANUP );
 
             proposal.end_date = new_end_date;
          } );
@@ -138,4 +138,4 @@ void remove_proposal_evaluator::do_apply(const remove_proposal_operation& op)
    FC_CAPTURE_AND_RETHROW( (op) )
 }
 
-} } // steem::chain
+} } // blurt::chain

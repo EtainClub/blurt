@@ -1,11 +1,11 @@
 
 
-#include <steem/plugins/raw_block/raw_block_api.hpp>
-#include <steem/plugins/raw_block/raw_block_plugin.hpp>
+#include <blurt/plugins/raw_block/raw_block_api.hpp>
+#include <blurt/plugins/raw_block/raw_block_plugin.hpp>
 
 #include <string>
 
-namespace steem { namespace plugin { namespace raw_block {
+namespace blurt { namespace plugin { namespace raw_block {
 
 raw_block_plugin::raw_block_plugin( application* app ) : plugin( app ) {}
 raw_block_plugin::~raw_block_plugin() {}
@@ -28,6 +28,6 @@ void raw_block_plugin::plugin_shutdown()
 {
 }
 
-} } } // steem::plugin::raw_block
+} } } // blurt::plugin::raw_block
 
-STEEM_DEFINE_PLUGIN( raw_block, steem::plugin::raw_block::raw_block_plugin )
+BLURT_DEFINE_PLUGIN( raw_block, blurt::plugin::raw_block::raw_block_plugin )

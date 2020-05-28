@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/plugins/rewards_api/*.hpp")
+file(GLOB HEADERS "include/blurt/plugins/rewards_api/*.hpp")
 
 add_library( rewards_api_plugin
              ${HEADERS}

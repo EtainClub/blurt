@@ -31,8 +31,8 @@ OBJECTS=( "account_authority"                \
           "witness_vote" )
 
 
-DATA_DIR="$HOME/.steemd"
-STEEMD_DIR="../.."
+DATA_DIR="$HOME/.blurtd"
+BLURTD_DIR="../.."
 STATS_DUMP_PERIOD=600
 
 ADVISOR_PATH="../../libraries/vendor/rocksdb/tools/advisor"
@@ -43,8 +43,8 @@ while (( "$#" )); do
          DATA_DIR=$2
          shift 2
          ;;
-      -s|--steemd-dir)
-         STEEMD_DIR=$2
+      -s|--blurtd-dir)
+         BLURTD_DIR=$2
          shift 2
          ;;
       -p|--stats-dump-period)
@@ -52,21 +52,21 @@ while (( "$#" )); do
          shift 2
          ;;
       -h|--help)
-         echo "Specify data directory with '--data-dir' (Default is ~/.steemd)"
-         echo "Specify steemd directory with '--steemd-dir' (Default is ../..)"
+         echo "Specify data directory with '--data-dir' (Default is ~/.blurtd)"
+         echo "Specify blurtd directory with '--blurtd-dir' (Default is ../..)"
          echo "Specify stats dump period with '--stats-dump-period' (Default is 600)"
          exit 1
          ;;
       *)
-         echo "Specify data directory with '--data-dir' (Default is ~/.steemd)"
-         echo "Specify steemd directory with '--steemd-dir' (Default is ../..)"
+         echo "Specify data directory with '--data-dir' (Default is ~/.blurtd)"
+         echo "Specify blurtd directory with '--blurtd-dir' (Default is ../..)"
          echo "Specify stats dump period with '--stats-dump-period' (Default is 600)"
          exit 1
          ;;
    esac
 done
 
-cd "$STEEMD_DIR/libraries/vendor/rocksdb/tools/advisor"
+cd "$BLURTD_DIR/libraries/vendor/rocksdb/tools/advisor"
 
 for OBJ in "${OBJECTS[@]}"; do
    DB_PATH="$DATA_DIR/blockchain/rocksdb_"

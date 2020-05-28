@@ -101,7 +101,7 @@ class SteemNode(object):
         ]
 
         parameters = screen_params + parameters
-        logger.info("Running steemd with command: {0}".format(" ".join(parameters)))
+        logger.info("Running blurtd with command: {0}".format(" ".join(parameters)))
         
         try:
             subprocess.Popen(parameters)
@@ -113,7 +113,7 @@ class SteemNode(object):
             self.node_running = True
             logger.info("Node at {0}:{1} in {2} is up and running...".format(self.ip_address, self.port, self.working_dir))
         except Exception as ex:
-            logger.error("Exception during steemd run: {0}".format(ex))
+            logger.error("Exception during blurtd run: {0}".format(ex))
             kill_process(self.pid_file_name, "steem", self.ip_address, self.port)
             self.node_running = False
 
@@ -125,6 +125,6 @@ class SteemNode(object):
 
 
 if __name__ == "__main__":
-    node = SteemNode("/home/dariusz-work/Builds/steem/programs/steemd/steemd", "/home/dariusz-work/steem-data", "./resources/config.ini.in")
+    node = SteemNode("/home/dariusz-work/Builds/steem/programs/blurtd/blurtd", "/home/dariusz-work/steem-data", "./resources/config.ini.in")
     node.run_steem_node()
     node.stop_steem_node()

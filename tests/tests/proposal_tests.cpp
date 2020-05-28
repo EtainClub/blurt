@@ -1,22 +1,22 @@
 #include <boost/test/unit_test.hpp>
 
-#include <steem/chain/steem_fwd.hpp>
+#include <blurt/chain/steem_fwd.hpp>
 
-#include <steem/protocol/exceptions.hpp>
-#include <steem/protocol/hardfork.hpp>
-#include <steem/protocol/sps_operations.hpp>
+#include <blurt/protocol/exceptions.hpp>
+#include <blurt/protocol/hardfork.hpp>
+#include <blurt/protocol/sps_operations.hpp>
 
-#include <steem/chain/database.hpp>
-#include <steem/chain/database_exceptions.hpp>
-#include <steem/chain/steem_objects.hpp>
+#include <blurt/chain/database.hpp>
+#include <blurt/chain/database_exceptions.hpp>
+#include <blurt/chain/steem_objects.hpp>
 
-#include <steem/chain/util/reward.hpp>
+#include <blurt/chain/util/reward.hpp>
 
-#include <steem/plugins/rc/rc_objects.hpp>
-#include <steem/plugins/rc/resource_count.hpp>
+#include <blurt/plugins/rc/rc_objects.hpp>
+#include <blurt/plugins/rc/resource_count.hpp>
 
-#include <steem/chain/sps_objects.hpp>
-#include <steem/chain/util/sps_processor.hpp>
+#include <blurt/chain/sps_objects.hpp>
+#include <blurt/chain/util/sps_processor.hpp>
 
 #include <fc/macros.hpp>
 #include <fc/crypto/digest.hpp>
@@ -27,9 +27,9 @@
 #include <iostream>
 #include <stdexcept>
 
-using namespace steem;
-using namespace steem::chain;
-using namespace steem::protocol;
+using namespace blurt;
+using namespace blurt::chain;
+using namespace blurt::protocol;
 using fc::string;
 
 template< typename PROPOSAL_IDX >
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE( generating_payments )
 //
 //      FUND( creator, ASSET( "160.000 TESTS" ) );
 //      FUND( creator, ASSET( "80.000 TBD" ) );
-//      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000.000 TBD" ) );
+//      FUND( BLURT_TREASURY_ACCOUNT, ASSET( "5000.000 TBD" ) );
 //
 //      auto voter_01 = "carol";
 //      //=====================preparing=====================
@@ -100,13 +100,13 @@ BOOST_AUTO_TEST_CASE( generating_payments )
 //      vote_proposal( voter_01, { id_proposal_00 }, true/*approve*/, carol_private_key );
 //      generate_blocks( 1 );
 //
-//      vest(STEEM_INIT_MINER_NAME, voter_01, ASSET( "1.000 TESTS" ));
+//      vest(BLURT_INIT_MINER_NAME, voter_01, ASSET( "1.000 TESTS" ));
 //      generate_blocks( 1 );
 //
 //      //skipping interest generating is necessary
-//      transfer( STEEM_INIT_MINER_NAME, receiver, ASSET( "0.001 TBD" ));
+//      transfer( BLURT_INIT_MINER_NAME, receiver, ASSET( "0.001 TBD" ));
 //      generate_block( 5 );
-//      transfer( STEEM_INIT_MINER_NAME, STEEM_TREASURY_ACCOUNT, ASSET( "0.001 TBD" ) );
+//      transfer( BLURT_INIT_MINER_NAME, BLURT_TREASURY_ACCOUNT, ASSET( "0.001 TBD" ) );
 //      generate_block( 5 );
 //
 //      const auto& dgpo = db->get_dynamic_global_properties();
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE( generating_payments )
 //      const account_object& _creator = db->get_account( creator );
 //      const account_object& _receiver = db->get_account( receiver );
 //      const account_object& _voter_01 = db->get_account( voter_01 );
-//      const account_object& _treasury = db->get_account( STEEM_TREASURY_ACCOUNT );
+//      const account_object& _treasury = db->get_account( BLURT_TREASURY_ACCOUNT );
 //
 //      {
 //         BOOST_TEST_MESSAGE( "---Payment---" );
@@ -179,7 +179,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_01 )
       {
          FUND( item.account, ASSET( "400.000 TESTS" ) );
 //         FUND( item.account, ASSET( "400.000 TBD" ) );
-         vest(STEEM_INIT_MINER_NAME, item.account, ASSET( "300.000 TESTS" ));
+         vest(BLURT_INIT_MINER_NAME, item.account, ASSET( "300.000 TESTS" ));
       }
 
       auto start_date = db->head_block_time();
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_01 )
       auto daily_pay = ASSET( "24.000 TESTS" );
       auto paid = ASSET( "4.990 TESTS" );// paid != ASSET( "5.000 TBD" ) because lack of rounding
 
-      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
+      FUND( BLURT_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
       //=====================preparing=====================
       for( int32_t i = 0; i < nr_proposals; ++i )
       {
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_02 )
       for( auto item : inits )
       {
          FUND( item.account, ASSET( "400.000 TESTS" ) );
-         vest(STEEM_INIT_MINER_NAME, item.account, ASSET( "300.000 TESTS" ));
+         vest(BLURT_INIT_MINER_NAME, item.account, ASSET( "300.000 TESTS" ));
       }
 
       const auto& proposal_idx = db->get_index< proposal_index >().indices().get< by_proposal_id >();
@@ -275,9 +275,9 @@ BOOST_AUTO_TEST_CASE( generating_payments_02 )
       auto start_date = db->head_block_time() + fc::hours( 2 );
       auto end_date = start_date + fc::days( 15 );
 
-      const auto block_interval = fc::seconds( STEEM_BLOCK_INTERVAL );
+      const auto block_interval = fc::seconds( BLURT_BLOCK_INTERVAL );
 
-      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
+      FUND( BLURT_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
       //=====================preparing=====================
       auto item_creator = inits[ 0 ];
       create_proposal( item_creator.account, item_creator.account, start_date, end_date, ASSET( "24.000 TESTS" ), item_creator.key );
@@ -352,12 +352,12 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
          if( item.first == tester02_account )
          {
             FUND( item.first, ASSET( "41.000 TESTS" ) );
-            vest(STEEM_INIT_MINER_NAME, item.first, ASSET( "31.000 TESTS" ));
+            vest(BLURT_INIT_MINER_NAME, item.first, ASSET( "31.000 TESTS" ));
          }
          else
          {
             FUND( item.first, ASSET( "40.000 TESTS" ) );
-            vest(STEEM_INIT_MINER_NAME, item.first, ASSET( "30.000 TESTS" ));
+            vest(BLURT_INIT_MINER_NAME, item.first, ASSET( "30.000 TESTS" ));
          }
       }
 
@@ -369,7 +369,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
       auto huge_daily_pay = ASSET( "50000001.000 TESTS" );
       auto daily_pay = ASSET( "24.000 TESTS" );
 
-      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
+      FUND( BLURT_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
       //=====================preparing=====================
       uint16_t i = 0;
       for( auto item : inits )
@@ -433,7 +433,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
          op.proxy = tester00_account;
 
          signed_transaction tx;
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          tx.operations.push_back( op );
          sign( tx, inits[ tester01_account ] );
          db->push_transaction( tx, 0 );
@@ -469,7 +469,7 @@ BOOST_AUTO_TEST_CASE( generating_payments_03 )
          op.proxy = "";
 
          signed_transaction tx;
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          tx.operations.push_back( op );
          sign( tx, inits[ tester01_account ] );
          db->push_transaction( tx, 0 );
@@ -514,7 +514,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance)
       auto start_date_02 = start_time + fc::seconds( 50 );
       auto end_date_02 = start_time + fc::minutes( 20 );
 
-      auto daily_pay = asset( 100, STEEM_SYMBOL );
+      auto daily_pay = asset( 100, BLURT_SYMBOL );
 
       FUND( creator, ASSET( "100.000 TESTS" ) );
       //=====================preparing=====================
@@ -533,7 +533,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance)
          BOOST_REQUIRE( exist_proposal( id_proposal_01 ) );
          BOOST_REQUIRE( exist_proposal( id_proposal_02 ) );
 
-         generate_blocks( start_time + fc::seconds( STEEM_PROPOSAL_MAINTENANCE_CLEANUP ) );
+         generate_blocks( start_time + fc::seconds( BLURT_PROPOSAL_MAINTENANCE_CLEANUP ) );
          start_time = db->head_block_time();
 
          BOOST_REQUIRE( exist_proposal( id_proposal_00 ) );
@@ -571,7 +571,7 @@ BOOST_AUTO_TEST_CASE( proposal_object_apply )
       ACTORS( (alice)(bob) )
       generate_block();
 
-      auto fee = asset( STEEM_TREASURY_FEE, STEEM_SYMBOL );
+      auto fee = asset( BLURT_TREASURY_FEE, BLURT_SYMBOL );
 
       auto creator = "alice";
       auto receiver = "bob";
@@ -579,7 +579,7 @@ BOOST_AUTO_TEST_CASE( proposal_object_apply )
       auto start_date = db->head_block_time() + fc::days( 1 );
       auto end_date = start_date + fc::days( 2 );
 
-      auto daily_pay = asset( 100, STEEM_SYMBOL );
+      auto daily_pay = asset( 100, BLURT_SYMBOL );
 
       auto subject = "hello";
       auto permlink = "somethingpermlink";
@@ -590,7 +590,7 @@ BOOST_AUTO_TEST_CASE( proposal_object_apply )
 
       signed_transaction tx;
 
-      const account_object& before_treasury_account = db->get_account(STEEM_TREASURY_ACCOUNT);
+      const account_object& before_treasury_account = db->get_account(BLURT_TREASURY_ACCOUNT);
       const account_object& before_alice_account = db->get_account( creator );
       const account_object& before_bob_account = db->get_account( receiver );
 
@@ -612,13 +612,13 @@ BOOST_AUTO_TEST_CASE( proposal_object_apply )
       op.permlink = permlink;
 
       tx.operations.push_back( op );
-      tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+      tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
       sign( tx, alice_private_key );
       db->push_transaction( tx, 0 );
       tx.operations.clear();
       tx.signatures.clear();
 
-      const auto& after_treasury_account = db->get_account(STEEM_TREASURY_ACCOUNT);
+      const auto& after_treasury_account = db->get_account(BLURT_TREASURY_ACCOUNT);
       const account_object& after_alice_account = db->get_account( creator );
       const account_object& after_bob_account = db->get_account( receiver );
 
@@ -663,7 +663,7 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_apply )
       auto start_date = db->head_block_time() + fc::days( 1 );
       auto end_date = start_date + fc::days( 2 );
 
-      auto daily_pay = asset( 100, STEEM_SYMBOL );
+      auto daily_pay = asset( 100, BLURT_SYMBOL );
 
       FUND( creator, ASSET( "80.000 TESTS" ) );
 
@@ -683,7 +683,7 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_apply )
          op.approve = true;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_01_key );
          db->push_transaction( tx, 0 );
          tx.operations.clear();
@@ -702,7 +702,7 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_apply )
          op.approve = false;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_01_key );
          db->push_transaction( tx, 0 );
          tx.operations.clear();
@@ -732,9 +732,9 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
       auto start_date = db->head_block_time() + fc::days( 1 );
       auto end_date = start_date + fc::days( 2 );
 
-      auto daily_pay_00 = asset( 100, STEEM_SYMBOL );
-      auto daily_pay_01 = asset( 101, STEEM_SYMBOL );
-      auto daily_pay_02 = asset( 102, STEEM_SYMBOL );
+      auto daily_pay_00 = asset( 100, BLURT_SYMBOL );
+      auto daily_pay_01 = asset( 101, BLURT_SYMBOL );
+      auto daily_pay_02 = asset( 102, BLURT_SYMBOL );
 
       FUND( creator, ASSET( "80.000 TESTS" ) );
 
@@ -756,7 +756,7 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
          op.approve = true;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_01_key );
          db->push_transaction( tx, 0 );
          tx.operations.clear();
@@ -786,7 +786,7 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
          op.approve = true;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_02_key );
          db->push_transaction( tx, 0 );
          tx.operations.clear();
@@ -810,7 +810,7 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
          op.approve = true;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_02_key );
          db->push_transaction( tx, 0 );
          tx.operations.clear();
@@ -834,7 +834,7 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
          op.approve = false;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_01_key );
          db->push_transaction( tx, 0 );
          tx.operations.clear();
@@ -858,7 +858,7 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
          op.approve = false;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_01_key );
          db->push_transaction( tx, 0 );
          tx.operations.clear();
@@ -884,7 +884,7 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
          op.approve = false;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_02_key );
          db->push_transaction( tx, 0 );
          tx.operations.clear();
@@ -908,7 +908,7 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
          op.approve = false;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_01_key );
          db->push_transaction( tx, 0 );
          tx.operations.clear();
@@ -931,9 +931,9 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
          op.approve = true;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_01_key );
-         STEEM_REQUIRE_THROW(db->push_transaction( tx, 0 ), fc::exception);
+         BLURT_REQUIRE_THROW(db->push_transaction( tx, 0 ), fc::exception);
          tx.operations.clear();
          tx.signatures.clear();
 
@@ -954,9 +954,9 @@ BOOST_AUTO_TEST_CASE( proposal_vote_object_01_apply )
          op.approve = false;
 
          tx.operations.push_back( op );
-         tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+         tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
          sign( tx, voter_01_key );
-         STEEM_REQUIRE_THROW(db->push_transaction( tx, 0 ), fc::exception);
+         BLURT_REQUIRE_THROW(db->push_transaction( tx, 0 ), fc::exception);
          tx.operations.clear();
          tx.signatures.clear();
 
@@ -981,7 +981,7 @@ struct create_proposal_data {
       std::string receiver   ;
       fc::time_point_sec start_date ;
       fc::time_point_sec end_date   ;
-      steem::protocol::asset daily_pay ;
+      blurt::protocol::asset daily_pay ;
       std::string subject ;
       std::string url     ;
 
@@ -990,7 +990,7 @@ struct create_proposal_data {
          receiver   = "bob";
          start_date = _start     + fc::days( 1 );
          end_date   = start_date + fc::days( 2 );
-         daily_pay  = asset( 100, STEEM_SYMBOL );
+         daily_pay  = asset( 100, BLURT_SYMBOL );
          subject    = "hello";
          url        = "http:://something.html";
       }
@@ -1007,7 +1007,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_000 )
       auto receiver   = "bob";
       auto start_date = db->head_block_time() + fc::days( 1 );
       auto end_date   = start_date + fc::days( 2 );
-      auto daily_pay  = asset( 100, STEEM_SYMBOL );
+      auto daily_pay  = asset( 100, BLURT_SYMBOL );
 
       FUND( creator, ASSET( "80.000 TESTS" ) );
       {
@@ -1028,7 +1028,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_001 )
          ACTORS( (alice)(bob) )
          generate_block();
          FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
-         STEEM_REQUIRE_THROW( create_proposal( "", cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
+         BLURT_REQUIRE_THROW( create_proposal( "", cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
 
       }
       validate_database();
@@ -1045,7 +1045,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_002 )
       ACTORS( (alice)(bob) )
       generate_block();
       FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
-      STEEM_REQUIRE_THROW(create_proposal( cpd.creator, "", cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
+      BLURT_REQUIRE_THROW(create_proposal( cpd.creator, "", cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -1061,7 +1061,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_003 )
       generate_block();
       FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       cpd.start_date = cpd.end_date + fc::days(2);
-      STEEM_REQUIRE_THROW(create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
+      BLURT_REQUIRE_THROW(create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -1077,7 +1077,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_004 )
       generate_block();
       FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       cpd.end_date = cpd.start_date - fc::days(2);
-      STEEM_REQUIRE_THROW(create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
+      BLURT_REQUIRE_THROW(create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -1095,16 +1095,16 @@ BOOST_AUTO_TEST_CASE( create_proposal_005 )
       cpo.receiver   = "bob";
       cpo.start_date = db->head_block_time() + fc::days( 1 );
       cpo.end_date   = cpo.start_date + fc::days( 2 );
-      cpo.daily_pay  = asset( 100, STEEM_SYMBOL );
+      cpo.daily_pay  = asset( 100, BLURT_SYMBOL );
       cpo.subject    = "";
       cpo.permlink        = "http:://something.html";
       FUND( cpo.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       signed_transaction tx;
       tx.operations.push_back( cpo );
-      tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+      tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
       sign( tx, alice_private_key );
-      STEEM_REQUIRE_THROW(db->push_transaction( tx, 0 ), fc::exception);
+      BLURT_REQUIRE_THROW(db->push_transaction( tx, 0 ), fc::exception);
       tx.operations.clear();
       tx.signatures.clear();
       validate_database();
@@ -1124,16 +1124,16 @@ BOOST_AUTO_TEST_CASE( create_proposal_006 )
       cpo.receiver   = "bob";
       cpo.start_date = db->head_block_time() + fc::days( 1 );
       cpo.end_date   = cpo.start_date + fc::days( 2 );
-      cpo.daily_pay  = asset( 100, STEEM_SYMBOL );
+      cpo.daily_pay  = asset( 100, BLURT_SYMBOL );
       cpo.subject    = "very very very very very very long long long long long long subject subject subject subject subject subject";
       cpo.permlink        = "http:://something.html";
       FUND( cpo.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       signed_transaction tx;
       tx.operations.push_back( cpo );
-      tx.set_expiration( db->head_block_time() + STEEM_MAX_TIME_UNTIL_EXPIRATION );
+      tx.set_expiration( db->head_block_time() + BLURT_MAX_TIME_UNTIL_EXPIRATION );
       sign( tx, alice_private_key );
-      STEEM_REQUIRE_THROW(db->push_transaction( tx, 0 ), fc::exception);
+      BLURT_REQUIRE_THROW(db->push_transaction( tx, 0 ), fc::exception);
       tx.operations.clear();
       tx.signatures.clear();
       validate_database();
@@ -1153,7 +1153,7 @@ BOOST_AUTO_TEST_CASE( create_proposal_007 )
       cpo.receiver   = "bob";
       cpo.start_date = db->head_block_time() + fc::days( 1 );
       cpo.end_date   = cpo.start_date + fc::days( 2 );
-      cpo.daily_pay  = asset( 100, STEEM_SYMBOL );
+      cpo.daily_pay  = asset( 100, BLURT_SYMBOL );
       cpo.subject    = "subject";
       cpo.permlink        = "http:://something.html";
 
@@ -1187,8 +1187,8 @@ BOOST_AUTO_TEST_CASE( create_proposal_008 )
       generate_block();
       generate_block();
       cpd.end_date = cpd.start_date + fc::days(20);
-      cpd.daily_pay = asset( -10, STEEM_SYMBOL );
-      STEEM_REQUIRE_THROW(create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
+      cpd.daily_pay = asset( -10, BLURT_SYMBOL );
+      BLURT_REQUIRE_THROW(create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ), fc::exception);
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -1248,7 +1248,7 @@ BOOST_AUTO_TEST_CASE( update_proposal_votes_002 )
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
       BOOST_REQUIRE(proposal_1 >= 0);
       std::vector< int64_t > proposals;
-      STEEM_REQUIRE_THROW( vote_proposal("carol", proposals, true, carol_private_key), fc::exception);
+      BLURT_REQUIRE_THROW( vote_proposal("carol", proposals, true, carol_private_key), fc::exception);
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -1286,7 +1286,7 @@ BOOST_AUTO_TEST_CASE( update_proposal_votes_004 )
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
       BOOST_REQUIRE(proposal_1 >= 0);
       std::vector< int64_t > proposals = {proposal_1};
-      STEEM_REQUIRE_THROW(vote_proposal("urp", proposals, false, carol_private_key), fc::exception);
+      BLURT_REQUIRE_THROW(vote_proposal("urp", proposals, false, carol_private_key), fc::exception);
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -1304,10 +1304,10 @@ BOOST_AUTO_TEST_CASE( update_proposal_votes_005 )
       generate_block();
 
       std::vector< int64_t > proposals;
-      for(int i = 0; i <= STEEM_PROPOSAL_MAX_IDS_NUMBER; i++) {
+      for(int i = 0; i <= BLURT_PROPOSAL_MAX_IDS_NUMBER; i++) {
          proposals.push_back(i);
       }
-      STEEM_REQUIRE_THROW(vote_proposal("carol", proposals, true, carol_private_key), fc::exception);
+      BLURT_REQUIRE_THROW(vote_proposal("carol", proposals, true, carol_private_key), fc::exception);
 
       validate_database();
    }
@@ -1731,7 +1731,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_009 )
       generate_block();
       int64_t proposal_1 = create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key );
       flat_set<int64_t> proposals = { proposal_1 };
-      STEEM_REQUIRE_THROW(remove_proposal(cpd.receiver, proposals, bob_private_key), fc::exception);
+      BLURT_REQUIRE_THROW(remove_proposal(cpd.receiver, proposals, bob_private_key), fc::exception);
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -1748,7 +1748,7 @@ BOOST_AUTO_TEST_CASE( remove_proposal_010 )
       FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       flat_set<int64_t> proposals;
-      STEEM_REQUIRE_THROW(remove_proposal(cpd.creator, proposals, bob_private_key), fc::exception);
+      BLURT_REQUIRE_THROW(remove_proposal(cpd.creator, proposals, bob_private_key), fc::exception);
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -1765,10 +1765,10 @@ BOOST_AUTO_TEST_CASE( remove_proposal_011 )
       FUND( cpd.creator, ASSET( "80.000 TESTS" ) );
       generate_block();
       flat_set<int64_t> proposals;
-      for(int i = 0; i <= STEEM_PROPOSAL_MAX_IDS_NUMBER; i++) {
+      for(int i = 0; i <= BLURT_PROPOSAL_MAX_IDS_NUMBER; i++) {
          proposals.insert(create_proposal( cpd.creator, cpd.receiver, cpd.start_date, cpd.end_date, cpd.daily_pay, alice_private_key ));
       }
-      STEEM_REQUIRE_THROW(remove_proposal(cpd.creator, proposals, bob_private_key), fc::exception);
+      BLURT_REQUIRE_THROW(remove_proposal(cpd.creator, proposals, bob_private_key), fc::exception);
       validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -1813,18 +1813,18 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_01 )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = STEEM_TREASURY_ACCOUNT;
+      auto receiver = BLURT_TREASURY_ACCOUNT;
 
       auto start_time = db->head_block_time();
 
       const auto start_time_shift = fc::hours( 11 );
       const auto end_time_shift = fc::hours( 10 );
-      const auto block_interval = fc::seconds( STEEM_BLOCK_INTERVAL );
+      const auto block_interval = fc::seconds( BLURT_BLOCK_INTERVAL );
 
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
 
-      auto daily_pay = asset( 100, STEEM_SYMBOL );
+      auto daily_pay = asset( 100, BLURT_SYMBOL );
 
       const auto nr_proposals = 200;
       std::vector< int64_t > proposals_id;
@@ -1861,7 +1861,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_01 )
       auto current_active_proposals = nr_proposals;
       BOOST_REQUIRE( calc_proposals( proposal_idx, proposals_id ) == current_active_proposals );
 
-      generate_blocks( start_time + fc::seconds( STEEM_PROPOSAL_MAINTENANCE_CLEANUP ) );
+      generate_blocks( start_time + fc::seconds( BLURT_PROPOSAL_MAINTENANCE_CLEANUP ) );
       start_time = db->head_block_time();
 
       generate_blocks( start_time + ( start_time_shift + end_time_shift - block_interval ) );
@@ -1896,18 +1896,18 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_02 )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = STEEM_TREASURY_ACCOUNT;
+      auto receiver = BLURT_TREASURY_ACCOUNT;
 
       auto start_time = db->head_block_time();
 
       const auto start_time_shift = fc::hours( 11 );
       const auto end_time_shift = fc::hours( 10 );
-      const auto block_interval = fc::seconds( STEEM_BLOCK_INTERVAL );
+      const auto block_interval = fc::seconds( BLURT_BLOCK_INTERVAL );
 
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
 
-      auto daily_pay = asset( 100, STEEM_SYMBOL );
+      auto daily_pay = asset( 100, BLURT_SYMBOL );
 
       const auto nr_proposals = 10;
       std::vector< int64_t > proposals_id;
@@ -1939,7 +1939,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_02 )
          generate_block();
       }
 
-      auto itr_begin_2 = proposals_id.begin() + STEEM_PROPOSAL_MAX_IDS_NUMBER;
+      auto itr_begin_2 = proposals_id.begin() + BLURT_PROPOSAL_MAX_IDS_NUMBER;
       std::vector< int64_t > v1( proposals_id.begin(), itr_begin_2 );
       std::vector< int64_t > v2( itr_begin_2, proposals_id.end() );
 
@@ -1960,7 +1960,7 @@ BOOST_AUTO_TEST_CASE( proposals_maintenance_02 )
       auto current_active_votes = current_active_proposals * static_cast< int16_t > ( inits.size() );
       BOOST_REQUIRE( calc_votes( proposal_vote_idx, proposals_id ) == current_active_votes );
 
-      generate_blocks( start_time + fc::seconds( STEEM_PROPOSAL_MAINTENANCE_CLEANUP ) );
+      generate_blocks( start_time + fc::seconds( BLURT_PROPOSAL_MAINTENANCE_CLEANUP ) );
       start_time = db->head_block_time();
 
       generate_blocks( start_time + ( start_time_shift + end_time_shift - block_interval ) );
@@ -1997,7 +1997,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = STEEM_TREASURY_ACCOUNT;
+      auto receiver = BLURT_TREASURY_ACCOUNT;
 
       auto start_time = db->head_block_time();
 
@@ -2007,7 +2007,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold )
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
 
-      auto daily_pay = asset( 100, STEEM_SYMBOL );
+      auto daily_pay = asset( 100, BLURT_SYMBOL );
 
       const auto nr_proposals = 5;
       std::vector< int64_t > proposals_id;
@@ -2092,13 +2092,13 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_01 )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = STEEM_TREASURY_ACCOUNT;
+      auto receiver = BLURT_TREASURY_ACCOUNT;
       auto start_time = db->head_block_time();
       const auto start_time_shift = fc::days( 100 );
       const auto end_time_shift = fc::days( 101 );
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
-      auto daily_pay = asset( 100, STEEM_SYMBOL );
+      auto daily_pay = asset( 100, BLURT_SYMBOL );
       const auto nr_proposals = 10;
       std::vector< int64_t > proposals_id;
 
@@ -2130,7 +2130,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_01 )
          generate_block();
       }
 
-      auto itr_begin_2 = proposals_id.begin() + STEEM_PROPOSAL_MAX_IDS_NUMBER;
+      auto itr_begin_2 = proposals_id.begin() + BLURT_PROPOSAL_MAX_IDS_NUMBER;
       std::vector< int64_t > v1( proposals_id.begin(), itr_begin_2 );
       std::vector< int64_t > v2( itr_begin_2, proposals_id.end() );
 
@@ -2328,13 +2328,13 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_02 )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = STEEM_TREASURY_ACCOUNT;
+      auto receiver = BLURT_TREASURY_ACCOUNT;
       auto start_time = db->head_block_time();
       const auto start_time_shift = fc::days( 100 );
       const auto end_time_shift = fc::days( 101 );
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
-      auto daily_pay = asset( 100, STEEM_SYMBOL );
+      auto daily_pay = asset( 100, BLURT_SYMBOL );
       const auto nr_proposals = 5;
       std::vector< int64_t > proposals_id;
 
@@ -2729,14 +2729,14 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_03 )
       generate_block();
 
       //=====================preparing=====================
-      auto receiver = STEEM_TREASURY_ACCOUNT;
+      auto receiver = BLURT_TREASURY_ACCOUNT;
       auto start_time = db->head_block_time();
       const auto start_time_shift = fc::hours( 20 );
       const auto end_time_shift = fc::hours( 6 );
-      const auto block_interval = fc::seconds( STEEM_BLOCK_INTERVAL );
+      const auto block_interval = fc::seconds( BLURT_BLOCK_INTERVAL );
       auto start_date_00 = start_time + start_time_shift;
       auto end_date_00 = start_date_00 + end_time_shift;
-      auto daily_pay = asset( 100, STEEM_SYMBOL );
+      auto daily_pay = asset( 100, BLURT_SYMBOL );
       const auto nr_proposals = 200;
       std::vector< int64_t > proposals_id;
 
@@ -2766,7 +2766,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_03 )
       for( auto id : proposals_id )
       {
          ids.push_back( id );
-         if( ids.size() == STEEM_PROPOSAL_MAX_IDS_NUMBER )
+         if( ids.size() == BLURT_PROPOSAL_MAX_IDS_NUMBER )
          {
             for( auto item : inits )
             {
@@ -2792,7 +2792,7 @@ BOOST_AUTO_TEST_CASE( proposals_removing_with_threshold_03 )
       auto threshold = db->get_sps_remove_threshold();
       BOOST_REQUIRE( threshold == -1 );
 
-      generate_blocks( start_time + fc::seconds( STEEM_PROPOSAL_MAINTENANCE_CLEANUP ) );
+      generate_blocks( start_time + fc::seconds( BLURT_PROPOSAL_MAINTENANCE_CLEANUP ) );
       start_time = db->head_block_time();
 
       generate_blocks( start_time + ( start_time_shift + end_time_shift - block_interval ) );
@@ -2846,7 +2846,7 @@ BOOST_AUTO_TEST_CASE( generating_payments )
          {
             FUND( item.account, ASSET( "11.000 TESTS" ) );
          }
-         vest(STEEM_INIT_MINER_NAME, item.account, ASSET( "30.000 TESTS" ));
+         vest(BLURT_INIT_MINER_NAME, item.account, ASSET( "30.000 TESTS" ));
 
          call( i, 50, "${x} accounts got VESTS" );
       }
@@ -2855,7 +2855,7 @@ BOOST_AUTO_TEST_CASE( generating_payments )
 
       const auto start_time_shift = fc::hours( 10 );
       const auto end_time_shift = fc::hours( 1 );
-      const auto block_interval = fc::seconds( STEEM_BLOCK_INTERVAL );
+      const auto block_interval = fc::seconds( BLURT_BLOCK_INTERVAL );
 
       auto start_date = start_time + start_time_shift;
       auto end_date = start_date + end_time_shift;
@@ -2863,7 +2863,7 @@ BOOST_AUTO_TEST_CASE( generating_payments )
       auto daily_pay = ASSET( "24.000 TESTS" );
       auto paid = ASSET( "1.000 TESTS" );//because only 1 hour
 
-      FUND( STEEM_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
+      FUND( BLURT_TREASURY_ACCOUNT, ASSET( "5000000.000 TESTS" ) );
       //=====================preparing=====================
       for( int32_t i = 0; i < nr_proposals; ++i )
       {

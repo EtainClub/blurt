@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/plugins/account_by_key/*.hpp")
+file(GLOB HEADERS "include/blurt/plugins/account_by_key/*.hpp")
 
 add_library( account_by_key_plugin
              account_by_key_plugin.cpp
