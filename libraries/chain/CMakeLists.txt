@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/chain/*.hpp" "include/steem/chain/util/*.hpp" "include/steem/chain/smt_objects/*.hpp" "include/steem/chain/sps_objects/*.hpp")
+file(GLOB HEADERS "include/blurt/chain/*.hpp" "include/blurt/chain/util/*.hpp" "include/blurt/chain/smt_objects/*.hpp" "include/blurt/chain/sps_objects/*.hpp")
 
 ## SORT .cpp by most likely to change / break compile
 add_library( steem_chain
@@ -54,4 +54,4 @@ INSTALL( TARGETS
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
 )
-INSTALL( FILES ${HEADERS} DESTINATION "include/steem/chain" )
+INSTALL( FILES ${HEADERS} DESTINATION "include/blurt/chain" )

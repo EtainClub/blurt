@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/plugins/stats_export/*.hpp")
+file(GLOB HEADERS "include/blurt/plugins/stats_export/*.hpp")
 
 add_library( stats_export_plugin
              stats_export_plugin.cpp

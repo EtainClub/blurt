@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/plugins/block_data_export/*.hpp")
+file(GLOB HEADERS "include/blurt/plugins/block_data_export/*.hpp")
 
 add_library( block_data_export_plugin
              block_data_export_plugin.cpp

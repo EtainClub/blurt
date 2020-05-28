@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 #example A:
-#"/home/a/steemd" Path to steemd exe
+#"/home/a/blurtd" Path to blurtd exe
 # "/home/a/data"  Path to blockchain directory
 # "./steem_utils/resources/config.ini.in" Path to config.ini.in - usually ./steem_utils/resources/config.ini.in
 #  1 - number of proposals for every account
@@ -10,10 +10,10 @@
 #  30000.000- number of SBD's for every account
 #  100000.000- number of VEST's for every account
 # finally is created 200(1*200) proposals and 200 votes for every proposals -> 40200 objects are created
-#  ./proposal_benchmark_test.py "/home/a/steemd" "/home/a/data" "./steem_utils/resources/config.ini.in" initminer 1 200 200000.000 30000.000 100000.000
+#  ./proposal_benchmark_test.py "/home/a/blurtd" "/home/a/data" "./steem_utils/resources/config.ini.in" initminer 1 200 200000.000 30000.000 100000.000
 
 #example B:
-#"/home/a/steemd" Path to steemd exe
+#"/home/a/blurtd" Path to blurtd exe
 # "/home/a/data"  Path to blockchain directory
 # "./steem_utils/resources/config.ini.in" Path to config.ini.in - usually ./steem_utils/resources/config.ini.in
 #  2 - number of proposals for every account
@@ -22,7 +22,7 @@
 #  30000.000- number of SBD's for every account
 #  100000.000- number of VEST's for every account
 # finally is created 600(2*300) proposals and 300 votes for every proposals -> 180600 objects are created
-#  ./proposal_benchmark_test.py "/home/a/steemd" "/home/a/data" "./steem_utils/resources/config.ini.in" initminer 2 300 200000.000 30000.000 100000.000
+#  ./proposal_benchmark_test.py "/home/a/blurtd" "/home/a/data" "./steem_utils/resources/config.ini.in" initminer 2 300 200000.000 30000.000 100000.000
 
 #Time[ms] is saved in `r_advanced_benchmark.json` ( position{"op_name": "sps_processor"} ) in directory where this script is called
 
@@ -38,7 +38,7 @@ data_size = 100
 delayed_blocks = 1
 delayed_blocks_ex = 3
 SPS_API_SINGLE_QUERY_LIMIT = 1000
-STEEM_PROPOSAL_MAX_IDS_NUMBER = 5
+BLURT_PROPOSAL_MAX_IDS_NUMBER = 5
 
 LOG_LEVEL = logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
@@ -137,7 +137,7 @@ def generate_dates( node ):
 
     start_date = now + datetime.timedelta(hours = 2)
     end_date = start_date + datetime.timedelta(hours = 1)
-    #because of STEEM_PROPOSAL_MAINTENANCE_CLEANUP
+    #because of BLURT_PROPOSAL_MAINTENANCE_CLEANUP
     end_date_delay = end_date + datetime.timedelta(days = 1)
 
     start_date = start_date.replace(microsecond=0).isoformat()
@@ -213,7 +213,7 @@ def list_voter_proposals(node, limit ):
 def vote_proposals(node, ids, accounts ):
     logger.info("Voting proposals for %i proposals..." % ( len( ids ) ) )
 
-    proposal_limit = STEEM_PROPOSAL_MAX_IDS_NUMBER
+    proposal_limit = BLURT_PROPOSAL_MAX_IDS_NUMBER
 
     i = 0
     i_real = 0
@@ -260,7 +260,7 @@ if __name__ == '__main__':
     logger.info("Performing SPS tests")
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("path", type=str, help = "Path to steemd")
+    parser.add_argument("path", type=str, help = "Path to blurtd")
     parser.add_argument("dir", type=str, help = "Path to blockchain directory")
     parser.add_argument("ini", type=str, help = "Path to config.ini.in - usually ./steem_utils/resources/config.ini.in")
     parser.add_argument("creator", help = "Account to create test accounts with")

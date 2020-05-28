@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/plugins/rc/*.hpp")
+file(GLOB HEADERS "include/blurt/plugins/rc/*.hpp")
 
 add_library( rc_plugin
              rc_plugin.cpp

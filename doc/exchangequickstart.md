@@ -7,7 +7,7 @@ With the right equipment and technical configuration a reindex should take **no 
 
 Physically attached SSD will ensure an optimal reindex time.  SSD over a NAS or some kind of network storage backed by SSD will often have much higher latency. As an example, AWS EBS is not performant enough. A good recommended instance in AWS is the i3.2xlarge, it comes with a physically attached nVME drive (it must be formatted and mounted on instance launch).
 
-You can save a lot of time by replaying from a `block_log`. Steemit hosts a public `block_log` that is regularly updated. Using the docker method below, we have made it easy to download a `block_log` at launch and replay from it by passing in the `USE_PUBLIC_BLOCKLOG=1` environment variable. To do this, make sure your data directory is empty and does not contain a block_log. If you are not using docker, you can download a `block_log` from [here](https://s3.amazonaws.com/steemit-dev-blockchainstate/block_log-latest), put it in your steem data directory, and use the `--replay-blockchain` command line option. Be sure to remove the option if you have to stop/restart steemd after already being synced.
+You can save a lot of time by replaying from a `block_log`. Steemit hosts a public `block_log` that is regularly updated. Using the docker method below, we have made it easy to download a `block_log` at launch and replay from it by passing in the `USE_PUBLIC_BLOCKLOG=1` environment variable. To do this, make sure your data directory is empty and does not contain a block_log. If you are not using docker, you can download a `block_log` from [here](https://s3.amazonaws.com/steemit-dev-blockchainstate/block_log-latest), put it in your steem data directory, and use the `--replay-blockchain` command line option. Be sure to remove the option if you have to stop/restart blurtd after already being synced.
 
 We recommend using docker to both build and run STEEM for exchanges. Docker is the world's leading containerization platform and using it guarantees that your build and run environment is identical to what our developers use. You can still build from source and you can keep both blockchain data and wallet data outside of the docker container. The instructions below will show you how to do this in just a few easy steps.
 
@@ -56,15 +56,15 @@ docker pull steemit/steem
 
 ### Running a binary build without a Docker container
 
-If you build with Docker but do not want to run steemd from within a docker container, you can stop here with this step and instead extract the binary from the container with the commands below. If you are going to run steemd with docker (recommended method), skip this step altogether. We're simply providing an option for everyone's use-case. Our binaries are built mostly static, only dynamically linking to linux kernel libraries. We have tested and confirmed binaries built in Docker work on Ubuntu and Fedora and will likely work on many other Linux distrubutions. Building the image yourself or pulling one of our pre-built images both work.
+If you build with Docker but do not want to run blurtd from within a docker container, you can stop here with this step and instead extract the binary from the container with the commands below. If you are going to run blurtd with docker (recommended method), skip this step altogether. We're simply providing an option for everyone's use-case. Our binaries are built mostly static, only dynamically linking to linux kernel libraries. We have tested and confirmed binaries built in Docker work on Ubuntu and Fedora and will likely work on many other Linux distrubutions. Building the image yourself or pulling one of our pre-built images both work.
 
 To extract the binary you need to start a container and then copy the file from it.
 
 ```
-docker run -d --name steemd-exchange steemit/steem
-docker cp steemd-exchange:/usr/local/steemd-default/bin/steemd /local/path/to/steemd
-docker cp steemd-exchange:/usr/local/steemd-default/bin/cli_wallet /local/path/to/cli_wallet
-docker stop steemd-exchange
+docker run -d --name blurtd-exchange steemit/steem
+docker cp blurtd-exchange:/usr/local/blurtd-default/bin/blurtd /local/path/to/blurtd
+docker cp blurtd-exchange:/usr/local/blurtd-default/bin/cli_wallet /local/path/to/cli_wallet
+docker stop blurtd-exchange
 ```
 
 ### Configuration files when not using a Docker image
@@ -73,7 +73,7 @@ For your convenience, we have provided a provided an [example\_config](example\_
 
 ### Custom configuration files when using a Docker image
 
-If you are using our docker image and have a need for using a custom config file, instead use [config-for-docker.ini](https://github.com/steemit/steem/blob/master/contrib/config-for-docker.ini). You can place this outside of your container and map to it by adding this argument to your docker run command: `-v /path/to/config.ini:/etc/steemd/config.ini`. In most cases, a custom configuration file is not necessary.
+If you are using our docker image and have a need for using a custom config file, instead use [config-for-docker.ini](https://github.com/steemit/steem/blob/master/contrib/config-for-docker.ini). You can place this outside of your container and map to it by adding this argument to your docker run command: `-v /path/to/config.ini:/etc/blurtd/config.ini`. In most cases, a custom configuration file is not necessary.
 
 ### Account history and limitations
 
@@ -93,7 +93,7 @@ mkdir steemwallet
 The below command will start a daemonized instance opening ports for p2p and RPC  while linking the directories we created for blockchain and wallet data inside the container. Fill in `TRACK_ACCOUNT` with the name of your exchange account that you want to follow. The `-v` flags are how you map directories outside of the container to the inside, you list the path to the directories you created earlier before the `:` for each `-v` flag. The restart policy ensures that the container will automatically restart even if your system is restarted.
 
 ```
-docker run -d --name steemd-exchange --env TRACK_ACCOUNT=nameofaccount --env USE_PUBLIC_BLOCKLOG=1 -p 2001:2001 -p 8090:8090 -v /path/to/steemwallet:/var/steemwallet -v /path/to/blockchain:/var/lib/steemd/blockchain --restart always steemit/steem
+docker run -d --name blurtd-exchange --env TRACK_ACCOUNT=nameofaccount --env USE_PUBLIC_BLOCKLOG=1 -p 2001:2001 -p 8090:8090 -v /path/to/steemwallet:/var/steemwallet -v /path/to/blockchain:/var/lib/blurtd/blockchain --restart always steemit/steem
 ```
 
 You can see that the container is running with the `docker ps` command.
@@ -107,7 +107,7 @@ Initial syncing will take between 6 and 72 hours depending on your equipment, fa
 The command below will run the cli_wallet from inside the running container while mapping the `wallet.json` to the directory you created for it on the host.
 
 ```
-docker exec -it steemd-exchange /usr/local/steemd-default/bin/cli_wallet -w /var/steemwallet/wallet.json
+docker exec -it blurtd-exchange /usr/local/blurtd-default/bin/cli_wallet -w /var/steemwallet/wallet.json
 ```
 
 ### Upgrading for major releases that require a full reindex
@@ -117,11 +117,11 @@ For upgrades that require a full replay, we highly recommend *performing the upg
 Stop the docker container, remove the existing container, clear out your blockchain data directory completely, pull in the latest docker image (or build the image from scratch), and then start a new container using the same command that you previously launched with.
 
 ```
-docker stop steemd-exchange
-docker rm steemd-exchange
+docker stop blurtd-exchange
+docker rm blurtd-exchange
 rm -rf blockchain/*
 docker pull steemit/steem
-docker run -d --name steemd-exchange --env TRACK_ACCOUNT=nameofaccount --env USE_PUBLIC_BLOCKLOG=1 -p 2001:2001 -p 8090:8090 -v /path/to/steemwallet:/var/steemwallet -v /path/to/blockchain:/var/lib/steemd/blockchain --restart always steemit/steem
+docker run -d --name blurtd-exchange --env TRACK_ACCOUNT=nameofaccount --env USE_PUBLIC_BLOCKLOG=1 -p 2001:2001 -p 8090:8090 -v /path/to/steemwallet:/var/steemwallet -v /path/to/blockchain:/var/lib/blurtd/blockchain --restart always steemit/steem
 ```
 
 ### Upgrading for releases that do not require a reindex
@@ -129,8 +129,8 @@ docker run -d --name steemd-exchange --env TRACK_ACCOUNT=nameofaccount --env USE
 For upgrades that do not require a full replay, you would use the following instructions: stop the docker container, remove the existing container, pull in the latest docker image (or build the image from scratch), and then start a new container using the same command that you previously launched with:
 
 ```
-docker stop steemd-exchange
-docker rm steemd-exchange
+docker stop blurtd-exchange
+docker rm blurtd-exchange
 docker pull steemit/steem
-docker run -d --name steemd-exchange --env TRACK_ACCOUNT=nameofaccount --env USE_PUBLIC_BLOCKLOG=1 -p 2001:2001 -p 8090:8090 -v /path/to/steemwallet:/var/steemwallet -v /path/to/blockchain:/var/lib/steemd/blockchain --restart always steemit/steem
+docker run -d --name blurtd-exchange --env TRACK_ACCOUNT=nameofaccount --env USE_PUBLIC_BLOCKLOG=1 -p 2001:2001 -p 8090:8090 -v /path/to/steemwallet:/var/steemwallet -v /path/to/blockchain:/var/lib/blurtd/blockchain --restart always steemit/steem
 ```

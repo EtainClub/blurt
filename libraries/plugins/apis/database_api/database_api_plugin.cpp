@@ -1,7 +1,7 @@
-#include <steem/plugins/database_api/database_api.hpp>
-#include <steem/plugins/database_api/database_api_plugin.hpp>
+#include <blurt/plugins/database_api/database_api.hpp>
+#include <blurt/plugins/database_api/database_api_plugin.hpp>
 
-namespace steem { namespace plugins { namespace database_api {
+namespace blurt { namespace plugins { namespace database_api {
 
 database_api_plugin::database_api_plugin() {}
 database_api_plugin::~database_api_plugin() {}
@@ -19,4 +19,4 @@ void database_api_plugin::plugin_startup() {}
 
 void database_api_plugin::plugin_shutdown() {}
 
-} } } // steem::plugins::database_api
+} } } // blurt::plugins::database_api

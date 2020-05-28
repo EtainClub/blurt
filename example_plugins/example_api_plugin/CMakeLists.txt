@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/plugins/example_api_plugin/*.hpp")
+file(GLOB HEADERS "include/blurt/plugins/example_api_plugin/*.hpp")
 
 add_library( example_api_plugin
              ${HEADERS}

@@ -218,7 +218,7 @@ void application::quit() {
 
 void application::exec() {
    /** To avoid killing process by broken pipe and continue regular app shutdown.
-    *  Useful for usecase: `steemd | tee steemd.log` and pressing Ctrl+C
+    *  Useful for usecase: `blurtd | tee blurtd.log` and pressing Ctrl+C
     **/
    signal(SIGPIPE, SIG_IGN);
 

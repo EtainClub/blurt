@@ -70,7 +70,7 @@ Securing specific APIs
 -----------------------
 
 The problem with securing APIs at the network level is that there are deployment scenarios where a node may want to have some APIs public, but other APIs private.
-The `steemd` process includes username/password based authentication to individual APIs.
+The `blurtd` process includes username/password based authentication to individual APIs.
 
 Since the username/password is sent directly over the wire, you should use a TLS connection when authenticating with username and password.  TLS connection can be achieved by one of two methods:
 

@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/plugins/account_history_rocksdb/*.hpp")
+file(GLOB HEADERS "include/blurt/plugins/account_history_rocksdb/*.hpp")
 
 add_library( account_history_rocksdb_plugin
              account_history_rocksdb_plugin.cpp

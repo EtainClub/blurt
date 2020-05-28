@@ -22,18 +22,18 @@
  * THE SOFTWARE.
  */
 
-#include <steem/utilities/tempdir.hpp>
+#include <blurt/utilities/tempdir.hpp>
 
 #include <cstdlib>
 
-namespace steem { namespace utilities {
+namespace blurt { namespace utilities {
 
 fc::path temp_directory_path()
 {
-   const char* steemit_tempdir = getenv("STEEM_TEMPDIR");
+   const char* steemit_tempdir = getenv("BLURT_TEMPDIR");
    if( steemit_tempdir != nullptr )
       return fc::path( steemit_tempdir );
-   return fc::temp_directory_path() / "steem-tmp";
+   return fc::temp_directory_path() / "blurt-tmp";
 }
 
-} } // steem::utilities
+} } // blurt::utilities

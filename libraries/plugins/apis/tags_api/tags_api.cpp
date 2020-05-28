@@ -1,21 +1,21 @@
-#include <steem/plugins/tags_api/tags_api_plugin.hpp>
-#include <steem/plugins/tags_api/tags_api.hpp>
-#include <steem/plugins/tags/tags_plugin.hpp>
-#include <steem/plugins/follow_api/follow_api_plugin.hpp>
-#include <steem/plugins/follow_api/follow_api.hpp>
+#include <blurt/plugins/tags_api/tags_api_plugin.hpp>
+#include <blurt/plugins/tags_api/tags_api.hpp>
+#include <blurt/plugins/tags/tags_plugin.hpp>
+#include <blurt/plugins/follow_api/follow_api_plugin.hpp>
+#include <blurt/plugins/follow_api/follow_api.hpp>
 
-#include <steem/chain/steem_object_types.hpp>
-#include <steem/chain/util/reward.hpp>
-#include <steem/chain/util/uint256.hpp>
+#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/util/reward.hpp>
+#include <blurt/chain/util/uint256.hpp>
 
-namespace steem { namespace plugins { namespace tags {
+namespace blurt { namespace plugins { namespace tags {
 
 namespace detail {
 
 class tags_api_impl
 {
    public:
-      tags_api_impl() : _db( appbase::app().get_plugin< steem::plugins::chain::chain_plugin >().db() ) {}
+      tags_api_impl() : _db( appbase::app().get_plugin< blurt::plugins::chain::chain_plugin >().db() ) {}
 
       DECLARE_API_IMPL(
          (get_trending_tags)
@@ -63,7 +63,7 @@ class tags_api_impl
       chain::comment_id_type get_parent( const discussion_query& q );
 
       chain::database& _db;
-      std::shared_ptr< steem::plugins::follow::follow_api > _follow_api;
+      std::shared_ptr< blurt::plugins::follow::follow_api > _follow_api;
 };
 
 DEFINE_API_IMPL( tags_api_impl, get_trending_tags )
@@ -421,7 +421,7 @@ DEFINE_API_IMPL( tags_api_impl, get_discussions_by_promoted )
    auto parent = get_parent( args );
 
    const auto& tidx = _db.get_index< tags::tag_index, tags::by_parent_promoted >();
-   auto tidx_itr = tidx.lower_bound( boost::make_tuple( tag, parent, share_type( STEEM_MAX_SHARE_SUPPLY ) )  );
+   auto tidx_itr = tidx.lower_bound( boost::make_tuple( tag, parent, share_type( BLURT_MAX_SHARE_SUPPLY ) )  );
 
    return get_discussions( args, tag, parent, tidx, tidx_itr, args.truncate_body, filter_default, exit_default, []( const tags::tag_object& t ){ return t.promoted_balance == 0; }  );
 }
@@ -539,7 +539,7 @@ void tags_api_impl::set_pending_payout( discussion& d )
    const auto& cidx = _db.get_index< tags::tag_index, tags::by_comment>();
    auto itr = cidx.lower_bound( d.id );
    if( itr != cidx.end() && itr->comment == d.id )  {
-      d.promoted = asset( itr->promoted_balance, STEEM_SYMBOL );
+      d.promoted = asset( itr->promoted_balance, BLURT_SYMBOL );
    }
 
    asset pot = _db.get_reward_fund( _db.get_comment( d.author, d.permlink ) ).reward_balance;
@@ -563,7 +563,7 @@ void tags_api_impl::set_pending_payout( discussion& d )
       }
    }
 
-   if( d.parent_author != STEEM_ROOT_POST_PARENT )
+   if( d.parent_author != BLURT_ROOT_POST_PARENT )
       d.cashout_time = _db.calculate_discussion_payout_time( _db.get< chain::comment_object >( d.id ) );
 
    if( d.body.size() > 1024*128 )
@@ -652,7 +652,7 @@ discussion_query_result tags_api_impl::get_discussions( const discussion_query& 
       try
       {
          result.discussions.push_back( lookup_discussion( tidx_itr->comment, truncate_body ) );
-         result.discussions.back().promoted = asset(tidx_itr->promoted_balance, STEEM_SYMBOL );
+         result.discussions.back().promoted = asset(tidx_itr->promoted_balance, BLURT_SYMBOL );
 
          if( filter( result.discussions.back() ) )
          {
@@ -690,7 +690,7 @@ chain::comment_id_type tags_api_impl::get_parent( const discussion_query& query 
 
 tags_api::tags_api(): my( new detail::tags_api_impl() )
 {
-   JSON_RPC_REGISTER_API( STEEM_TAGS_API_PLUGIN_NAME );
+   JSON_RPC_REGISTER_API( BLURT_TAGS_API_PLUGIN_NAME );
 }
 
 tags_api::~tags_api() {}
@@ -725,10 +725,10 @@ void tags_api::set_pending_payout( discussion& d )
 
 void tags_api::api_startup()
 {
-   auto follow_api_plugin = appbase::app().find_plugin< steem::plugins::follow::follow_api_plugin >();
+   auto follow_api_plugin = appbase::app().find_plugin< blurt::plugins::follow::follow_api_plugin >();
 
    if( follow_api_plugin != nullptr )
       my->_follow_api = follow_api_plugin->api;
 }
 
-} } } // steem::plugins::tags
+} } } // blurt::plugins::tags

@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/steem/plugins/chain/*.hpp")
+file(GLOB HEADERS "include/blurt/plugins/chain/*.hpp")
 add_library( chain_plugin
              chain_plugin.cpp
              ${HEADERS} )
@@ -20,4 +20,4 @@ install( TARGETS
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
 )
-install( FILES ${HEADERS} DESTINATION "include/steem/plugins/chain" )
+install( FILES ${HEADERS} DESTINATION "include/blurt/plugins/chain" )

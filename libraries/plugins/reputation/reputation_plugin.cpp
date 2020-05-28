@@ -1,26 +1,26 @@
 
-#include <steem/chain/steem_fwd.hpp>
+#include <blurt/chain/steem_fwd.hpp>
 
-#include <steem/plugins/reputation/reputation_plugin.hpp>
-#include <steem/plugins/reputation/reputation_objects.hpp>
+#include <blurt/plugins/reputation/reputation_plugin.hpp>
+#include <blurt/plugins/reputation/reputation_objects.hpp>
 
-#include <steem/chain/util/impacted.hpp>
+#include <blurt/chain/util/impacted.hpp>
 
-#include <steem/protocol/config.hpp>
+#include <blurt/protocol/config.hpp>
 
-#include <steem/chain/database.hpp>
-#include <steem/chain/index.hpp>
-#include <steem/chain/account_object.hpp>
-#include <steem/chain/comment_object.hpp>
+#include <blurt/chain/database.hpp>
+#include <blurt/chain/index.hpp>
+#include <blurt/chain/account_object.hpp>
+#include <blurt/chain/comment_object.hpp>
 
 #include <fc/smart_ref_impl.hpp>
 #include <fc/thread/thread.hpp>
 
 #include <memory>
 
-namespace steem { namespace plugins { namespace reputation {
+namespace blurt { namespace plugins { namespace reputation {
 
-using namespace steem::protocol;
+using namespace blurt::protocol;
 
 namespace detail {
 
@@ -28,7 +28,7 @@ class reputation_plugin_impl
 {
    public:
       reputation_plugin_impl( reputation_plugin& _plugin ) :
-         _db( appbase::app().get_plugin< steem::plugins::chain::chain_plugin >().db() ),
+         _db( appbase::app().get_plugin< blurt::plugins::chain::chain_plugin >().db() ),
          _self( _plugin ) {}
       ~reputation_plugin_impl() {}
 
@@ -205,7 +205,7 @@ void reputation_plugin::plugin_initialize( const boost::program_options::variabl
 
       my->_pre_apply_operation_conn = my->_db.add_pre_apply_operation_handler( [&]( const operation_notification& note ){ my->pre_operation( note ); }, *this, 0 );
       my->_post_apply_operation_conn = my->_db.add_post_apply_operation_handler( [&]( const operation_notification& note ){ my->post_operation( note ); }, *this, 0 );
-      STEEM_ADD_PLUGIN_INDEX(my->_db, reputation_index);
+      BLURT_ADD_PLUGIN_INDEX(my->_db, reputation_index);
 
       appbase::app().get_plugin< chain::chain_plugin >().report_state_options( name(), fc::variant_object() );
    }
@@ -220,4 +220,4 @@ void reputation_plugin::plugin_shutdown()
    chain::util::disconnect_signal( my->_post_apply_operation_conn );
 }
 
-} } } // steem::plugins::reputation
+} } } // blurt::plugins::reputation

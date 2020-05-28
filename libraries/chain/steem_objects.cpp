@@ -1,8 +1,8 @@
-#include <steem/chain/steem_fwd.hpp>
-#include <steem/chain/steem_objects.hpp>
+#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/steem_objects.hpp>
 
 #include <fc/uint128.hpp>
 
-namespace steem { namespace chain {
+namespace blurt { namespace chain {
 
-} } // steem::chain
+} } // blurt::chain

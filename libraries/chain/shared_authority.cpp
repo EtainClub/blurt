@@ -1,6 +1,6 @@
-#include <steem/chain/shared_authority.hpp>
+#include <blurt/chain/shared_authority.hpp>
 
-namespace steem { namespace chain {
+namespace blurt { namespace chain {
 
 shared_authority::operator authority()const
 {
@@ -90,4 +90,4 @@ bool operator == ( const shared_authority& a, const authority& b )
    return authority( a ) == b;
 }
 
-} } // steem::chain
+} } // blurt::chain

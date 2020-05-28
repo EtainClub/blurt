@@ -1,7 +1,7 @@
 #!/bin/bash
 #params:
-# - ref steemd location
-# - tested steemd location
+# - ref blurtd location
+# - tested blurtd location
 # - ref blockchain folder location
 # - tested blockchain folder location
 # - path to directory, where non-empty logs should be generated
@@ -11,13 +11,13 @@
 #
 # WARNING: use absolute paths instead of relative!
 #
-# sudo ./docker_build_and_run.sh ~/steemit/steem/build/Release/programs/steemd ~/steemit/steem/build/Release/programs/steemd ~/steemit/steemd_data/steemnet ~/steemit/steemd_data/steemnet ~/steemit/logs 5000000 12
+# sudo ./docker_build_and_run.sh ~/steemit/steem/build/Release/programs/blurtd ~/steemit/steem/build/Release/programs/blurtd ~/steemit/blurtd_data/steemnet ~/steemit/blurtd_data/steemnet ~/steemit/logs 5000000 12
 
 if [ $# -lt 6 -o $# -gt 8 ]
 then
-   echo "Usage: reference_steemd_location tested_steemd_location ref_blockchain_folder_location tested_blockchain_folder_location"
+   echo "Usage: reference_blurtd_location tested_blurtd_location ref_blockchain_folder_location tested_blockchain_folder_location"
    echo "       logs_dir stop_replay_at_block [jobs [--dont-copy-config]"
-   echo "Example: ~/steemit/ref_steemd ~/steemit/steem/build/Release/programs/steemd ~/steemit/steemnet ~/steemit/testnet"
+   echo "Example: ~/steemit/ref_blurtd ~/steemit/steem/build/Release/programs/blurtd ~/steemit/steemnet ~/steemit/testnet"
    echo "         ~/steemit/logs 5000000 12"
    echo "         if <jobs> not passed, <nproc> will be used."
    exit -1

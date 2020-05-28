@@ -1,8 +1,8 @@
-#include <steem/plugins/follow/follow_operations.hpp>
+#include <blurt/plugins/follow/follow_operations.hpp>
 
-#include <steem/protocol/operation_util_impl.hpp>
+#include <blurt/protocol/operation_util_impl.hpp>
 
-namespace steem { namespace plugins{ namespace follow {
+namespace blurt { namespace plugins{ namespace follow {
 
 void follow_operation::validate()const
 {
@@ -14,6 +14,6 @@ void reblog_operation::validate()const
    FC_ASSERT( account != author, "You cannot reblog your own content" );
 }
 
-} } } //steem::plugins::follow
+} } } //blurt::plugins::follow
 
-STEEM_DEFINE_OPERATION_TYPE( steem::plugins::follow::follow_plugin_operation )
+BLURT_DEFINE_OPERATION_TYPE( blurt::plugins::follow::follow_plugin_operation )

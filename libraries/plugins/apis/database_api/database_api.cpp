@@ -1,19 +1,19 @@
-#include <steem/chain/steem_fwd.hpp>
+#include <blurt/chain/steem_fwd.hpp>
 
 #include <appbase/application.hpp>
 
-#include <steem/plugins/database_api/database_api.hpp>
-#include <steem/plugins/database_api/database_api_plugin.hpp>
+#include <blurt/plugins/database_api/database_api.hpp>
+#include <blurt/plugins/database_api/database_api_plugin.hpp>
 
-#include <steem/protocol/get_config.hpp>
-#include <steem/protocol/exceptions.hpp>
-#include <steem/protocol/transaction_util.hpp>
+#include <blurt/protocol/get_config.hpp>
+#include <blurt/protocol/exceptions.hpp>
+#include <blurt/protocol/transaction_util.hpp>
 
-#include <steem/utilities/git_revision.hpp>
+#include <blurt/utilities/git_revision.hpp>
 
 #include <fc/git_revision.hpp>
 
-namespace steem { namespace plugins { namespace database_api {
+namespace blurt { namespace plugins { namespace database_api {
 
 class database_api_impl
 {
@@ -124,13 +124,13 @@ class database_api_impl
 database_api::database_api()
    : my( new database_api_impl() )
 {
-   JSON_RPC_REGISTER_API( STEEM_DATABASE_API_PLUGIN_NAME );
+   JSON_RPC_REGISTER_API( BLURT_DATABASE_API_PLUGIN_NAME );
 }
 
 database_api::~database_api() {}
 
 database_api_impl::database_api_impl()
-   : _db( appbase::app().get_plugin< steem::plugins::chain::chain_plugin >().db() ) {}
+   : _db( appbase::app().get_plugin< blurt::plugins::chain::chain_plugin >().db() ) {}
 
 database_api_impl::~database_api_impl() {}
 
@@ -143,15 +143,15 @@ database_api_impl::~database_api_impl() {}
 
 DEFINE_API_IMPL( database_api_impl, get_config )
 {
-   return steem::protocol::get_config();
+   return blurt::protocol::get_config();
 }
 
 DEFINE_API_IMPL( database_api_impl, get_version )
 {
    return get_version_return
    (
-      fc::string( STEEM_BLOCKCHAIN_VERSION ),
-      fc::string( steem::utilities::git_revision_sha ),
+      fc::string( BLURT_BLOCKCHAIN_VERSION ),
+      fc::string( blurt::utilities::git_revision_sha ),
       fc::string( fc::git_revision_sha ),
       _db.get_chain_id()
    );
@@ -1259,7 +1259,7 @@ DEFINE_API_IMPL( database_api_impl, list_proposals )
       case by_creator:
       {
          auto key = args.start.as< std::pair< account_name_type, api_id_type > >();
-         iterate_results< steem::chain::proposal_index, steem::chain::by_creator >(
+         iterate_results< blurt::chain::proposal_index, blurt::chain::by_creator >(
             boost::make_tuple( key.first, key.second ),
             result.proposals,
             args.limit,
@@ -1272,7 +1272,7 @@ DEFINE_API_IMPL( database_api_impl, list_proposals )
       case by_start_date:
       {
          auto key = args.start.as< std::pair< time_point_sec, api_id_type > >();
-         iterate_results< steem::chain::proposal_index, steem::chain::by_start_date >(
+         iterate_results< blurt::chain::proposal_index, blurt::chain::by_start_date >(
             boost::make_tuple( key.first, key.second ),
             result.proposals,
             args.limit,
@@ -1285,7 +1285,7 @@ DEFINE_API_IMPL( database_api_impl, list_proposals )
       case by_end_date:
       {
          auto key = args.start.as< std::pair< time_point_sec, api_id_type > >();
-         iterate_results< steem::chain::proposal_index, steem::chain::by_end_date >(
+         iterate_results< blurt::chain::proposal_index, blurt::chain::by_end_date >(
             boost::make_tuple( key.first, key.second ),
             result.proposals,
             args.limit,
@@ -1298,7 +1298,7 @@ DEFINE_API_IMPL( database_api_impl, list_proposals )
       case by_total_votes:
       {
          auto key = args.start.as< std::pair< uint64_t, api_id_type > >();
-         iterate_results< steem::chain::proposal_index, steem::chain::by_total_votes >(
+         iterate_results< blurt::chain::proposal_index, blurt::chain::by_total_votes >(
             boost::make_tuple( key.first, key.second ),
             result.proposals,
             args.limit,
@@ -1326,7 +1326,7 @@ DEFINE_API_IMPL( database_api_impl, find_proposals )
 
    std::for_each( args.proposal_ids.begin(), args.proposal_ids.end(), [&](auto& id)
    {
-      auto po = _db.find< steem::chain::proposal_object, steem::chain::by_proposal_id >( id );
+      auto po = _db.find< blurt::chain::proposal_object, blurt::chain::by_proposal_id >( id );
       if( po != nullptr && !po->removed )
       {
          result.proposals.emplace_back( api_proposal_object( *po, currentTime ) );
@@ -1353,14 +1353,14 @@ DEFINE_API_IMPL( database_api_impl, list_proposal_votes )
       case by_voter_proposal:
       {
          auto key = args.start.as< std::pair< account_name_type, api_id_type > >();
-         iterate_results< steem::chain::proposal_vote_index, steem::chain::by_voter_proposal >(
+         iterate_results< blurt::chain::proposal_vote_index, blurt::chain::by_voter_proposal >(
             boost::make_tuple( key.first, key.second ),
             result.proposal_votes,
             args.limit,
             [&]( const proposal_vote_object& po ){ return api_proposal_vote_object( po, _db ); },
             [&]( const proposal_vote_object& po )
             {
-               auto itr = _db.find< steem::chain::proposal_object, steem::chain::by_id >( po.proposal_id );
+               auto itr = _db.find< blurt::chain::proposal_object, blurt::chain::by_id >( po.proposal_id );
                return itr != nullptr && !itr->removed;
             },
             args.order_direction
@@ -1370,14 +1370,14 @@ DEFINE_API_IMPL( database_api_impl, list_proposal_votes )
       case by_proposal_voter:
       {
          auto key = args.start.as< std::pair< api_id_type, account_name_type > >();
-         iterate_results< steem::chain::proposal_vote_index, steem::chain::by_proposal_voter >(
+         iterate_results< blurt::chain::proposal_vote_index, blurt::chain::by_proposal_voter >(
             boost::make_tuple( key.first, key.second ),
             result.proposal_votes,
             args.limit,
             [&]( const proposal_vote_object& po ){ return api_proposal_vote_object( po, _db ); },
             [&]( const proposal_vote_object& po )
             {
-               auto itr = _db.find< steem::chain::proposal_object, steem::chain::by_id >( po.proposal_id );
+               auto itr = _db.find< blurt::chain::proposal_object, blurt::chain::by_id >( po.proposal_id );
                return itr != nullptr && !itr->removed;
             },
             args.order_direction
@@ -1411,7 +1411,7 @@ DEFINE_API_IMPL( database_api_impl, get_required_signatures )
                                                    [&]( string account_name ){ return authority( _db.get< chain::account_authority_object, chain::by_account >( account_name ).active  ); },
                                                    [&]( string account_name ){ return authority( _db.get< chain::account_authority_object, chain::by_account >( account_name ).owner   ); },
                                                    [&]( string account_name ){ return authority( _db.get< chain::account_authority_object, chain::by_account >( account_name ).posting ); },
-                                                   STEEM_MAX_SIG_CHECK_DEPTH,
+                                                   BLURT_MAX_SIG_CHECK_DEPTH,
                                                    fc::ecc::canonical_signature_type::bip_0062 );
 
    return result;
@@ -1444,7 +1444,7 @@ DEFINE_API_IMPL( database_api_impl, get_potential_signatures )
             result.keys.insert( k );
          return authority( auth );
       },
-      STEEM_MAX_SIG_CHECK_DEPTH,
+      BLURT_MAX_SIG_CHECK_DEPTH,
       fc::ecc::canonical_signature_type::bip_0062
    );
 
@@ -1457,9 +1457,9 @@ DEFINE_API_IMPL( database_api_impl, verify_authority )
                            [&]( string account_name ){ return authority( _db.get< chain::account_authority_object, chain::by_account >( account_name ).active  ); },
                            [&]( string account_name ){ return authority( _db.get< chain::account_authority_object, chain::by_account >( account_name ).owner   ); },
                            [&]( string account_name ){ return authority( _db.get< chain::account_authority_object, chain::by_account >( account_name ).posting ); },
-                           STEEM_MAX_SIG_CHECK_DEPTH,
-                           STEEM_MAX_AUTHORITY_MEMBERSHIP,
-                           STEEM_MAX_SIG_CHECK_ACCOUNTS,
+                           BLURT_MAX_SIG_CHECK_DEPTH,
+                           BLURT_MAX_AUTHORITY_MEMBERSHIP,
+                           BLURT_MAX_SIG_CHECK_ACCOUNTS,
                            fc::ecc::canonical_signature_type::bip_0062  );
    return verify_authority_return( { true } );
 }
@@ -1486,7 +1486,7 @@ DEFINE_API_IMPL( database_api_impl, verify_signatures )
    flat_set< public_key_type > sig_keys;
    for( const auto&  sig : args.signatures )
    {
-      STEEM_ASSERT(
+      BLURT_ASSERT(
          sig_keys.insert( fc::ecc::public_key( sig, args.hash ) ).second,
          protocol::tx_duplicate_sig,
          "Duplicate Signature detected" );
@@ -1498,13 +1498,13 @@ DEFINE_API_IMPL( database_api_impl, verify_signatures )
    // verify authority throws on failure, catch and return false
    try
    {
-      steem::protocol::verify_authority< verify_signatures_args >(
+      blurt::protocol::verify_authority< verify_signatures_args >(
          { args },
          sig_keys,
          [this]( const string& name ) { return authority( _db.get< chain::account_authority_object, chain::by_account >( name ).owner ); },
          [this]( const string& name ) { return authority( _db.get< chain::account_authority_object, chain::by_account >( name ).active ); },
          [this]( const string& name ) { return authority( _db.get< chain::account_authority_object, chain::by_account >( name ).posting ); },
-         STEEM_MAX_SIG_CHECK_DEPTH );
+         BLURT_MAX_SIG_CHECK_DEPTH );
    }
    catch( fc::exception& ) { result.valid = false; }
 
@@ -1557,4 +1557,4 @@ DEFINE_READ_APIS( database_api,
    (verify_signatures)
 )
 
-} } } // steem::plugins::database_api
+} } } // blurt::plugins::database_api

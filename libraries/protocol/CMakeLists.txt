@@ -1,19 +1,19 @@
-file(GLOB HEADERS "include/steem/protocol/*.hpp")
+file(GLOB HEADERS "include/blurt/protocol/*.hpp")
 file(GLOB HF_PARTS "hardfork.d/*.hpp")
 
 if( MSVC )
-   set( hardfork_hpp_file "${CMAKE_CURRENT_SOURCE_DIR}/include/steem/protocol/hardfork.hpp" )
+   set( hardfork_hpp_file "${CMAKE_CURRENT_SOURCE_DIR}/include/blurt/protocol/hardfork.hpp" )
    add_custom_target( build_hardfork_hpp
       COMMAND cat-parts "${CMAKE_CURRENT_SOURCE_DIR}/hardfork.d" ${hardfork_hpp_file} )
    add_dependencies( build_hardfork_hpp cat-parts )
 else( MSVC )
-   set( hardfork_hpp_file "${CMAKE_CURRENT_BINARY_DIR}/include/steem/protocol/hardfork.hpp" )
+   set( hardfork_hpp_file "${CMAKE_CURRENT_BINARY_DIR}/include/blurt/protocol/hardfork.hpp" )
    add_custom_command(
       COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_SOURCE_DIR}/../../programs/build_helpers
       python3 -m steem_build_helpers.cat_parts
       "${CMAKE_CURRENT_SOURCE_DIR}/hardfork.d"
       ${hardfork_hpp_file}
-      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/include/steem/protocol/hardfork.hpp"
+      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/include/blurt/protocol/hardfork.hpp"
       DEPENDS ${HF_PARTS}
    )
 endif( MSVC )
@@ -36,7 +36,7 @@ add_library( steem_protocol
 
              ${HEADERS}
              ${hardfork_hpp_file}
-             "${CMAKE_CURRENT_BINARY_DIR}/include/steem/protocol/hardfork.hpp"
+             "${CMAKE_CURRENT_BINARY_DIR}/include/blurt/protocol/hardfork.hpp"
            )
 
 target_link_libraries( steem_protocol steem_schema fc )
@@ -58,4 +58,4 @@ INSTALL( TARGETS
    ARCHIVE DESTINATION lib
 )
 
-INSTALL( FILES ${HEADERS} DESTINATION "include/steem/protocol" )
+INSTALL( FILES ${HEADERS} DESTINATION "include/blurt/protocol" )

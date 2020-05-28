@@ -1,12 +1,12 @@
 
-#include <steem/plugins/rc/resource_count.hpp>
-#include <steem/plugins/rc/resource_sizes.hpp>
+#include <blurt/plugins/rc/resource_count.hpp>
+#include <blurt/plugins/rc/resource_sizes.hpp>
 
-#include <steem/protocol/operations.hpp>
+#include <blurt/protocol/operations.hpp>
 
-namespace steem { namespace plugins { namespace rc {
+namespace blurt { namespace plugins { namespace rc {
 
-using namespace steem::protocol;
+using namespace blurt::protocol;
 
 struct count_operation_visitor
 {
@@ -331,4 +331,4 @@ void count_resources(
    result.resource_count[ resource_execution_time ] += vtor.execution_time_count;
 }
 
-} } } // steem::plugins::rc
+} } } // blurt::plugins::rc

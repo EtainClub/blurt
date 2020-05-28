@@ -1,22 +1,22 @@
-#include <steem/chain/util/sps_processor.hpp>
+#include <blurt/chain/util/sps_processor.hpp>
 
-namespace steem { namespace chain {
+namespace blurt { namespace chain {
 
-using steem::protocol::asset;
-using steem::protocol::operation;
+using blurt::protocol::asset;
+using blurt::protocol::operation;
 
-using steem::chain::proposal_object;
-using steem::chain::by_start_date;
-using steem::chain::by_end_date;
-using steem::chain::proposal_index;
-using steem::chain::proposal_id_type;
-using steem::chain::proposal_vote_index;
-using steem::chain::by_proposal_voter;
-using steem::chain::by_voter_proposal;
-using steem::protocol::proposal_pay_operation;
-using steem::chain::sps_helper;
-using steem::chain::dynamic_global_property_object;
-using steem::chain::block_notification;
+using blurt::chain::proposal_object;
+using blurt::chain::by_start_date;
+using blurt::chain::by_end_date;
+using blurt::chain::proposal_index;
+using blurt::chain::proposal_id_type;
+using blurt::chain::proposal_vote_index;
+using blurt::chain::by_proposal_voter;
+using blurt::chain::by_voter_proposal;
+using blurt::protocol::proposal_pay_operation;
+using blurt::chain::sps_helper;
+using blurt::chain::dynamic_global_property_object;
+using blurt::chain::block_notification;
 
 const std::string sps_processor::removing_name = "sps_processor_remove";
 const std::string sps_processor::calculating_name = "sps_processor_calculate";
@@ -72,11 +72,11 @@ uint64_t sps_processor::calculate_votes( const proposal_id_type& id )
       const auto& _voter = db.get_account( found->voter );
 
       //If _voter has set proxy, then his votes aren't taken into consideration
-      if( _voter.proxy == STEEM_PROXY_TO_SELF_ACCOUNT )
+      if( _voter.proxy == BLURT_PROXY_TO_SELF_ACCOUNT )
       {
          auto vote_weight = _voter.witness_vote_weight();
 
-         if (_voter.name == STEEM_REGENT_ACCOUNT) { // for regent
+         if (_voter.name == BLURT_REGENT_ACCOUNT) { // for regent
             vote_weight = dgpo.regent_vesting_shares.amount;
          }
 
@@ -118,7 +118,7 @@ void sps_processor::sort_by_votes( t_proposals& proposals )
 
 asset sps_processor::get_treasury_fund()
 {
-   auto& treasury_account = db.get_account( STEEM_TREASURY_ACCOUNT );
+   auto& treasury_account = db.get_account( BLURT_TREASURY_ACCOUNT );
    return treasury_account.balance;
 }
 
@@ -145,10 +145,10 @@ void sps_processor::transfer_payments( const time_point_sec& head_time, asset& m
    if( maintenance_budget_limit.amount.value == 0 )
       return;
 
-   const auto& treasury_account = db.get_account(STEEM_TREASURY_ACCOUNT);
+   const auto& treasury_account = db.get_account(BLURT_TREASURY_ACCOUNT);
 
    uint32_t passed_time_seconds = ( head_time - db.get_dynamic_global_properties().last_budget_time ).to_seconds();
-   uint128_t ratio = ( passed_time_seconds * STEEM_100_PERCENT ) / daily_seconds;
+   uint128_t ratio = ( passed_time_seconds * BLURT_100_PERCENT ) / daily_seconds;
 
    auto processing = [this, &treasury_account]( const proposal_object& _item, const asset& payment )
    {
@@ -170,7 +170,7 @@ void sps_processor::transfer_payments( const time_point_sec& head_time, asset& m
       if( _item.total_votes == 0 )
          break;
 
-      asset period_pay = asset( ( ratio * _item.daily_pay.amount.value ).to_uint64() / STEEM_100_PERCENT, _item.daily_pay.symbol );
+      asset period_pay = asset( ( ratio * _item.daily_pay.amount.value ).to_uint64() / BLURT_100_PERCENT, _item.daily_pay.symbol );
 
       if( period_pay >= maintenance_budget_limit )
       {
@@ -189,7 +189,7 @@ void sps_processor::update_settings( const time_point_sec& head_time )
 {
    db.modify( db.get_dynamic_global_properties(), [&]( dynamic_global_property_object& _dgpo )
                                           {
-                                             _dgpo.next_maintenance_time = head_time + fc::seconds( STEEM_PROPOSAL_MAINTENANCE_PERIOD );
+                                             _dgpo.next_maintenance_time = head_time + fc::seconds( BLURT_PROPOSAL_MAINTENANCE_PERIOD );
                                              _dgpo.last_budget_time = head_time;
                                           } );
 }
@@ -283,8 +283,8 @@ void sps_processor::record_funding( const block_notification& note )
 
    db.modify( props, []( dynamic_global_property_object& dgpo )
    {
-      dgpo.sps_interval_ledger = asset( 0, STEEM_SYMBOL );
+      dgpo.sps_interval_ledger = asset( 0, BLURT_SYMBOL );
    });
 }
 
-} } // namespace steem::chain
+} } // namespace blurt::chain

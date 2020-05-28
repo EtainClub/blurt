@@ -1,9 +1,9 @@
 
-#include <steem/schema/schema.hpp>
+#include <blurt/schema/schema.hpp>
 
 #include <set>
 
-namespace steem { namespace schema {
+namespace blurt { namespace schema {
 
 namespace detail {
 
