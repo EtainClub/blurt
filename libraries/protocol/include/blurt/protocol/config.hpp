@@ -13,7 +13,7 @@
 
 #define BLURT_INIT_PRIVATE_KEY                (fc::ecc::private_key::regenerate(fc::sha256::hash(std::string("init_key"))))
 #define BLURT_INIT_PUBLIC_KEY_STR             (std::string( blurt::protocol::public_key_type(BLURT_INIT_PRIVATE_KEY.get_public_key()) ))
-#define BLURT_CHAIN_ID (fc::sha256::hash("testnet"))
+#define BLURT_CHAIN_ID                        (fc::sha256::hash("testnet"))
 #define BLURT_ADDRESS_PREFIX                  "TST"
 
 #define BLURT_GENESIS_TIME                    (fc::time_point_sec(1451606400))
@@ -48,7 +48,7 @@
 #define BLURT_BLOCKCHAIN_VERSION              ( version(0, 0, 0) )
 
 #define BLURT_INIT_PUBLIC_KEY_STR             "BLT8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"
-#define BLURT_CHAIN_ID fc::sha256()
+#define BLURT_CHAIN_ID                        (fc::sha256::hash("blurt"))
 #define BLURT_ADDRESS_PREFIX                  "BLT"
 
 #define BLURT_GENESIS_TIME                    (fc::time_point_sec(1458835200))
