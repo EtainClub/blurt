@@ -54,7 +54,7 @@ struct operation_process
          b.transfers++;
 
          if( op.amount.symbol == BLURT_SYMBOL )
-            b.steem_transferred += op.amount.amount;
+            b.blurt_transferred += op.amount.amount;
       });
    }
 
@@ -137,7 +137,7 @@ struct operation_process
       _db.modify( _bucket, [&]( bucket_object& b )
       {
          b.transfers_to_vesting++;
-         b.steem_vested += op.amount.amount;
+         b.blurt_vested += op.amount.amount;
       });
    }
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 #include <blurt/plugins/chain/chain_plugin.hpp>
 
 #include <blurt/chain/comment_object.hpp>

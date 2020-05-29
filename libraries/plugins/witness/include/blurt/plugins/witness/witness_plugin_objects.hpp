@@ -1,6 +1,6 @@
 #pragma once
 
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 
 #ifndef BLURT_WITNESS_SPACE_ID
 #define BLURT_WITNESS_SPACE_ID 19

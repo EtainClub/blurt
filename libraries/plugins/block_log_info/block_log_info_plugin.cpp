@@ -1,5 +1,5 @@
 
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/plugins/block_log_info/block_log_info_plugin.hpp>
 #include <blurt/plugins/block_log_info/block_log_info_objects.hpp>

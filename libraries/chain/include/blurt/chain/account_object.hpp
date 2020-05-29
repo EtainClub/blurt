@@ -1,12 +1,12 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <fc/fixed_string.hpp>
 
 #include <blurt/protocol/authority.hpp>
-#include <blurt/protocol/steem_operations.hpp>
+#include <blurt/protocol/blurt_operations.hpp>
 
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 #include <blurt/chain/witness_objects.hpp>
 #include <blurt/chain/shared_authority.hpp>
 #include <blurt/chain/util/manabar.hpp>
@@ -53,9 +53,9 @@ namespace blurt { namespace chain {
          uint8_t           savings_withdraw_requests = 0;
          ///@}
 
-         asset             reward_steem_balance = asset( 0, BLURT_SYMBOL );
+         asset             reward_blurt_balance = asset( 0, BLURT_SYMBOL );
          asset             reward_vesting_balance = asset( 0, VESTS_SYMBOL );
-         asset             reward_vesting_steem = asset( 0, BLURT_SYMBOL );
+         asset             reward_vesting_blurt = asset( 0, BLURT_SYMBOL );
 
          share_type        curation_rewards = 0;
          share_type        posting_rewards = 0;
@@ -417,7 +417,7 @@ FC_REFLECT( blurt::chain::account_object,
              (balance)
              (savings_balance)
              (savings_withdraw_requests)
-             (reward_steem_balance)(reward_vesting_balance)(reward_vesting_steem)
+             (reward_blurt_balance)(reward_vesting_balance)(reward_vesting_blurt)
              (vesting_shares)(delegated_vesting_shares)(received_vesting_shares)
              (vesting_withdraw_rate)(next_vesting_withdrawal)(withdrawn)(to_withdraw)(withdraw_routes)
              (curation_rewards)

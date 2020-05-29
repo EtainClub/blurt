@@ -1,7 +1,7 @@
 #if defined IS_TEST_NET
 #include <boost/test/unit_test.hpp>
 #include <blurt/chain/account_object.hpp>
-#include <blurt/protocol/steem_operations.hpp>
+#include <blurt/protocol/blurt_operations.hpp>
 #include <blurt/protocol/config.hpp>
 #include <blurt/plugins/transaction_status/transaction_status_plugin.hpp>
 #include <blurt/plugins/transaction_status/transaction_status_objects.hpp>

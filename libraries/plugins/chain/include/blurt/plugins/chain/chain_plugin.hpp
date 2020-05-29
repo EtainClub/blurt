@@ -1,5 +1,5 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 #include <appbase/application.hpp>
 #include <blurt/chain/database.hpp>
 #include <blurt/plugins/chain/abstract_block_producer.hpp>

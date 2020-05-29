@@ -1,5 +1,5 @@
 
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/plugins/transaction_status/transaction_status_plugin.hpp>
 #include <blurt/plugins/transaction_status/transaction_status_objects.hpp>

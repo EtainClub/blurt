@@ -1,11 +1,11 @@
 
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 
 #include <blurt/chain/index.hpp>
 
 #include <blurt/chain/block_summary_object.hpp>
 #include <blurt/chain/history_object.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 #include <blurt/chain/sps_objects.hpp>
 #include <blurt/chain/transaction_object.hpp>
 #include <blurt/chain/witness_schedule.hpp>

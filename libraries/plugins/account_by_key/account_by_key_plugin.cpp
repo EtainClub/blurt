@@ -1,5 +1,5 @@
 
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/plugins/account_by_key/account_by_key_plugin.hpp>
 #include <blurt/plugins/account_by_key/account_by_key_objects.hpp>

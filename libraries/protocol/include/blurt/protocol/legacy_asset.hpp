@@ -10,10 +10,10 @@
 
 namespace blurt { namespace protocol {
 
-class legacy_steem_asset_symbol_type
+class legacy_blurt_asset_symbol_type
 {
    public:
-      legacy_steem_asset_symbol_type() {}
+      legacy_blurt_asset_symbol_type() {}
 
       bool is_canon()const
       {   return ( ser == BLURT_SYMBOL_SER );    }
@@ -21,10 +21,10 @@ class legacy_steem_asset_symbol_type
       uint64_t ser = BLURT_SYMBOL_SER;
 };
 
-struct legacy_steem_asset
+struct legacy_blurt_asset
 {
    public:
-      legacy_steem_asset() {}
+      legacy_blurt_asset() {}
 
       template< bool force_canon >
       asset to_asset()const
@@ -36,21 +36,21 @@ struct legacy_steem_asset
          return asset( amount, BLURT_SYMBOL );
       }
 
-      static legacy_steem_asset from_amount( share_type amount )
+      static legacy_blurt_asset from_amount( share_type amount )
       {
-         legacy_steem_asset leg;
+         legacy_blurt_asset leg;
          leg.amount = amount;
          return leg;
       }
 
-      static legacy_steem_asset from_asset( const asset& a )
+      static legacy_blurt_asset from_asset( const asset& a )
       {
          FC_ASSERT( a.symbol == BLURT_SYMBOL );
          return from_amount( a.amount );
       }
 
       share_type                       amount;
-      legacy_steem_asset_symbol_type   symbol;
+      legacy_blurt_asset_symbol_type   symbol;
 };
 
 } }
@@ -58,7 +58,7 @@ struct legacy_steem_asset
 namespace fc { namespace raw {
 
 template< typename Stream >
-inline void pack( Stream& s, const blurt::protocol::legacy_steem_asset_symbol_type& sym )
+inline void pack( Stream& s, const blurt::protocol::legacy_blurt_asset_symbol_type& sym )
 {
    switch( sym.ser )
    {
@@ -77,7 +77,7 @@ inline void pack( Stream& s, const blurt::protocol::legacy_steem_asset_symbol_ty
 }
 
 template< typename Stream >
-inline void unpack( Stream& s, blurt::protocol::legacy_steem_asset_symbol_type& sym, uint32_t depth )
+inline void unpack( Stream& s, blurt::protocol::legacy_blurt_asset_symbol_type& sym, uint32_t depth )
 {
    //  994240:        "account_creation_fee": "0.1 BLURT"
    // 1021529:        "account_creation_fee": "10.0 BLURT"
@@ -109,30 +109,30 @@ inline void unpack( Stream& s, blurt::protocol::legacy_steem_asset_symbol_type& 
 
 } // fc::raw
 
-inline void to_variant( const blurt::protocol::legacy_steem_asset& leg, fc::variant& v )
+inline void to_variant( const blurt::protocol::legacy_blurt_asset& leg, fc::variant& v )
 {
    to_variant( leg.to_asset<false>(), v );
 }
 
-inline void from_variant( const fc::variant& v, blurt::protocol::legacy_steem_asset& leg )
+inline void from_variant( const fc::variant& v, blurt::protocol::legacy_blurt_asset& leg )
 {
    blurt::protocol::asset a;
    from_variant( v, a );
-   leg = blurt::protocol::legacy_steem_asset::from_asset( a );
+   leg = blurt::protocol::legacy_blurt_asset::from_asset( a );
 }
 
 template<>
-struct get_typename< blurt::protocol::legacy_steem_asset_symbol_type >
+struct get_typename< blurt::protocol::legacy_blurt_asset_symbol_type >
 {
    static const char* name()
    {
-      return "blurt::protocol::legacy_steem_asset_symbol_type";
+      return "blurt::protocol::legacy_blurt_asset_symbol_type";
    }
 };
 
 } // fc
 
-FC_REFLECT( blurt::protocol::legacy_steem_asset,
+FC_REFLECT( blurt::protocol::legacy_blurt_asset,
    (amount)
    (symbol)
    )

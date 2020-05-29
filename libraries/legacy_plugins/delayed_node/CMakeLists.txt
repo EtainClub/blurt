@@ -1,11 +1,11 @@
 file(GLOB HEADERS "include/blurt/delayed_node/*.hpp")
 
-add_library( steem_delayed_node
+add_library( blurt_delayed_node
              delayed_node_plugin.cpp
            )
 
-target_link_libraries( steem_delayed_node steem_chain steem_protocol steem_app )
-target_include_directories( steem_delayed_node
+target_link_libraries( blurt_delayed_node blurt_chain blurt_protocol blurt_app )
+target_include_directories( blurt_delayed_node
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 
 if(MSVC)
@@ -13,7 +13,7 @@ if(MSVC)
 endif(MSVC)
 
 install( TARGETS
-   steem_delayed_node
+   blurt_delayed_node
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib

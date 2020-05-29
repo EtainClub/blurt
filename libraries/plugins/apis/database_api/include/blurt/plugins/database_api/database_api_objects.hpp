@@ -4,7 +4,7 @@
 #include <blurt/chain/comment_object.hpp>
 #include <blurt/chain/global_property_object.hpp>
 #include <blurt/chain/history_object.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 #include <blurt/chain/sps_objects.hpp>
 #include <blurt/chain/transaction_object.hpp>
 #include <blurt/chain/witness_objects.hpp>
@@ -174,9 +174,9 @@ struct api_account_object
       balance( a.balance ),
       savings_balance( a.savings_balance ),
       savings_withdraw_requests( a.savings_withdraw_requests ),
-      reward_steem_balance( a.reward_steem_balance ),
+      reward_blurt_balance( a.reward_blurt_balance ),
       reward_vesting_balance( a.reward_vesting_balance ),
-      reward_vesting_steem( a.reward_vesting_steem ),
+      reward_vesting_blurt( a.reward_vesting_blurt ),
       curation_rewards( a.curation_rewards ),
       posting_rewards( a.posting_rewards ),
       vesting_shares( a.vesting_shares ),
@@ -250,9 +250,9 @@ struct api_account_object
 
    uint8_t           savings_withdraw_requests = 0;
 
-   asset             reward_steem_balance;
+   asset             reward_blurt_balance;
    asset             reward_vesting_balance;
-   asset             reward_vesting_steem;
+   asset             reward_vesting_blurt;
 
    share_type        curation_rewards;
    share_type        posting_rewards;
@@ -590,7 +590,7 @@ FC_REFLECT( blurt::plugins::database_api::api_account_object,
              (balance)
              (savings_balance)
              (savings_withdraw_requests)
-             (reward_steem_balance)(reward_vesting_balance)(reward_vesting_steem)
+             (reward_blurt_balance)(reward_vesting_balance)(reward_vesting_blurt)
              (vesting_shares)(delegated_vesting_shares)(received_vesting_shares)(vesting_withdraw_rate)(next_vesting_withdrawal)(withdrawn)(to_withdraw)(withdraw_routes)
              (curation_rewards)
              (posting_rewards)

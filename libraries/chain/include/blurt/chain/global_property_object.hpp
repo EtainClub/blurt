@@ -1,9 +1,9 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <fc/uint128.hpp>
 
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 
 #include <blurt/protocol/asset.hpp>
 
@@ -53,28 +53,28 @@ namespace blurt { namespace chain {
 
          asset       current_supply             = asset( 0, BLURT_SYMBOL );
          asset       confidential_supply        = asset( 0, BLURT_SYMBOL ); ///< total asset held in confidential balances
-         asset       total_vesting_fund_steem   = asset( 0, BLURT_SYMBOL );
+         asset       total_vesting_fund_blurt   = asset( 0, BLURT_SYMBOL );
          asset       total_vesting_shares       = asset( 0, VESTS_SYMBOL );
-         asset       total_reward_fund_steem    = asset( 0, BLURT_SYMBOL );
+         asset       total_reward_fund_blurt    = asset( 0, BLURT_SYMBOL );
          fc::uint128 total_reward_shares2; ///< the running total of REWARD^2
          asset       pending_rewarded_vesting_shares = asset( 0, VESTS_SYMBOL );
-         asset       pending_rewarded_vesting_steem  = asset( 0, BLURT_SYMBOL );
+         asset       pending_rewarded_vesting_blurt  = asset( 0, BLURT_SYMBOL );
 
          price       get_vesting_share_price() const
          {
-            if ( total_vesting_fund_steem.amount == 0 || total_vesting_shares.amount == 0 )
+            if ( total_vesting_fund_blurt.amount == 0 || total_vesting_shares.amount == 0 )
                return price ( asset( 1000, BLURT_SYMBOL ), asset( 1000000, VESTS_SYMBOL ) );
 
-            return price( total_vesting_shares, total_vesting_fund_steem );
+            return price( total_vesting_shares, total_vesting_fund_blurt );
          }
 
          price get_reward_vesting_share_price() const
          {
-            if (pending_rewarded_vesting_shares.amount == 0 || pending_rewarded_vesting_steem.amount == 0)
+            if (pending_rewarded_vesting_shares.amount == 0 || pending_rewarded_vesting_blurt.amount == 0)
                return get_vesting_share_price();
 
             return price( total_vesting_shares + pending_rewarded_vesting_shares,
-               total_vesting_fund_steem + pending_rewarded_vesting_steem );
+               total_vesting_fund_blurt + pending_rewarded_vesting_blurt );
          }
 
          /**
@@ -162,12 +162,12 @@ FC_REFLECT( blurt::chain::dynamic_global_property_object,
              (num_pow_witnesses)
              (current_supply)
              (confidential_supply)
-             (total_vesting_fund_steem)
+             (total_vesting_fund_blurt)
              (total_vesting_shares)
-             (total_reward_fund_steem)
+             (total_reward_fund_blurt)
              (total_reward_shares2)
              (pending_rewarded_vesting_shares)
-             (pending_rewarded_vesting_steem)
+             (pending_rewarded_vesting_blurt)
              (maximum_block_size)
              (current_aslot)
              (recent_slots_filled)

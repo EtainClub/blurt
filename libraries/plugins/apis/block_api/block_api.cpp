@@ -1,4 +1,4 @@
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 #include <appbase/application.hpp>
 
 #include <blurt/plugins/block_api/block_api.hpp>

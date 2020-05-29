@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 #include <blurt/protocol/protocol.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 #include <fc/smart_ref_impl.hpp>
 #include <iostream>
 

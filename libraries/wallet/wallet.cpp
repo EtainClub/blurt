@@ -1,4 +1,4 @@
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/utilities/git_revision.hpp>
 #include <blurt/utilities/key_conversion.hpp>
@@ -222,14 +222,14 @@ class wallet_api_impl
 
 public:
    wallet_api& self;
-   wallet_api_impl( wallet_api& s, const wallet_data& initial_data, const blurt::protocol::chain_id_type& _steem_chain_id, fc::api< remote_node_api > rapi )
+   wallet_api_impl( wallet_api& s, const wallet_data& initial_data, const blurt::protocol::chain_id_type& _blurt_chain_id, fc::api< remote_node_api > rapi )
       : self( s ),
         _remote_api( rapi )
    {
       init_prototype_ops();
 
       _wallet.ws_server = initial_data.ws_server;
-      steem_chain_id = _steem_chain_id;
+      blurt_chain_id = _blurt_chain_id;
    }
    virtual ~wallet_api_impl()
    {}
@@ -311,7 +311,7 @@ public:
       fc::mutable_variant_object result;
       result["blockchain_version"]       = BLURT_BLOCKCHAIN_VERSION;
       result["client_version"]           = client_version;
-      result["steem_revision"]           = blurt::utilities::git_revision_sha;
+      result["blurt_revision"]           = blurt::utilities::git_revision_sha;
       result["steem_revision_age"]       = fc::get_approximate_relative_time_string( fc::time_point_sec( blurt::utilities::git_revision_unix_timestamp ) );
       result["fc_revision"]              = fc::git_revision_sha;
       result["fc_revision_age"]          = fc::get_approximate_relative_time_string( fc::time_point_sec( fc::git_revision_unix_timestamp ) );
@@ -335,7 +335,7 @@ public:
       {
          auto v = _remote_api->get_version();
          result["server_blockchain_version"] = v.blockchain_version;
-         result["server_steem_revision"] = v.steem_revision;
+         result["server_steem_revision"] = v.blurt_revision;
          result["server_fc_revision"] = v.fc_revision;
       }
       catch( fc::exception& )
@@ -688,7 +688,7 @@ public:
       }
 
       auto minimal_signing_keys = tx.minimize_required_signatures(
-         steem_chain_id,
+         blurt_chain_id,
          available_keys,
          [&]( const string& account_name ) -> const authority&
          {
@@ -724,7 +724,7 @@ public:
       {
          auto it = available_private_keys.find(k);
          FC_ASSERT( it != available_private_keys.end() );
-         tx.sign( it->second, steem_chain_id, fc::ecc::fc_canonical );
+         tx.sign( it->second, blurt_chain_id, fc::ecc::fc_canonical );
       }
 
       if( broadcast )
@@ -833,7 +833,7 @@ public:
 
    string                                  _wallet_filename;
    wallet_data                             _wallet;
-   blurt::protocol::chain_id_type          steem_chain_id;
+   blurt::protocol::chain_id_type          blurt_chain_id;
 
    map<public_key_type,string>             _keys;
    fc::sha512                              _checksum;
@@ -856,8 +856,8 @@ public:
 
 namespace blurt { namespace wallet {
 
-wallet_api::wallet_api(const wallet_data& initial_data, const blurt::protocol::chain_id_type& _steem_chain_id, fc::api< remote_node_api > rapi)
-   : my(new detail::wallet_api_impl(*this, initial_data, _steem_chain_id, rapi))
+wallet_api::wallet_api(const wallet_data& initial_data, const blurt::protocol::chain_id_type& _blurt_chain_id, fc::api< remote_node_api > rapi)
+   : my(new detail::wallet_api_impl(*this, initial_data, _blurt_chain_id, rapi))
 {}
 
 wallet_api::~wallet_api(){}
@@ -1558,7 +1558,7 @@ condenser_api::legacy_signed_transaction wallet_api::create_account(
  */
 condenser_api::legacy_signed_transaction wallet_api::create_account_delegated(
    string creator,
-   condenser_api::legacy_asset steem_fee,
+   condenser_api::legacy_asset blurt_fee,
    condenser_api::legacy_asset delegated_vests,
    string new_account_name,
    string json_meta,
@@ -1573,7 +1573,7 @@ condenser_api::legacy_signed_transaction wallet_api::create_account_delegated(
    import_key( active.wif_priv_key );
    import_key( posting.wif_priv_key );
    import_key( memo.wif_priv_key );
-   return create_account_with_keys_delegated( creator, steem_fee, delegated_vests, new_account_name, json_meta,  owner.pub_key, active.pub_key, posting.pub_key, memo.pub_key, broadcast );
+   return create_account_with_keys_delegated( creator, blurt_fee, delegated_vests, new_account_name, json_meta,  owner.pub_key, active.pub_key, posting.pub_key, memo.pub_key, broadcast );
 } FC_CAPTURE_AND_RETHROW( (creator)(new_account_name)(json_meta) ) }
 
 
@@ -1751,7 +1751,7 @@ condenser_api::legacy_signed_transaction wallet_api::escrow_transfer(
    string to,
    string agent,
    uint32_t escrow_id,
-   condenser_api::legacy_asset steem_amount,
+   condenser_api::legacy_asset blurt_amount,
    condenser_api::legacy_asset fee,
    time_point_sec ratification_deadline,
    time_point_sec escrow_expiration,
@@ -1764,7 +1764,7 @@ condenser_api::legacy_signed_transaction wallet_api::escrow_transfer(
    op.to = to;
    op.agent = agent;
    op.escrow_id = escrow_id;
-   op.steem_amount = steem_amount.to_asset();
+   op.blurt_amount = blurt_amount.to_asset();
    op.fee = fee.to_asset();
    op.ratification_deadline = ratification_deadline;
    op.escrow_expiration = escrow_expiration;
@@ -1831,7 +1831,7 @@ condenser_api::legacy_signed_transaction wallet_api::escrow_release(
    string who,
    string receiver,
    uint32_t escrow_id,
-   condenser_api::legacy_asset steem_amount,
+   condenser_api::legacy_asset blurt_amount,
    bool broadcast )
 {
    FC_ASSERT( !is_locked() );
@@ -1842,7 +1842,7 @@ condenser_api::legacy_signed_transaction wallet_api::escrow_release(
    op.who = who;
    op.receiver = receiver;
    op.escrow_id = escrow_id;
-   op.steem_amount = steem_amount.to_asset();
+   op.blurt_amount = blurt_amount.to_asset();
 
    signed_transaction tx;
    tx.operations.push_back( op );
@@ -2040,14 +2040,14 @@ condenser_api::legacy_signed_transaction wallet_api::decline_voting_rights(
 
 condenser_api::legacy_signed_transaction wallet_api::claim_reward_balance(
    string account,
-   condenser_api::legacy_asset reward_steem,
+   condenser_api::legacy_asset reward_blurt,
    condenser_api::legacy_asset reward_vests,
    bool broadcast )
 {
    FC_ASSERT( !is_locked() );
    claim_reward_balance_operation op;
    op.account = account;
-   op.reward_steem = reward_steem.to_asset();
+   op.reward_blurt = reward_blurt.to_asset();
    op.reward_vests = reward_vests.to_asset();
 
    signed_transaction tx;

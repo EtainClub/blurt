@@ -316,7 +316,7 @@
 /// Represents the canonical root post parent account
 #define BLURT_ROOT_POST_PARENT                (account_name_type())
 /// Represents the account with NO authority which holds resources for payouts according to given proposals
-#define BLURT_TREASURY_ACCOUNT                "steem.dao"
+#define BLURT_TREASURY_ACCOUNT                "blurt.dao"
 /// This regent account controls the chain within 2 years
 #define BLURT_REGENT_ACCOUNT                  "regent"
 ///@}

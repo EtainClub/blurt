@@ -1,6 +1,6 @@
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
-#include <blurt/protocol/steem_operations.hpp>
+#include <blurt/protocol/blurt_operations.hpp>
 
 #include <blurt/chain/block_summary_object.hpp>
 #include <blurt/chain/compound.hpp>
@@ -12,7 +12,7 @@
 #include <blurt/chain/global_property_object.hpp>
 #include <blurt/chain/history_object.hpp>
 #include <blurt/chain/steem_evaluator.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 #include <blurt/chain/transaction_object.hpp>
 #include <blurt/chain/shared_db_merkle.hpp>
 #include <blurt/chain/witness_schedule.hpp>
@@ -79,7 +79,7 @@ struct reward_fund_context
 {
    uint128_t   recent_claims = 0;
    asset       reward_balance = asset( 0, BLURT_SYMBOL );
-   share_type  steem_awarded = 0;
+   share_type  blurt_awarded = 0;
 };
 
 class database_impl
@@ -488,14 +488,14 @@ std::vector< block_id_type > database::get_block_ids_on_fork( block_id_type head
 
 chain_id_type database::get_chain_id() const
 {
-   return steem_chain_id;
+   return blurt_chain_id;
 }
 
 void database::set_chain_id( const chain_id_type& chain_id )
 {
-   steem_chain_id = chain_id;
+   blurt_chain_id = chain_id;
 
-   idump( (steem_chain_id) );
+   idump( (blurt_chain_id) );
 }
 
 void database::foreach_block(std::function<bool(const signed_block_header&, const signed_block&)> processor) const
@@ -1053,7 +1053,7 @@ asset create_vesting2( database& db, const account_object& to_account, asset liq
       auto calculate_new_vesting = [ liquid ] ( price vesting_share_price ) -> asset
          {
          /**
-          *  The ratio of total_vesting_shares / total_vesting_fund_steem should not
+          *  The ratio of total_vesting_shares / total_vesting_fund_blurt should not
           *  change as the result of the user adding funds
           *
           *  V / C  = (V+Vn) / (C+Cn)
@@ -1102,11 +1102,11 @@ asset create_vesting2( database& db, const account_object& to_account, asset liq
          if( to_reward_balance )
          {
             props.pending_rewarded_vesting_shares += new_vesting;
-            props.pending_rewarded_vesting_steem += liquid;
+            props.pending_rewarded_vesting_blurt += liquid;
          }
          else
          {
-            props.total_vesting_fund_steem += liquid;
+            props.total_vesting_fund_blurt += liquid;
             props.total_vesting_shares += new_vesting;
          }
       } );
@@ -1277,14 +1277,14 @@ void database::clear_null_account_balance()
       total_vests += null_account.vesting_shares;
    }
 
-   if( null_account.reward_steem_balance.amount > 0 )
+   if( null_account.reward_blurt_balance.amount > 0 )
    {
-      total_steem += null_account.reward_steem_balance;
+      total_steem += null_account.reward_blurt_balance;
    }
 
    if( null_account.reward_vesting_balance.amount > 0 )
    {
-      total_steem += null_account.reward_vesting_steem;
+      total_steem += null_account.reward_vesting_blurt;
       total_vests += null_account.reward_vesting_balance;
    }
 
@@ -1319,7 +1319,7 @@ void database::clear_null_account_balance()
       modify( gpo, [&]( dynamic_global_property_object& g )
       {
          g.total_vesting_shares -= null_account.vesting_shares;
-         g.total_vesting_fund_steem -= vesting_shares_steem_value;
+         g.total_vesting_fund_blurt -= vesting_shares_steem_value;
       });
 
       modify( null_account, [&]( account_object& a )
@@ -1328,9 +1328,9 @@ void database::clear_null_account_balance()
       });
    }
 
-   if( null_account.reward_steem_balance.amount > 0 )
+   if( null_account.reward_blurt_balance.amount > 0 )
    {
-      adjust_reward_balance( null_account, -null_account.reward_steem_balance );
+      adjust_reward_balance( null_account, -null_account.reward_blurt_balance );
    }
 
    if( null_account.reward_vesting_balance.amount > 0 )
@@ -1340,12 +1340,12 @@ void database::clear_null_account_balance()
       modify( gpo, [&]( dynamic_global_property_object& g )
       {
          g.pending_rewarded_vesting_shares -= null_account.reward_vesting_balance;
-         g.pending_rewarded_vesting_steem -= null_account.reward_vesting_steem;
+         g.pending_rewarded_vesting_blurt -= null_account.reward_vesting_blurt;
       });
 
       modify( null_account, [&]( account_object& a )
       {
-         a.reward_vesting_steem.amount = 0;
+         a.reward_vesting_blurt.amount = 0;
          a.reward_vesting_balance.amount = 0;
       });
    }
@@ -1446,7 +1446,7 @@ void database::process_vesting_withdrawals()
 
       share_type vests_deposited_as_steem = 0;
       share_type vests_deposited_as_vests = 0;
-      asset total_steem_converted = asset( 0, BLURT_SYMBOL );
+      asset total_blurt_converted = asset( 0, BLURT_SYMBOL );
 
       // Do two passes, the first for vests, the second for steem. Try to maintain as much accuracy for vests as possible.
       for( auto itr = didx.upper_bound( boost::make_tuple( from_account.name, account_name_type() ) );
@@ -1489,7 +1489,7 @@ void database::process_vesting_withdrawals()
             share_type to_deposit = ( ( fc::uint128_t ( to_withdraw.value ) * itr->percent ) / BLURT_100_PERCENT ).to_uint64();
             vests_deposited_as_steem += to_deposit;
             auto converted_steem = asset( to_deposit, VESTS_SYMBOL ) * cprops.get_vesting_share_price();
-            total_steem_converted += converted_steem;
+            total_blurt_converted += converted_steem;
 
             if( to_deposit > 0 )
             {
@@ -1504,7 +1504,7 @@ void database::process_vesting_withdrawals()
 
                modify( cprops, [&]( dynamic_global_property_object& o )
                {
-                  o.total_vesting_fund_steem -= converted_steem;
+                  o.total_vesting_fund_blurt -= converted_steem;
                   o.total_vesting_shares.amount -= to_deposit;
                });
 
@@ -1539,7 +1539,7 @@ void database::process_vesting_withdrawals()
 
       modify( cprops, [&]( dynamic_global_property_object& o )
       {
-         o.total_vesting_fund_steem -= converted_steem;
+         o.total_vesting_fund_blurt -= converted_steem;
          o.total_vesting_shares.amount -= to_convert;
       });
 
@@ -1683,8 +1683,8 @@ share_type database::cashout_comment_helper( util::comment_reward_context& ctx, 
                if( b.account == BLURT_TREASURY_ACCOUNT )
                {
                   benefactor_vesting_steem = 0;
-                  vop.steem_payout = asset( benefactor_tokens, BLURT_SYMBOL );
-                  adjust_balance( get_account( BLURT_TREASURY_ACCOUNT ), vop.steem_payout );
+                  vop.blurt_payout = asset( benefactor_tokens, BLURT_SYMBOL );
+                  adjust_balance( get_account( BLURT_TREASURY_ACCOUNT ), vop.blurt_payout );
                }
                else
                {
@@ -1783,7 +1783,7 @@ void database::process_comment_cashout()
 {
    util::comment_reward_context ctx;
    vector< reward_fund_context > funds;
-   vector< share_type > steem_awarded;
+   vector< share_type > blurt_awarded;
    const auto& reward_idx = get_index< reward_fund_index, by_id >();
 
    // Decay recent rshares of each fund
@@ -1847,9 +1847,9 @@ void database::process_comment_cashout()
    {
       auto fund_id = get_reward_fund( *current ).id._id;
       ctx.total_reward_shares2 = funds[ fund_id ].recent_claims;
-      ctx.total_reward_fund_steem = funds[ fund_id ].reward_balance;
+      ctx.total_reward_fund_blurt = funds[ fund_id ].reward_balance;
 
-      funds[ fund_id ].steem_awarded += cashout_comment_helper( ctx, *current, false );
+      funds[ fund_id ].blurt_awarded += cashout_comment_helper( ctx, *current, false );
 
       current = cidx.begin();
    }
@@ -1862,7 +1862,7 @@ void database::process_comment_cashout()
          modify( get< reward_fund_object, by_id >( reward_fund_id_type( i ) ), [&]( reward_fund_object& rfo )
          {
             rfo.recent_claims = funds[ i ].recent_claims;
-            rfo.reward_balance -= asset( funds[ i ].steem_awarded, BLURT_SYMBOL );
+            rfo.reward_balance -= asset( funds[ i ].blurt_awarded, BLURT_SYMBOL );
          });
       }
    }
@@ -1924,7 +1924,7 @@ void database::process_funds()
 
    modify( props, [&]( dynamic_global_property_object& p )
    {
-      p.total_vesting_fund_steem += asset( vesting_reward, BLURT_SYMBOL );
+      p.total_vesting_fund_blurt += asset( vesting_reward, BLURT_SYMBOL );
       p.current_supply      += asset( new_steem + sps_fund, BLURT_SYMBOL );
       p.sps_interval_ledger += asset( sps_fund, BLURT_SYMBOL );
    });
@@ -2123,7 +2123,7 @@ void database::expire_escrow_ratification()
       const auto& old_escrow = *escrow_itr;
       ++escrow_itr;
 
-      adjust_balance( old_escrow.from, old_escrow.steem_balance );
+      adjust_balance( old_escrow.from, old_escrow.blurt_balance );
       adjust_balance( old_escrow.from, old_escrow.pending_fee );
 
       remove( old_escrow );
@@ -2593,7 +2593,7 @@ void database::init_genesis( uint64_t init_supply )
                rfo.content_constant = BLURT_CONTENT_CONSTANT_HF0;
                rfo.percent_curation_rewards = BLURT_1_PERCENT * 25;
                rfo.percent_content_rewards = BLURT_100_PERCENT;
-               rfo.reward_balance = gpo.total_reward_fund_steem;
+               rfo.reward_balance = gpo.total_reward_fund_blurt;
 //  #ifndef IS_TEST_NET
 //               rfo.recent_claims = BLURT_HF_17_RECENT_CLAIMS; // set to BLURT_HF_19_RECENT_CLAIMS
 //  #endif
@@ -2607,7 +2607,7 @@ void database::init_genesis( uint64_t init_supply )
 
             modify( gpo, [&]( dynamic_global_property_object& g )
             {
-               g.total_reward_fund_steem = asset( 0, BLURT_SYMBOL );
+               g.total_reward_fund_blurt = asset( 0, BLURT_SYMBOL );
                g.total_reward_shares2 = 0;
             });
 
@@ -3657,15 +3657,15 @@ void database::modify_reward_balance( const account_object& a, const asset& valu
          case BLURT_ASSET_NUM_BLURT:
             if( share_delta.amount.value == 0 )
             {
-               acnt.reward_steem_balance += value_delta;
+               acnt.reward_blurt_balance += value_delta;
                if( check_balance )
                {
-                  FC_ASSERT( acnt.reward_steem_balance.amount.value >= 0, "Insufficient reward BLURT funds" );
+                  FC_ASSERT( acnt.reward_blurt_balance.amount.value >= 0, "Insufficient reward BLURT funds" );
                }
             }
             else
             {
-               acnt.reward_vesting_steem += value_delta;
+               acnt.reward_vesting_blurt += value_delta;
                acnt.reward_vesting_balance += share_delta;
                if( check_balance )
                {
@@ -3771,7 +3771,7 @@ void database::adjust_supply( const asset& delta, bool adjust_vesting )
          {
             asset new_vesting( (adjust_vesting && delta.amount > 0) ? delta.amount * 9 : 0, BLURT_SYMBOL );
             props.current_supply += delta + new_vesting;
-            props.total_vesting_fund_steem += new_vesting;
+            props.total_vesting_fund_blurt += new_vesting;
             FC_ASSERT( props.current_supply.amount.value >= 0 );
             break;
          }
@@ -3923,10 +3923,10 @@ void database::validate_invariants()const
       {
          total_supply += itr->balance;
          total_supply += itr->savings_balance;
-         total_supply += itr->reward_steem_balance;
+         total_supply += itr->reward_blurt_balance;
          total_vesting += itr->vesting_shares;
          total_vesting += itr->reward_vesting_balance;
-         pending_vesting_steem += itr->reward_vesting_steem;
+         pending_vesting_steem += itr->reward_vesting_blurt;
          total_vsf_votes += ( itr->proxy == BLURT_PROXY_TO_SELF_ACCOUNT ?
                                  itr->witness_vote_weight() :
                                  ( BLURT_MAX_PROXY_RECURSION_DEPTH > 0 ?
@@ -3938,7 +3938,7 @@ void database::validate_invariants()const
 
       for( auto itr = escrow_idx.begin(); itr != escrow_idx.end(); ++itr )
       {
-         total_supply += itr->steem_balance;
+         total_supply += itr->blurt_balance;
 
          if( itr->pending_fee.symbol == BLURT_SYMBOL )
             total_supply += itr->pending_fee;
@@ -3963,12 +3963,12 @@ void database::validate_invariants()const
          total_supply += itr->reward_balance;
       }
 
-      total_supply += gpo.total_vesting_fund_steem + gpo.total_reward_fund_steem + gpo.pending_rewarded_vesting_steem;
+      total_supply += gpo.total_vesting_fund_blurt + gpo.total_reward_fund_blurt + gpo.pending_rewarded_vesting_blurt;
 
       FC_ASSERT( gpo.current_supply == total_supply, "", ("gpo.current_supply",gpo.current_supply)("total_supply",total_supply) );
       FC_ASSERT( gpo.total_vesting_shares + gpo.pending_rewarded_vesting_shares == total_vesting, "", ("gpo.total_vesting_shares",gpo.total_vesting_shares)("total_vesting",total_vesting) );
       FC_ASSERT( gpo.total_vesting_shares.amount == total_vsf_votes, "", ("total_vesting_shares",gpo.total_vesting_shares)("total_vsf_votes",total_vsf_votes) );
-      FC_ASSERT( gpo.pending_rewarded_vesting_steem == pending_vesting_steem, "", ("pending_rewarded_vesting_steem",gpo.pending_rewarded_vesting_steem)("pending_vesting_steem", pending_vesting_steem));
+      FC_ASSERT( gpo.pending_rewarded_vesting_blurt == pending_vesting_steem, "", ("pending_rewarded_vesting_blurt",gpo.pending_rewarded_vesting_blurt)("pending_vesting_steem", pending_vesting_steem));
    }
    FC_CAPTURE_LOG_AND_RETHROW( (head_block_num()) );
 }

@@ -23,7 +23,7 @@ struct comment_reward_context
    uint16_t   reward_weight = 0;
    asset      max_payout;
    uint128_t  total_reward_shares2;
-   asset      total_reward_fund_steem;
+   asset      total_reward_fund_blurt;
    protocol::curve_id   reward_curve = protocol::quadratic;
    uint128_t  content_constant = BLURT_CONTENT_CONSTANT_HF0;
 };
@@ -37,9 +37,9 @@ inline uint128_t get_content_constant_s()
 
 uint128_t evaluate_reward_curve( const uint128_t& rshares, const protocol::curve_id& curve = protocol::quadratic, const uint128_t& var1 = BLURT_CONTENT_CONSTANT_HF0 );
 
-inline bool is_comment_payout_dust( uint64_t steem_payout )
+inline bool is_comment_payout_dust( uint64_t blurt_payout )
 {
-   return asset( steem_payout, BLURT_SYMBOL ) < BLURT_MIN_PAYOUT;
+   return asset( blurt_payout, BLURT_SYMBOL ) < BLURT_MIN_PAYOUT;
 }
 
 } } } // blurt::chain::util
@@ -49,7 +49,7 @@ FC_REFLECT( blurt::chain::util::comment_reward_context,
    (reward_weight)
    (max_payout)
    (total_reward_shares2)
-   (total_reward_fund_steem)
+   (total_reward_fund_blurt)
    (reward_curve)
    (content_constant)
    )

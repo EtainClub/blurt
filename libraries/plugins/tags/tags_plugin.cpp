@@ -1,5 +1,5 @@
 
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/plugins/tags/tags_plugin.hpp>
 

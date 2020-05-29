@@ -4,7 +4,7 @@
 #include <blurt/chain/comment_object.hpp>
 #include <blurt/chain/global_property_object.hpp>
 #include <blurt/chain/history_object.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 #include <blurt/chain/transaction_object.hpp>
 #include <blurt/chain/witness_objects.hpp>
 #include <blurt/chain/database.hpp>

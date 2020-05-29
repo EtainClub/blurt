@@ -1,7 +1,7 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 #include <boost/multi_index/composite_key.hpp>
 #include <blurt/protocol/asset.hpp>
 

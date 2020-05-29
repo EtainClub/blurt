@@ -179,7 +179,7 @@ namespace blurt { namespace chain {
          const signed_transaction   get_recent_transaction( const transaction_id_type& trx_id )const;
          std::vector<block_id_type> get_block_ids_on_fork(block_id_type head_of_fork) const;
 
-         chain_id_type steem_chain_id = BLURT_CHAIN_ID;
+         chain_id_type blurt_chain_id = BLURT_CHAIN_ID;
          chain_id_type get_chain_id() const;
          void set_chain_id( const chain_id_type& chain_id );
 
@@ -331,7 +331,7 @@ namespace blurt { namespace chain {
           */
          uint32_t get_slot_at_time(fc::time_point_sec when)const;
 
-         asset create_vesting( const account_object& to_account, asset steem, bool to_reward_balance=false );
+         asset create_vesting( const account_object& to_account, asset liquid, bool to_reward_balance=false );
          void adjust_total_payout( const comment_object& a, const asset& total_payout_value, const asset& curator_payout_value, const asset& beneficiary_payout_value );
 
          void        adjust_balance( const account_object& a, const asset& delta );

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <blurt/protocol/steem_operations.hpp>
+#include <blurt/protocol/blurt_operations.hpp>
 
 #include <blurt/chain/evaluator.hpp>
 

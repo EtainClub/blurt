@@ -1,5 +1,5 @@
 #pragma once
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 #include <blurt/protocol/transaction.hpp>
 
 namespace blurt { namespace plugins { namespace transaction_status {

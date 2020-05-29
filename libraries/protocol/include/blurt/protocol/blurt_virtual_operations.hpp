@@ -10,11 +10,11 @@ namespace blurt { namespace protocol {
    struct author_reward_operation : public virtual_operation {
       author_reward_operation(){}
       author_reward_operation( const account_name_type& a, const string& p, const asset& st, const asset& v )
-         :author(a), permlink(p), steem_payout(st), vesting_payout(v){}
+         :author(a), permlink(p), blurt_payout(st), vesting_payout(v){}
 
       account_name_type author;
       string            permlink;
-      asset             steem_payout;
+      asset             blurt_payout;
       asset             vesting_payout;
    };
 
@@ -107,12 +107,12 @@ namespace blurt { namespace protocol {
    {
       comment_benefactor_reward_operation() {}
       comment_benefactor_reward_operation( const account_name_type& b, const account_name_type& a, const string& p, const asset& st, const asset& v )
-         : benefactor( b ), author( a ), permlink( p ), steem_payout( st ), vesting_payout( v ) {}
+         : benefactor( b ), author( a ), permlink( p ), blurt_payout( st ), vesting_payout( v ) {}
 
       account_name_type benefactor;
       account_name_type author;
       string            permlink;
-      asset             steem_payout;
+      asset             blurt_payout;
       asset             vesting_payout;
    };
 
@@ -141,7 +141,7 @@ namespace blurt { namespace protocol {
 
 } } //blurt::protocol
 
-FC_REFLECT( blurt::protocol::author_reward_operation, (author)(permlink)(steem_payout)(vesting_payout) )
+FC_REFLECT( blurt::protocol::author_reward_operation, (author)(permlink)(blurt_payout)(vesting_payout) )
 FC_REFLECT( blurt::protocol::curation_reward_operation, (curator)(reward)(comment_author)(comment_permlink) )
 FC_REFLECT( blurt::protocol::comment_reward_operation, (author)(permlink)(payout) )
 FC_REFLECT( blurt::protocol::fill_vesting_withdraw_operation, (from_account)(to_account)(withdrawn)(deposited) )
@@ -150,7 +150,7 @@ FC_REFLECT( blurt::protocol::fill_transfer_from_savings_operation, (from)(to)(am
 FC_REFLECT( blurt::protocol::hardfork_operation, (hardfork_id) )
 FC_REFLECT( blurt::protocol::comment_payout_update_operation, (author)(permlink) )
 FC_REFLECT( blurt::protocol::return_vesting_delegation_operation, (account)(vesting_shares) )
-FC_REFLECT( blurt::protocol::comment_benefactor_reward_operation, (benefactor)(author)(permlink)(steem_payout)(vesting_payout) )
+FC_REFLECT( blurt::protocol::comment_benefactor_reward_operation, (benefactor)(author)(permlink)(blurt_payout)(vesting_payout) )
 FC_REFLECT( blurt::protocol::producer_reward_operation, (producer)(vesting_shares) )
 FC_REFLECT( blurt::protocol::clear_null_account_balance_operation, (total_cleared) )
 FC_REFLECT( blurt::protocol::sps_fund_operation, (additional_funds) )

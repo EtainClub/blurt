@@ -1,5 +1,5 @@
 #include <blurt/protocol/types_fwd.hpp>
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/schema/schema.hpp>
 #include <blurt/schema/schema_impl.hpp>
@@ -16,7 +16,7 @@
 #include <vector>
 
 #include <blurt/chain/account_object.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 #include <blurt/chain/database.hpp>
 #include <blurt/chain/index.hpp>
 
@@ -64,14 +64,14 @@ void add_to_schema_map(
       add_to_schema_map( m, ds, follow_deps );
 }
 
-struct steem_schema
+struct blurt_schema
 {
    std::map< std::string, schema_info >     schema_map;
    std::vector< std::string >               chain_object_types;
 };
 
 FC_REFLECT( schema_info, (deps)(schema) )
-FC_REFLECT( steem_schema, (schema_map)(chain_object_types) )
+FC_REFLECT( blurt_schema, (schema_map)(chain_object_types) )
 
 int main( int argc, char** argv, char** envp )
 {
@@ -86,7 +86,7 @@ int main( int argc, char** argv, char** envp )
 
    db.open( db_args );
 
-   steem_schema ss;
+   blurt_schema ss;
 
    std::vector< std::string > chain_objects;
    /*

@@ -3,7 +3,7 @@
 
 #include <blurt/chain/account_object.hpp>
 #include <blurt/chain/comment_object.hpp>
-#include <blurt/protocol/steem_operations.hpp>
+#include <blurt/protocol/blurt_operations.hpp>
 #include <blurt/plugins/json_rpc/json_rpc_plugin.hpp>
 
 #include "../db_fixture/database_fixture.hpp"

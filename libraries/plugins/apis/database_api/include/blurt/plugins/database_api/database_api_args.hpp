@@ -83,10 +83,10 @@ struct get_version_return
 {
    get_version_return() {}
    get_version_return( fc::string bc_v, fc::string s_v, fc::string fc_v, chain_id_type c_id )
-      :blockchain_version( bc_v ), steem_revision( s_v ), fc_revision( fc_v ), chain_id( c_id ) {}
+      :blockchain_version( bc_v ), blurt_revision( s_v ), fc_revision( fc_v ), chain_id( c_id ) {}
 
    fc::string     blockchain_version;
-   fc::string     steem_revision;
+   fc::string     blurt_revision;
    fc::string     fc_revision;
    chain_id_type  chain_id;
 };
@@ -508,7 +508,7 @@ struct verify_signatures_return
 } } } // blurt::database_api
 
 FC_REFLECT( blurt::plugins::database_api::get_version_return,
-            (blockchain_version)(steem_revision)(fc_revision)(chain_id) )
+            (blockchain_version)(blurt_revision)(fc_revision)(chain_id) )
 
 FC_REFLECT_ENUM( blurt::plugins::database_api::sort_order_type,
    (by_name)

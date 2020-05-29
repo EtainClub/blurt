@@ -22,13 +22,13 @@ else()
                       DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/api_documentation_standin.cpp )
 endif()
 
-add_library( steem_wallet wallet.cpp remote_node_api.cpp ${CMAKE_CURRENT_BINARY_DIR}/api_documentation.cpp ${HEADERS} )
-target_link_libraries( steem_wallet PRIVATE graphene_net steem_chain steem_protocol steem_utilities fc condenser_api_plugin ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
-target_include_directories( steem_wallet PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
+add_library( blurt_wallet wallet.cpp remote_node_api.cpp ${CMAKE_CURRENT_BINARY_DIR}/api_documentation.cpp ${HEADERS} )
+target_link_libraries( blurt_wallet PRIVATE graphene_net blurt_chain blurt_protocol blurt_utilities fc condenser_api_plugin ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
+target_include_directories( blurt_wallet PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 
 if( CLANG_TIDY_EXE )
    set_target_properties(
-      steem_wallet PROPERTIES
+      blurt_wallet PROPERTIES
       CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
    )
 endif( CLANG_TIDY_EXE )
@@ -38,7 +38,7 @@ if(MSVC)
 endif(MSVC)
 
 install( TARGETS
-   steem_wallet
+   blurt_wallet
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib

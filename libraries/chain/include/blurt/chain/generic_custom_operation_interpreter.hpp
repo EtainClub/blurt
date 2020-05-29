@@ -5,7 +5,7 @@
 #include <blurt/chain/schema_types.hpp>
 #include <blurt/schema/schema.hpp>
 
-#include <blurt/protocol/steem_operations.hpp>
+#include <blurt/protocol/blurt_operations.hpp>
 #include <blurt/protocol/operation_util_impl.hpp>
 #include <blurt/protocol/types.hpp>
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 #include <blurt/plugins/follow/follow_plugin.hpp>
 #include <blurt/plugins/json_rpc/json_rpc_plugin.hpp>
 

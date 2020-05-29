@@ -1,7 +1,7 @@
 #pragma once
 #include <blurt/app/plugin.hpp>
 
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 
 #include <boost/multi_index/composite_key.hpp>
 
@@ -76,7 +76,7 @@ struct bucket_object : public object< bucket_object_type, bucket_object >
    uint32_t             operations = 0;                              ///< Operations evaluated
    uint32_t             transactions = 0;                            ///< Transactions processed
    uint32_t             transfers = 0;                               ///< Account to account transfers
-   share_type           steem_transferred = 0;                       ///< BLURT transferred from account to account
+   share_type           blurt_transferred = 0;                       ///< BLURT transferred from account to account
    uint32_t             paid_accounts_created = 0;                   ///< Accounts created with fee
    uint32_t             mined_accounts_created = 0;                  ///< Accounts mined for free
    uint32_t             root_comments = 0;                           ///< Top level root comments
@@ -93,7 +93,7 @@ struct bucket_object : public object< bucket_object_type, bucket_object >
    share_type           vests_paid_to_authors = 0;                   ///< Ammount of VESS paid to authors
    share_type           vests_paid_to_curators = 0;                  ///< Ammount of VESTS paid to curators
    uint32_t             transfers_to_vesting = 0;                    ///< Transfers of BLURT into VESTS
-   share_type           steem_vested = 0;                            ///< Ammount of BLURT vested
+   share_type           blurt_vested = 0;                            ///< Ammount of BLURT vested
    uint32_t             new_vesting_withdrawal_requests = 0;         ///< New vesting withdrawal requests
    uint32_t             modified_vesting_withdrawal_requests = 0;    ///< Changes to vesting withdrawal requests
    share_type           vesting_withdraw_rate_delta = 0;
@@ -101,7 +101,7 @@ struct bucket_object : public object< bucket_object_type, bucket_object >
    uint32_t             finished_vesting_withdrawals = 0;            ///< Processed vesting withdrawals that are now finished
    share_type           vests_withdrawn = 0;                         ///< Ammount of VESTS withdrawn to BLURT
    share_type           vests_transferred = 0;                       ///< Ammount of VESTS transferred to another account
-   share_type           steem_converted = 0;                         ///< Amount of BLURT that was converted
+   share_type           blurt_converted = 0;                         ///< Amount of BLURT that was converted
    uint32_t             total_pow = 0;                               ///< POW submitted
    uint128_t            estimated_hashpower = 0;                     ///< Estimated average hashpower over interval
 };
@@ -135,7 +135,7 @@ FC_REFLECT( blurt::blockchain_statistics::bucket_object,
    (operations)
    (transactions)
    (transfers)
-   (steem_transferred)
+   (blurt_transferred)
    (paid_accounts_created)
    (mined_accounts_created)
    (root_comments)
@@ -152,7 +152,7 @@ FC_REFLECT( blurt::blockchain_statistics::bucket_object,
    (vests_paid_to_authors)
    (vests_paid_to_curators)
    (transfers_to_vesting)
-   (steem_vested)
+   (blurt_vested)
    (new_vesting_withdrawal_requests)
    (modified_vesting_withdrawal_requests)
    (vesting_withdraw_rate_delta)
@@ -160,7 +160,7 @@ FC_REFLECT( blurt::blockchain_statistics::bucket_object,
    (finished_vesting_withdrawals)
    (vests_withdrawn)
    (vests_transferred)
-   (steem_converted)
+   (blurt_converted)
    (total_pow)
    (estimated_hashpower)
 )

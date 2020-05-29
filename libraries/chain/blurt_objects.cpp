@@ -1,5 +1,5 @@
-#include <blurt/chain/steem_fwd.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 
 #include <fc/uint128.hpp>
 

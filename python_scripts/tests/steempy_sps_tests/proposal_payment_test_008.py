@@ -165,7 +165,7 @@ if __name__ == '__main__':
                 proposals.append(proposal)
 
             start_date, end_date = test_utils.get_start_and_end_date(now, 1, 4)
-            proposals.append({'creator' : 'tester001', 'receiver' : 'steem.dao', 'start_date' : start_date, 'end_date' : end_date, 'daily_pay' : '96.000 TBD'})
+            proposals.append({'creator' : 'tester001', 'receiver' : 'blurt.dao', 'start_date' : start_date, 'end_date' : end_date, 'daily_pay' : '96.000 TBD'})
 
             import datetime
             test_start_date = now + datetime.timedelta(days = 1)

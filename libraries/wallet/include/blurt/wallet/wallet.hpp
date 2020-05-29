@@ -83,7 +83,7 @@ class wallet_api_impl;
 class wallet_api
 {
    public:
-      wallet_api( const wallet_data& initial_data, const blurt::protocol::chain_id_type& _steem_chain_id, fc::api< remote_node_api > rapi );
+      wallet_api( const wallet_data& initial_data, const blurt::protocol::chain_id_type& _blurt_chain_id, fc::api< remote_node_api > rapi );
       virtual ~wallet_api();
 
       bool copy_wallet_file( string destination_filename );
@@ -377,7 +377,7 @@ class wallet_api
        *  These accounts are created with combination of BLURT and delegated SP
        *
        *  @param creator The account creating the new account
-       *  @param steem_fee The amount of the fee to be paid with BLURT
+       *  @param blurt_fee The amount of the fee to be paid with BLURT
        *  @param delegated_vests The amount of the fee to be paid with delegation
        *  @param new_account_name The name of the new account
        *  @param json_meta JSON Metadata associated with the new account
@@ -385,7 +385,7 @@ class wallet_api
        */
       condenser_api::legacy_signed_transaction create_account_delegated(
          string creator,
-         condenser_api::legacy_asset steem_fee,
+         condenser_api::legacy_asset blurt_fee,
          condenser_api::legacy_asset delegated_vests,
          string new_account_name,
          string json_meta,
@@ -400,7 +400,7 @@ class wallet_api
        * These accounts are created with combination of BLURT and delegated SP
        *
        * @param creator The account creating the new account
-       * @param steem_fee The amount of the fee to be paid with BLURT
+       * @param blurt_fee The amount of the fee to be paid with BLURT
        * @param delegated_vests The amount of the fee to be paid with delegation
        * @param newname The name of the new account
        * @param json_meta JSON Metadata associated with the new account
@@ -412,7 +412,7 @@ class wallet_api
        */
       condenser_api::legacy_signed_transaction create_account_with_keys_delegated(
          string creator,
-         condenser_api::legacy_asset steem_fee,
+         condenser_api::legacy_asset blurt_fee,
          condenser_api::legacy_asset delegated_vests,
          string newname,
          string json_meta,
@@ -641,7 +641,7 @@ class wallet_api
        * @param to The account the funds are going to
        * @param agent The account acting as the agent in case of dispute
        * @param escrow_id A unique id for the escrow transfer. (from, escrow_id) must be a unique pair
-       * @param steem_amount The amount of BLURT to transfer
+       * @param blurt_amount The amount of BLURT to transfer
        * @param fee The fee paid to the agent
        * @param ratification_deadline The deadline for 'to' and 'agent' to approve the escrow transfer
        * @param escrow_expiration The expiration of the escrow transfer, after which either party can claim the funds
@@ -653,7 +653,7 @@ class wallet_api
          string to,
          string agent,
          uint32_t escrow_id,
-         condenser_api::legacy_asset steem_amount,
+         condenser_api::legacy_asset blurt_amount,
          condenser_api::legacy_asset fee,
          time_point_sec ratification_deadline,
          time_point_sec escrow_expiration,
@@ -711,7 +711,7 @@ class wallet_api
        * @param who The account authorizing the release
        * @param receiver The account that will receive funds being released
        * @param escrow_id A unique id for the escrow transfer
-       * @param steem_amount The amount of BLURT that will be released
+       * @param blurt_amount The amount of BLURT that will be released
        * @param broadcast true if you wish to broadcast the transaction
        */
       condenser_api::legacy_signed_transaction escrow_release(
@@ -721,7 +721,7 @@ class wallet_api
          string who,
          string receiver,
          uint32_t escrow_id,
-         condenser_api::legacy_asset steem_amount,
+         condenser_api::legacy_asset blurt_amount,
          bool broadcast = false
       );
 
@@ -978,7 +978,7 @@ class wallet_api
 
       condenser_api::legacy_signed_transaction claim_reward_balance(
          string account,
-         condenser_api::legacy_asset reward_steem,
+         condenser_api::legacy_asset reward_blurt,
          condenser_api::legacy_asset reward_vests,
          bool broadcast );
 

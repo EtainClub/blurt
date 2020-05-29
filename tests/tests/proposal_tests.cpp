@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
 
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/protocol/exceptions.hpp>
 #include <blurt/protocol/hardfork.hpp>
@@ -8,7 +8,7 @@
 
 #include <blurt/chain/database.hpp>
 #include <blurt/chain/database_exceptions.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 
 #include <blurt/chain/util/reward.hpp>
 

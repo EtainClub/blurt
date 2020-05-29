@@ -6,6 +6,6 @@ add_library( steem_auth_util
              auth_util_api.cpp
            )
 
-target_link_libraries( steem_auth_util steem_app steem_chain steem_protocol fc )
+target_link_libraries( steem_auth_util blurt_app blurt_chain blurt_protocol fc )
 target_include_directories( steem_auth_util
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )

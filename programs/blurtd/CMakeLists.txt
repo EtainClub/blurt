@@ -13,16 +13,16 @@ if( BLURT_STATIC_BUILD )
    target_link_libraries( blurtd PRIVATE
       "-static-libstdc++ -static-libgcc"
       appbase
-      steem_utilities
-      steem_plugins
+      blurt_utilities
+      blurt_plugins
       ${CMAKE_DL_LIBS}
       ${PLATFORM_SPECIFIC_LIBS}
    )
 else( BLURT_STATIC_BUILD )
    target_link_libraries( blurtd PRIVATE
       appbase
-      steem_utilities
-      steem_plugins
+      blurt_utilities
+      blurt_plugins
       ${CMAKE_DL_LIBS}
       ${PLATFORM_SPECIFIC_LIBS}
    )

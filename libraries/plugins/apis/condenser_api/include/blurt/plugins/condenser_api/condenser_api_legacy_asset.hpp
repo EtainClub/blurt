@@ -1,5 +1,5 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 #include <blurt/protocol/asset.hpp>
 
 namespace blurt { namespace plugins { namespace condenser_api {

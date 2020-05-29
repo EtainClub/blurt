@@ -1,5 +1,5 @@
 #include <chainbase/chainbase.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 #include <blurt/chain/util/reward.hpp>
 #include <blurt/chain/util/uint256.hpp>
 #include <blurt/plugins/chain/chain_plugin.hpp>

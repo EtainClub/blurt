@@ -24,7 +24,7 @@
 #pragma once
 
 #include <blurt/app/plugin.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 
 namespace blurt { namespace delayed_node {
 namespace detail { struct delayed_node_plugin_impl; }

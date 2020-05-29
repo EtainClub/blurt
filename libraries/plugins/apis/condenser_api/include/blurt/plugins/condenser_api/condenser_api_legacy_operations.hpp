@@ -1,5 +1,5 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/protocol/operations.hpp>
 #include <blurt/protocol/sps_operations.hpp>
@@ -90,7 +90,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
       operator legacy_chain_properties() const
       {
          legacy_chain_properties props;
-         props.account_creation_fee = legacy_steem_asset::from_asset( asset( account_creation_fee ) );
+         props.account_creation_fee = legacy_blurt_asset::from_asset( asset( account_creation_fee ) );
          props.maximum_block_size = maximum_block_size;
          return props;
       }
@@ -212,7 +212,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
          to( op.to ),
          agent( op.agent ),
          escrow_id( op.escrow_id ),
-         steem_amount( legacy_asset::from_asset( op.steem_amount ) ),
+         blurt_amount( legacy_asset::from_asset( op.blurt_amount ) ),
          fee( legacy_asset::from_asset( op.fee ) ),
          ratification_deadline( op.ratification_deadline ),
          escrow_expiration( op.escrow_expiration ),
@@ -226,7 +226,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
          op.to = to;
          op.agent = agent;
          op.escrow_id = escrow_id;
-         op.steem_amount = steem_amount;
+         op.blurt_amount = blurt_amount;
          op.fee = fee;
          op.ratification_deadline = ratification_deadline;
          op.escrow_expiration = escrow_expiration;
@@ -239,7 +239,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
       account_name_type agent;
       uint32_t          escrow_id;
 
-      legacy_asset      steem_amount;
+      legacy_asset      blurt_amount;
       legacy_asset      fee;
 
       time_point_sec    ratification_deadline;
@@ -258,7 +258,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
          who( op.who ),
          receiver( op.receiver ),
          escrow_id( op.escrow_id ),
-         steem_amount( legacy_asset::from_asset( op.steem_amount ) )
+         blurt_amount( legacy_asset::from_asset( op.blurt_amount ) )
       {}
 
       operator escrow_release_operation()const
@@ -270,7 +270,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
          op.who = who;
          op.receiver = receiver;
          op.escrow_id = escrow_id;
-         op.steem_amount = steem_amount;
+         op.blurt_amount = blurt_amount;
          return op;
       }
 
@@ -281,7 +281,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
       account_name_type receiver;
 
       uint32_t          escrow_id;
-      legacy_asset      steem_amount;
+      legacy_asset      blurt_amount;
    };
 
    struct legacy_transfer_to_vesting_operation
@@ -381,7 +381,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
          op.owner = owner;
          op.url = url;
          op.block_signing_key = block_signing_key;
-         op.props.account_creation_fee = legacy_steem_asset::from_asset( asset( props.account_creation_fee ) );
+         op.props.account_creation_fee = legacy_blurt_asset::from_asset( asset( props.account_creation_fee ) );
          op.props.maximum_block_size = props.maximum_block_size;
          op.fee = fee;
          return op;
@@ -454,7 +454,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
       legacy_claim_reward_balance_operation() {}
       legacy_claim_reward_balance_operation( const claim_reward_balance_operation& op ) :
          account( op.account ),
-         reward_steem( legacy_asset::from_asset( op.reward_steem ) ),
+         reward_blurt( legacy_asset::from_asset( op.reward_blurt ) ),
          reward_vests( legacy_asset::from_asset( op.reward_vests ) )
       {}
 
@@ -462,13 +462,13 @@ namespace blurt { namespace plugins { namespace condenser_api {
       {
          claim_reward_balance_operation op;
          op.account = account;
-         op.reward_steem = reward_steem;
+         op.reward_blurt = reward_blurt;
          op.reward_vests = reward_vests;
          return op;
       }
 
       account_name_type account;
-      legacy_asset      reward_steem;
+      legacy_asset      reward_blurt;
       legacy_asset      reward_vests;
    };
 
@@ -501,7 +501,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
       legacy_author_reward_operation( const author_reward_operation& op ) :
          author( op.author ),
          permlink( op.permlink ),
-         steem_payout( legacy_asset::from_asset( op.steem_payout ) ),
+         blurt_payout( legacy_asset::from_asset( op.blurt_payout ) ),
          vesting_payout( legacy_asset::from_asset( op.vesting_payout ) )
       {}
 
@@ -510,14 +510,14 @@ namespace blurt { namespace plugins { namespace condenser_api {
          author_reward_operation op;
          op.author = author;
          op.permlink = permlink;
-         op.steem_payout = steem_payout;
+         op.blurt_payout = blurt_payout;
          op.vesting_payout = vesting_payout;
          return op;
       }
 
       account_name_type author;
       string            permlink;
-      legacy_asset      steem_payout;
+      legacy_asset      blurt_payout;
       legacy_asset      vesting_payout;
    };
 
@@ -652,7 +652,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
          benefactor( op.benefactor ),
          author( op.author ),
          permlink( op.permlink ),
-         steem_payout( legacy_asset::from_asset( op.steem_payout ) ),
+         blurt_payout( legacy_asset::from_asset( op.blurt_payout ) ),
          vesting_payout( legacy_asset::from_asset( op.vesting_payout ) )
       {}
 
@@ -662,7 +662,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
          op.benefactor = benefactor;
          op.author = author;
          op.permlink = permlink;
-         op.steem_payout = steem_payout;
+         op.blurt_payout = blurt_payout;
          op.vesting_payout = vesting_payout;
          return op;
       }
@@ -670,7 +670,7 @@ namespace blurt { namespace plugins { namespace condenser_api {
       account_name_type benefactor;
       account_name_type author;
       string            permlink;
-      legacy_asset      steem_payout;
+      legacy_asset      blurt_payout;
       legacy_asset      vesting_payout;
    };
 
@@ -1211,17 +1211,17 @@ FC_REFLECT( blurt::plugins::condenser_api::legacy_transfer_to_vesting_operation,
 FC_REFLECT( blurt::plugins::condenser_api::legacy_withdraw_vesting_operation, (account)(vesting_shares) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_witness_update_operation, (owner)(url)(block_signing_key)(props)(fee) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_comment_options_operation, (author)(permlink)(max_accepted_payout)(allow_votes)(allow_curation_rewards)(extensions) )
-FC_REFLECT( blurt::plugins::condenser_api::legacy_escrow_transfer_operation, (from)(to)(steem_amount)(escrow_id)(agent)(fee)(json_meta)(ratification_deadline)(escrow_expiration) );
-FC_REFLECT( blurt::plugins::condenser_api::legacy_escrow_release_operation, (from)(to)(agent)(who)(receiver)(escrow_id)(steem_amount) );
-FC_REFLECT( blurt::plugins::condenser_api::legacy_claim_reward_balance_operation, (account)(reward_steem)(reward_vests) )
+FC_REFLECT( blurt::plugins::condenser_api::legacy_escrow_transfer_operation, (from)(to)(blurt_amount)(escrow_id)(agent)(fee)(json_meta)(ratification_deadline)(escrow_expiration) );
+FC_REFLECT( blurt::plugins::condenser_api::legacy_escrow_release_operation, (from)(to)(agent)(who)(receiver)(escrow_id)(blurt_amount) );
+FC_REFLECT( blurt::plugins::condenser_api::legacy_claim_reward_balance_operation, (account)(reward_blurt)(reward_vests) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_delegate_vesting_shares_operation, (delegator)(delegatee)(vesting_shares) );
-FC_REFLECT( blurt::plugins::condenser_api::legacy_author_reward_operation, (author)(permlink)(steem_payout)(vesting_payout) )
+FC_REFLECT( blurt::plugins::condenser_api::legacy_author_reward_operation, (author)(permlink)(blurt_payout)(vesting_payout) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_curation_reward_operation, (curator)(reward)(comment_author)(comment_permlink) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_comment_reward_operation, (author)(permlink)(payout) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_fill_vesting_withdraw_operation, (from_account)(to_account)(withdrawn)(deposited) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_fill_transfer_from_savings_operation, (from)(to)(amount)(request_id)(memo) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_return_vesting_delegation_operation, (account)(vesting_shares) )
-FC_REFLECT( blurt::plugins::condenser_api::legacy_comment_benefactor_reward_operation, (benefactor)(author)(permlink)(steem_payout)(vesting_payout) )
+FC_REFLECT( blurt::plugins::condenser_api::legacy_comment_benefactor_reward_operation, (benefactor)(author)(permlink)(blurt_payout)(vesting_payout) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_producer_reward_operation, (producer)(vesting_shares) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_claim_account_operation, (creator)(fee)(extensions) )
 FC_REFLECT( blurt::plugins::condenser_api::legacy_proposal_pay_operation, (receiver)(payment)(trx_id)(op_in_trx) )

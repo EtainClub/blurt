@@ -1,5 +1,5 @@
 
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 #include <blurt/chain/database.hpp>
 #include <blurt/chain/witness_objects.hpp>
 #include <blurt/chain/witness_schedule.hpp>

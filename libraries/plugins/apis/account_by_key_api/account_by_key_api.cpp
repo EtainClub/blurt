@@ -1,4 +1,4 @@
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/plugins/account_by_key_api/account_by_key_api_plugin.hpp>
 #include <blurt/plugins/account_by_key_api/account_by_key_api.hpp>

@@ -24,12 +24,12 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/chain/database.hpp>
 #include <blurt/protocol/protocol.hpp>
 
-#include <blurt/protocol/steem_operations.hpp>
+#include <blurt/protocol/blurt_operations.hpp>
 #include <blurt/chain/account_object.hpp>
 
 #include <blurt/chain/util/reward.hpp>

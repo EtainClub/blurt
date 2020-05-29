@@ -5,7 +5,7 @@ add_library( account_history_plugin
              ${HEADERS}
            )
 
-target_link_libraries( account_history_plugin chain_plugin steem_chain steem_protocol steem_utilities )
+target_link_libraries( account_history_plugin chain_plugin blurt_chain blurt_protocol blurt_utilities )
 target_include_directories( account_history_plugin
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 

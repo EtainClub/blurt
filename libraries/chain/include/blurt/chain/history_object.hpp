@@ -1,14 +1,14 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/protocol/authority.hpp>
 #include <blurt/protocol/operations.hpp>
-#include <blurt/protocol/steem_operations.hpp>
+#include <blurt/protocol/blurt_operations.hpp>
 
 #include <blurt/chain/buffer_type.hpp>
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 #include <blurt/chain/witness_objects.hpp>
 
 namespace blurt { namespace chain {

@@ -19,9 +19,9 @@ else( MSVC )
 endif( MSVC )
 
 ## SORT .cpp by most likely to change / break compile
-add_library( steem_protocol
+add_library( blurt_protocol
 
-             steem_operations.cpp
+             blurt_operations.cpp
              sps_operations.cpp
              types.cpp
              schema_types.cpp
@@ -39,19 +39,19 @@ add_library( steem_protocol
              "${CMAKE_CURRENT_BINARY_DIR}/include/blurt/protocol/hardfork.hpp"
            )
 
-target_link_libraries( steem_protocol steem_schema fc )
-target_include_directories( steem_protocol
+target_link_libraries( blurt_protocol blurt_schema fc )
+target_include_directories( blurt_protocol
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include" )
 
 if( CLANG_TIDY_EXE )
    set_target_properties(
-      steem_protocol PROPERTIES
+      blurt_protocol PROPERTIES
       CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
    )
 endif( CLANG_TIDY_EXE )
 
 INSTALL( TARGETS
-   steem_protocol
+   blurt_protocol
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib

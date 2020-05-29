@@ -1,11 +1,11 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/protocol/authority.hpp>
-#include <blurt/protocol/steem_operations.hpp>
+#include <blurt/protocol/blurt_operations.hpp>
 #include <blurt/protocol/misc_utilities.hpp>
 
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 
 #include <boost/multiprecision/cpp_int.hpp>
 
@@ -38,7 +38,7 @@ namespace blurt { namespace chain {
          account_name_type agent;
          time_point_sec    ratification_deadline;
          time_point_sec    escrow_expiration;
-         asset             steem_balance;
+         asset             blurt_balance;
          asset             pending_fee;
          bool              to_approved = false;
          bool              agent_approved = false;
@@ -305,7 +305,7 @@ CHAINBASE_SET_INDEX_TYPE( blurt::chain::savings_withdraw_object, blurt::chain::s
 FC_REFLECT( blurt::chain::escrow_object,
              (id)(escrow_id)(from)(to)(agent)
              (ratification_deadline)(escrow_expiration)
-             (steem_balance)(pending_fee)
+             (blurt_balance)(pending_fee)
              (to_approved)(agent_approved)(disputed) )
 CHAINBASE_SET_INDEX_TYPE( blurt::chain::escrow_object, blurt::chain::escrow_index )
 

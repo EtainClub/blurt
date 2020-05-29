@@ -3,8 +3,8 @@
 #include <blurt/protocol/types.hpp>
 
 #include <blurt/protocol/operation_util.hpp>
-#include <blurt/protocol/steem_operations.hpp>
-#include <blurt/protocol/steem_virtual_operations.hpp>
+#include <blurt/protocol/blurt_operations.hpp>
+#include <blurt/protocol/blurt_virtual_operations.hpp>
 #include <blurt/protocol/sps_operations.hpp>
 
 namespace blurt { namespace protocol {

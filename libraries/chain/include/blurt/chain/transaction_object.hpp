@@ -1,10 +1,10 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/protocol/transaction.hpp>
 
 #include <blurt/chain/buffer_type.hpp>
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 
 //#include <boost/multi_index/hashed_index.hpp>
 

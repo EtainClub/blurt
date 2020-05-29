@@ -1,14 +1,14 @@
 #ifdef IS_TEST_NET
 #include <boost/test/unit_test.hpp>
 
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/protocol/exceptions.hpp>
 #include <blurt/protocol/hardfork.hpp>
 
 #include <blurt/chain/database.hpp>
 #include <blurt/chain/database_exceptions.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 
 #include <blurt/chain/util/reward.hpp>
 
@@ -1306,7 +1306,7 @@ BOOST_AUTO_TEST_CASE( transfer_to_vesting_apply )
       BOOST_REQUIRE( alice.balance == ASSET( "10.000 TESTS" ) );
 
       auto shares = asset( gpo.total_vesting_shares.amount, VESTS_SYMBOL );
-      auto vests = asset( gpo.total_vesting_fund_steem.amount, BLURT_SYMBOL );
+      auto vests = asset( gpo.total_vesting_fund_blurt.amount, BLURT_SYMBOL );
       auto alice_shares = alice.vesting_shares;
       auto bob_shares = bob.vesting_shares;
 
@@ -1328,7 +1328,7 @@ BOOST_AUTO_TEST_CASE( transfer_to_vesting_apply )
 
       BOOST_REQUIRE( alice.balance.amount.value == ASSET( "2.500 TESTS" ).amount.value );
       BOOST_REQUIRE( alice.vesting_shares.amount.value == alice_shares.amount.value );
-      BOOST_REQUIRE( gpo.total_vesting_fund_steem.amount.value == vests.amount.value );
+      BOOST_REQUIRE( gpo.total_vesting_fund_blurt.amount.value == vests.amount.value );
       BOOST_REQUIRE( gpo.total_vesting_shares.amount.value == shares.amount.value );
       validate_database();
 
@@ -1350,7 +1350,7 @@ BOOST_AUTO_TEST_CASE( transfer_to_vesting_apply )
       BOOST_REQUIRE( alice.vesting_shares.amount.value == alice_shares.amount.value );
       BOOST_REQUIRE( bob.balance.amount.value == ASSET( "0.000 TESTS" ).amount.value );
       BOOST_REQUIRE( bob.vesting_shares.amount.value == bob_shares.amount.value );
-      BOOST_REQUIRE( gpo.total_vesting_fund_steem.amount.value == vests.amount.value );
+      BOOST_REQUIRE( gpo.total_vesting_fund_blurt.amount.value == vests.amount.value );
       BOOST_REQUIRE( gpo.total_vesting_shares.amount.value == shares.amount.value );
       validate_database();
 
@@ -1360,7 +1360,7 @@ BOOST_AUTO_TEST_CASE( transfer_to_vesting_apply )
       BOOST_REQUIRE( alice.vesting_shares.amount.value == alice_shares.amount.value );
       BOOST_REQUIRE( bob.balance.amount.value == ASSET( "0.000 TESTS" ).amount.value );
       BOOST_REQUIRE( bob.vesting_shares.amount.value == bob_shares.amount.value );
-      BOOST_REQUIRE( gpo.total_vesting_fund_steem.amount.value == vests.amount.value );
+      BOOST_REQUIRE( gpo.total_vesting_fund_blurt.amount.value == vests.amount.value );
       BOOST_REQUIRE( gpo.total_vesting_shares.amount.value == shares.amount.value );
       validate_database();
    }
@@ -1534,8 +1534,8 @@ BOOST_AUTO_TEST_CASE( withdraw_vesting_apply )
 
          db.modify( db.get_dynamic_global_properties(), [&]( dynamic_global_property_object& gpo )
          {
-            gpo.current_supply += wso.median_props.account_creation_fee - ASSET( "0.001 TESTS" ) - gpo.total_vesting_fund_steem;
-            gpo.total_vesting_fund_steem = wso.median_props.account_creation_fee - ASSET( "0.001 TESTS" );
+            gpo.current_supply += wso.median_props.account_creation_fee - ASSET( "0.001 TESTS" ) - gpo.total_vesting_fund_blurt;
+            gpo.total_vesting_fund_blurt = wso.median_props.account_creation_fee - ASSET( "0.001 TESTS" );
          });
       }, database::skip_witness_signature );
 
@@ -1644,7 +1644,7 @@ BOOST_AUTO_TEST_CASE( witness_update_apply )
       op.url = "foo.bar";
       op.fee = ASSET( "1.000 TESTS" );
       op.block_signing_key = signing_key.get_public_key();
-      op.props.account_creation_fee = legacy_steem_asset::from_asset( asset(BLURT_MIN_ACCOUNT_CREATION_FEE + 10, BLURT_SYMBOL) );
+      op.props.account_creation_fee = legacy_blurt_asset::from_asset( asset(BLURT_MIN_ACCOUNT_CREATION_FEE + 10, BLURT_SYMBOL) );
       op.props.maximum_block_size = BLURT_MIN_BLOCK_SIZE_LIMIT + 100;
 
       signed_transaction tx;
@@ -2645,7 +2645,7 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_validate )
       escrow_transfer_operation op;
       op.from = "alice";
       op.to = "bob";
-      op.steem_amount = ASSET( "1.000 TESTS" );
+      op.blurt_amount = ASSET( "1.000 TESTS" );
       op.escrow_id = 0;
       op.agent = "sam";
       op.fee = ASSET( "0.100 TESTS" );
@@ -2654,25 +2654,25 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_validate )
       op.escrow_expiration = db->head_block_time() + 200;
 
       BOOST_TEST_MESSAGE( "--- failure when steem symbol != BLURT" );
-      op.steem_amount.symbol = VESTS_SYMBOL;
+      op.blurt_amount.symbol = VESTS_SYMBOL;
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
 
       BOOST_TEST_MESSAGE( "--- failure when fee symbol != BLURT" );
-      op.steem_amount.symbol = BLURT_SYMBOL;
+      op.blurt_amount.symbol = BLURT_SYMBOL;
       op.fee.symbol = VESTS_SYMBOL;
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
 
       BOOST_TEST_MESSAGE( "--- failure when steem == 0" );
       op.fee.symbol = BLURT_SYMBOL;
-      op.steem_amount.amount = 0;
+      op.blurt_amount.amount = 0;
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
 
       BOOST_TEST_MESSAGE( "--- failure when steem < 0" );
-      op.steem_amount.amount = -100;
+      op.blurt_amount.amount = -100;
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
 
       BOOST_TEST_MESSAGE( "--- failure when fee < 0" );
-      op.steem_amount.amount = 1000;
+      op.blurt_amount.amount = 1000;
       op.fee.amount = -100;
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
 
@@ -2701,7 +2701,7 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_authorities )
       escrow_transfer_operation op;
       op.from = "alice";
       op.to = "bob";
-      op.steem_amount = ASSET( "1.000 TESTS" );
+      op.blurt_amount = ASSET( "1.000 TESTS" );
       op.escrow_id = 0;
       op.agent = "sam";
       op.fee = ASSET( "0.100 TESTS" );
@@ -2739,7 +2739,7 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_apply )
       escrow_transfer_operation op;
       op.from = "alice";
       op.to = "bob";
-      op.steem_amount = ASSET( "1.000 TESTS" );
+      op.blurt_amount = ASSET( "1.000 TESTS" );
       op.escrow_id = 0;
       op.agent = "sam";
       op.fee = ASSET( "0.100 TESTS" );
@@ -2748,7 +2748,7 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_apply )
       op.escrow_expiration = db->head_block_time() + 200;
 
       BOOST_TEST_MESSAGE( "--- failure when from cannot cover amount + fee" );
-      op.steem_amount.amount = 10000;
+      op.blurt_amount.amount = 10000;
       tx.operations.clear();
       tx.signatures.clear();
       tx.operations.push_back( op );
@@ -2757,7 +2757,7 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_apply )
       BLURT_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
 
       BOOST_TEST_MESSAGE( "--- failure when ratification deadline is in the past" );
-      op.steem_amount.amount = 1000;
+      op.blurt_amount.amount = 1000;
       op.ratification_deadline = db->head_block_time() - 200;
       tx.operations.clear();
       tx.signatures.clear();
@@ -2781,9 +2781,9 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_apply )
       tx.operations.push_back( op );
       sign( tx, alice_private_key );
 
-      auto alice_steem_balance = alice.balance - op.steem_amount - op.fee;
-      auto bob_steem_balance = bob.balance;
-      auto sam_steem_balance = sam.balance;
+      auto alice_blurt_balance = alice.balance - op.blurt_amount - op.fee;
+      auto bob_blurt_balance = bob.balance;
+      auto sam_blurt_balance = sam.balance;
 
       db->push_transaction( tx, 0 );
 
@@ -2795,14 +2795,14 @@ BOOST_AUTO_TEST_CASE( escrow_transfer_apply )
       BOOST_REQUIRE( escrow.agent == op.agent );
       BOOST_REQUIRE( escrow.ratification_deadline == op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == op.escrow_expiration );
-      BOOST_REQUIRE( escrow.steem_balance == op.steem_amount );
+      BOOST_REQUIRE( escrow.blurt_balance == op.blurt_amount );
       BOOST_REQUIRE( escrow.pending_fee == op.fee );
       BOOST_REQUIRE( !escrow.to_approved );
       BOOST_REQUIRE( !escrow.agent_approved );
       BOOST_REQUIRE( !escrow.disputed );
-      BOOST_REQUIRE( alice.balance == alice_steem_balance );
-      BOOST_REQUIRE( bob.balance == bob_steem_balance );
-      BOOST_REQUIRE( sam.balance == sam_steem_balance );
+      BOOST_REQUIRE( alice.balance == alice_blurt_balance );
+      BOOST_REQUIRE( bob.balance == bob_blurt_balance );
+      BOOST_REQUIRE( sam.balance == sam_blurt_balance );
 
       validate_database();
    }
@@ -2890,7 +2890,7 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
       et_op.from = "alice";
       et_op.to = "bob";
       et_op.agent = "sam";
-      et_op.steem_amount = ASSET( "1.000 TESTS" );
+      et_op.blurt_amount = ASSET( "1.000 TESTS" );
       et_op.fee = ASSET( "0.100 TESTS" );
       et_op.json_meta = "";
       et_op.ratification_deadline = db->head_block_time() + 100;
@@ -2946,7 +2946,7 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.steem_balance == ASSET( "1.000 TESTS" ) );
+      BOOST_REQUIRE( escrow.blurt_balance == ASSET( "1.000 TESTS" ) );
       BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.100 TESTS" ) );
       BOOST_REQUIRE( escrow.to_approved );
       BOOST_REQUIRE( !escrow.agent_approved );
@@ -2964,7 +2964,7 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.steem_balance == ASSET( "1.000 TESTS" ) );
+      BOOST_REQUIRE( escrow.blurt_balance == ASSET( "1.000 TESTS" ) );
       BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.100 TESTS" ) );
       BOOST_REQUIRE( escrow.to_approved );
       BOOST_REQUIRE( !escrow.agent_approved );
@@ -2985,7 +2985,7 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.steem_balance == ASSET( "1.000 TESTS" ) );
+      BOOST_REQUIRE( escrow.blurt_balance == ASSET( "1.000 TESTS" ) );
       BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.100 TESTS" ) );
       BOOST_REQUIRE( escrow.to_approved );
       BOOST_REQUIRE( !escrow.agent_approved );
@@ -3100,7 +3100,7 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
          BOOST_REQUIRE( escrow.agent == "sam" );
          BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
          BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-         BOOST_REQUIRE( escrow.steem_balance == ASSET( "1.000 TESTS" ) );
+         BOOST_REQUIRE( escrow.blurt_balance == ASSET( "1.000 TESTS" ) );
          BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
          BOOST_REQUIRE( escrow.to_approved );
          BOOST_REQUIRE( escrow.agent_approved );
@@ -3120,7 +3120,7 @@ BOOST_AUTO_TEST_CASE( escrow_approve_apply )
          BOOST_REQUIRE( escrow.agent == "sam" );
          BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
          BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-         BOOST_REQUIRE( escrow.steem_balance == ASSET( "1.000 TESTS" ) );
+         BOOST_REQUIRE( escrow.blurt_balance == ASSET( "1.000 TESTS" ) );
          BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
          BOOST_REQUIRE( escrow.to_approved );
          BOOST_REQUIRE( escrow.agent_approved );
@@ -3204,7 +3204,7 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
       et_op.from = "alice";
       et_op.to = "bob";
       et_op.agent = "sam";
-      et_op.steem_amount = ASSET( "1.000 TESTS" );
+      et_op.blurt_amount = ASSET( "1.000 TESTS" );
       et_op.fee = ASSET( "0.100 TESTS" );
       et_op.ratification_deadline = db->head_block_time() + BLURT_BLOCK_INTERVAL;
       et_op.escrow_expiration = db->head_block_time() + 2 * BLURT_BLOCK_INTERVAL;
@@ -3243,7 +3243,7 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
+      BOOST_REQUIRE( escrow.blurt_balance == et_op.blurt_amount );
       BOOST_REQUIRE( escrow.pending_fee == et_op.fee );
       BOOST_REQUIRE( escrow.to_approved );
       BOOST_REQUIRE( !escrow.agent_approved );
@@ -3276,7 +3276,7 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
+      BOOST_REQUIRE( escrow.blurt_balance == et_op.blurt_amount );
       BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
       BOOST_REQUIRE( escrow.to_approved );
       BOOST_REQUIRE( escrow.agent_approved );
@@ -3297,7 +3297,7 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
       BOOST_REQUIRE( escrow.agent == "sam" );
       BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
       BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-      BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
+      BOOST_REQUIRE( escrow.blurt_balance == et_op.blurt_amount );
       BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
       BOOST_REQUIRE( escrow.to_approved );
       BOOST_REQUIRE( escrow.agent_approved );
@@ -3321,7 +3321,7 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
          BOOST_REQUIRE( escrow.agent == "sam" );
          BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
          BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-         BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
+         BOOST_REQUIRE( escrow.blurt_balance == et_op.blurt_amount );
          BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
          BOOST_REQUIRE( escrow.to_approved );
          BOOST_REQUIRE( escrow.agent_approved );
@@ -3359,7 +3359,7 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
          BOOST_REQUIRE( escrow.agent == "sam" );
          BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
          BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-         BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
+         BOOST_REQUIRE( escrow.blurt_balance == et_op.blurt_amount );
          BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
          BOOST_REQUIRE( escrow.to_approved );
          BOOST_REQUIRE( escrow.agent_approved );
@@ -3381,7 +3381,7 @@ BOOST_AUTO_TEST_CASE( escrow_dispute_apply )
          BOOST_REQUIRE( escrow.agent == "sam" );
          BOOST_REQUIRE( escrow.ratification_deadline == et_op.ratification_deadline );
          BOOST_REQUIRE( escrow.escrow_expiration == et_op.escrow_expiration );
-         BOOST_REQUIRE( escrow.steem_balance == et_op.steem_amount );
+         BOOST_REQUIRE( escrow.blurt_balance == et_op.blurt_amount );
          BOOST_REQUIRE( escrow.pending_fee == ASSET( "0.000 TESTS" ) );
          BOOST_REQUIRE( escrow.to_approved );
          BOOST_REQUIRE( escrow.agent_approved );
@@ -3405,15 +3405,15 @@ BOOST_AUTO_TEST_CASE( escrow_release_validate )
 
 
       BOOST_TEST_MESSAGE( "--- failure when steem < 0" );
-      op.steem_amount.amount = -1;
+      op.blurt_amount.amount = -1;
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
 
       BOOST_TEST_MESSAGE( "--- failure when steem is not steem symbol" );
-      op.steem_amount = asset( 1000, VESTS_SYMBOL );
+      op.blurt_amount = asset( 1000, VESTS_SYMBOL );
       BLURT_REQUIRE_THROW( op.validate(), fc::exception );
 
       BOOST_TEST_MESSAGE( "--- success" );
-      op.steem_amount.symbol = BLURT_SYMBOL;
+      op.blurt_amount.symbol = BLURT_SYMBOL;
       op.validate();
    }
    FC_LOG_AND_RETHROW()
@@ -3472,7 +3472,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       et_op.from = "alice";
       et_op.to = "bob";
       et_op.agent = "sam";
-      et_op.steem_amount = ASSET( "1.000 TESTS" );
+      et_op.blurt_amount = ASSET( "1.000 TESTS" );
       et_op.fee = ASSET( "0.100 TESTS" );
       et_op.ratification_deadline = db->head_block_time() + BLURT_BLOCK_INTERVAL;
       et_op.escrow_expiration = db->head_block_time() + 2 * BLURT_BLOCK_INTERVAL;
@@ -3492,7 +3492,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       op.agent = et_op.agent;
       op.who = et_op.from;
       op.receiver = et_op.to;
-      op.steem_amount = ASSET( "0.100 TESTS" );
+      op.blurt_amount = ASSET( "0.100 TESTS" );
 
       tx.clear();
       tx.operations.push_back( op );
@@ -3608,7 +3608,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       sign( tx, bob_private_key );
       db->push_transaction( tx, 0 );
 
-      BOOST_REQUIRE( db->get_escrow( op.from, op.escrow_id ).steem_balance == ASSET( "0.900 TESTS" ) );
+      BOOST_REQUIRE( db->get_escrow( op.from, op.escrow_id ).blurt_balance == ASSET( "0.900 TESTS" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "9.000 TESTS" ) );
 
 
@@ -3648,12 +3648,12 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       sign( tx, alice_private_key );
       db->push_transaction( tx, 0 );
 
-      BOOST_REQUIRE( db->get_escrow( op.from, op.escrow_id ).steem_balance == ASSET( "0.800 TESTS" ) );
+      BOOST_REQUIRE( db->get_escrow( op.from, op.escrow_id ).blurt_balance == ASSET( "0.800 TESTS" ) );
       BOOST_REQUIRE( db->get_account( "bob" ).balance == ASSET( "0.100 TESTS" ) );
 
 
       BOOST_TEST_MESSAGE( "--- failure when releasing more sbd than available" );
-      op.steem_amount = ASSET( "1.000 TESTS" );
+      op.blurt_amount = ASSET( "1.000 TESTS" );
 
       tx.clear();
       tx.operations.push_back( op );
@@ -3662,7 +3662,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
 
 
       BOOST_TEST_MESSAGE( "--- failure when releasing less steem than available" );
-      op.steem_amount = ASSET( "0.000 TESTS" );
+      op.blurt_amount = ASSET( "0.000 TESTS" );
 
       tx.clear();
       tx.operations.push_back( op );
@@ -3686,7 +3686,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       op.from = et_op.from;
       op.receiver = et_op.from;
       op.who = et_op.to;
-      op.steem_amount = ASSET( "0.100 TESTS" );
+      op.blurt_amount = ASSET( "0.100 TESTS" );
       tx.operations.push_back( op );
       sign( tx, bob_private_key );
       BLURT_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
@@ -3728,7 +3728,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       db->push_transaction( tx, 0 );
 
       BOOST_REQUIRE( db->get_account( "bob" ).balance == ASSET( "0.200 TESTS" ) );
-      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).steem_balance == ASSET( "0.700 TESTS" ) );
+      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).blurt_balance == ASSET( "0.700 TESTS" ) );
 
 
       BOOST_TEST_MESSAGE( "--- success releasing disputed escrow with agent to 'from'" );
@@ -3740,7 +3740,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       db->push_transaction( tx, 0 );
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "9.100 TESTS" ) );
-      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).steem_balance == ASSET( "0.600 TESTS" ) );
+      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).blurt_balance == ASSET( "0.600 TESTS" ) );
 
 
       BOOST_TEST_MESSAGE( "--- failure when 'to' attempts to release disputed expired escrow" );
@@ -3773,12 +3773,12 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       db->push_transaction( tx, 0 );
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "9.200 TESTS" ) );
-      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).steem_balance == ASSET( "0.500 TESTS" ) );
+      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).blurt_balance == ASSET( "0.500 TESTS" ) );
 
 
       BOOST_TEST_MESSAGE( "--- success deleting escrow when balances are both zero" );
       tx.clear();
-      op.steem_amount = ASSET( "0.500 TESTS" );
+      op.blurt_amount = ASSET( "0.500 TESTS" );
       tx.operations.push_back( op );
       sign( tx, sam_private_key );
       db->push_transaction( tx, 0 );
@@ -3805,7 +3805,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       tx.clear();
       op.receiver = et_op.to;
       op.who = et_op.agent;
-      op.steem_amount = ASSET( "0.100 TESTS" );
+      op.blurt_amount = ASSET( "0.100 TESTS" );
       tx.operations.push_back( op );
       sign( tx, sam_private_key );
       BLURT_REQUIRE_THROW( db->push_transaction( tx, 0 ), fc::exception );
@@ -3852,7 +3852,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       db->push_transaction( tx, 0 );
 
       BOOST_REQUIRE( db->get_account( "bob" ).balance == ASSET( "0.300 TESTS" ) );
-      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).steem_balance == ASSET( "0.900 TESTS" ) );
+      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).blurt_balance == ASSET( "0.900 TESTS" ) );
 
 
       BOOST_TEST_MESSAGE( "--- success release non-disputed expired escrow to 'from' from 'to'" );
@@ -3863,7 +3863,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       db->push_transaction( tx, 0 );
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "8.700 TESTS" ) );
-      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).steem_balance == ASSET( "0.800 TESTS" ) );
+      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).blurt_balance == ASSET( "0.800 TESTS" ) );
 
 
       BOOST_TEST_MESSAGE( "--- failure when 'from' attempts to release non-disputed expired escrow to 'agent'" );
@@ -3891,7 +3891,7 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       db->push_transaction( tx, 0 );
 
       BOOST_REQUIRE( db->get_account( "bob" ).balance == ASSET( "0.400 TESTS" ) );
-      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).steem_balance == ASSET( "0.700 TESTS" ) );
+      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).blurt_balance == ASSET( "0.700 TESTS" ) );
 
 
       BOOST_TEST_MESSAGE( "--- success release non-disputed expired escrow to 'from' from 'from'" );
@@ -3902,12 +3902,12 @@ BOOST_AUTO_TEST_CASE( escrow_release_apply )
       db->push_transaction( tx, 0 );
 
       BOOST_REQUIRE( db->get_account( "alice" ).balance == ASSET( "8.800 TESTS" ) );
-      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).steem_balance == ASSET( "0.600 TESTS" ) );
+      BOOST_REQUIRE( db->get_escrow( et_op.from, et_op.escrow_id ).blurt_balance == ASSET( "0.600 TESTS" ) );
 
 
       BOOST_TEST_MESSAGE( "--- success deleting escrow when balances are zero on non-disputed escrow" );
       tx.clear();
-      op.steem_amount = ASSET( "0.600 TESTS" );
+      op.blurt_amount = ASSET( "0.600 TESTS" );
       tx.operations.push_back( op );
       sign( tx, alice_private_key );
       db->push_transaction( tx, 0 );
@@ -4591,7 +4591,7 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_validate )
    {
       claim_reward_balance_operation op;
       op.account = "alice";
-      op.reward_steem = ASSET( "0.000 TESTS" );
+      op.reward_blurt = ASSET( "0.000 TESTS" );
       op.reward_vests = ASSET( "0.000000 VESTS" );
 
 
@@ -4600,22 +4600,22 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_validate )
 
 
       BOOST_TEST_MESSAGE( "Testing single reward claims" );
-      op.reward_steem.amount = 1000;
+      op.reward_blurt.amount = 1000;
       op.reward_vests.amount = 0;
       op.validate();
 
-      op.reward_steem.amount = 0;
+      op.reward_blurt.amount = 0;
       op.reward_vests.amount = 1000;
       op.validate();
 
-      op.reward_steem.amount = 1000;
+      op.reward_blurt.amount = 1000;
       op.reward_vests.amount = 1000;
       op.validate();
 
       op.reward_vests.amount = 0;
 
       BOOST_TEST_MESSAGE( "Testing wrong BLURT symbol" );
-      op.reward_steem = asset(1000, VESTS_SYMBOL);
+      op.reward_blurt = asset(1000, VESTS_SYMBOL);
       op.reward_vests.amount = 0;
       BLURT_REQUIRE_THROW( op.validate(), fc::assert_exception );
 
@@ -4627,7 +4627,7 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_validate )
 
 
       BOOST_TEST_MESSAGE( "Testing a single negative amount" );
-      op.reward_steem.amount = -1000;
+      op.reward_blurt.amount = -1000;
       op.reward_vests.amount = 0;
       BLURT_REQUIRE_THROW( op.validate(), fc::assert_exception );
    }
@@ -4673,16 +4673,16 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
       {
          db.modify( db.get_account( "alice" ), []( account_object& a )
          {
-            a.reward_steem_balance = ASSET( "10.000 TESTS" );
+            a.reward_blurt_balance = ASSET( "10.000 TESTS" );
             a.reward_vesting_balance = ASSET( "10.000000 VESTS" );
-            a.reward_vesting_steem = ASSET( "10.000 TESTS" );
+            a.reward_vesting_blurt = ASSET( "10.000 TESTS" );
          });
 
          db.modify( db.get_dynamic_global_properties(), []( dynamic_global_property_object& gpo )
          {
             gpo.current_supply += ASSET( "20.000 TESTS" );
             gpo.pending_rewarded_vesting_shares += ASSET( "10.000000 VESTS" );
-            gpo.pending_rewarded_vesting_steem += ASSET( "10.000 TESTS" );
+            gpo.pending_rewarded_vesting_blurt += ASSET( "10.000 TESTS" );
          });
       });
 
@@ -4699,7 +4699,7 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
       signed_transaction tx;
 
       op.account = "alice";
-      op.reward_steem = ASSET( "20.000 TESTS" );
+      op.reward_blurt = ASSET( "20.000 TESTS" );
       op.reward_vests = ASSET( "0.000000 VESTS" );
 
       tx.operations.push_back( op );
@@ -4710,18 +4710,18 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
 
       BOOST_TEST_MESSAGE( "--- Claiming a partial reward balance" );
 
-      op.reward_steem = ASSET( "0.000 TESTS" );
+      op.reward_blurt = ASSET( "0.000 TESTS" );
       op.reward_vests = ASSET( "5.000000 VESTS" );
       tx.clear();
       tx.operations.push_back( op );
       sign( tx, alice_private_key );
       db->push_transaction( tx, 0 );
 
-      BOOST_REQUIRE( db->get_account( "alice" ).balance == alice_steem + op.reward_steem );
-      BOOST_REQUIRE( db->get_account( "alice" ).reward_steem_balance == ASSET( "10.000 TESTS" ) );
+      BOOST_REQUIRE( db->get_account( "alice" ).balance == alice_steem + op.reward_blurt );
+      BOOST_REQUIRE( db->get_account( "alice" ).reward_blurt_balance == ASSET( "10.000 TESTS" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).vesting_shares == alice_vests + op.reward_vests );
       BOOST_REQUIRE( db->get_account( "alice" ).reward_vesting_balance == ASSET( "5.000000 VESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).reward_vesting_steem == ASSET( "5.000 TESTS" ) );
+      BOOST_REQUIRE( db->get_account( "alice" ).reward_vesting_blurt == ASSET( "5.000 TESTS" ) );
       validate_database();
 
       alice_vests += op.reward_vests;
@@ -4729,17 +4729,17 @@ BOOST_AUTO_TEST_CASE( claim_reward_balance_apply )
 
       BOOST_TEST_MESSAGE( "--- Claiming the full reward balance" );
 
-      op.reward_steem = ASSET( "10.000 TESTS" );
+      op.reward_blurt = ASSET( "10.000 TESTS" );
       tx.clear();
       tx.operations.push_back( op );
       sign( tx, alice_private_key );
       db->push_transaction( tx, 0 );
 
-      BOOST_REQUIRE( db->get_account( "alice" ).balance == alice_steem + op.reward_steem );
-      BOOST_REQUIRE( db->get_account( "alice" ).reward_steem_balance == ASSET( "0.000 TESTS" ) );
+      BOOST_REQUIRE( db->get_account( "alice" ).balance == alice_steem + op.reward_blurt );
+      BOOST_REQUIRE( db->get_account( "alice" ).reward_blurt_balance == ASSET( "0.000 TESTS" ) );
       BOOST_REQUIRE( db->get_account( "alice" ).vesting_shares == alice_vests + op.reward_vests );
       BOOST_REQUIRE( db->get_account( "alice" ).reward_vesting_balance == ASSET( "0.000000 VESTS" ) );
-      BOOST_REQUIRE( db->get_account( "alice" ).reward_vesting_steem == ASSET( "0.000 TESTS" ) );
+      BOOST_REQUIRE( db->get_account( "alice" ).reward_vesting_blurt == ASSET( "0.000 TESTS" ) );
             validate_database();
    }
    FC_LOG_AND_RETHROW()
@@ -5394,19 +5394,19 @@ BOOST_AUTO_TEST_CASE( comment_beneficiaries_apply )
       {
          db.modify( db.get_dynamic_global_properties(), [=]( dynamic_global_property_object& gpo )
          {
-            gpo.current_supply -= gpo.total_reward_fund_steem;
-            gpo.total_reward_fund_steem = ASSET( "1000.000 TESTS" );
-            gpo.current_supply += gpo.total_reward_fund_steem;
+            gpo.current_supply -= gpo.total_reward_fund_blurt;
+            gpo.total_reward_fund_blurt = ASSET( "1000.000 TESTS" );
+            gpo.current_supply += gpo.total_reward_fund_blurt;
          });
       });
 
       generate_block();
 
-      BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_steem.amount + db->get_account( "sam" ).reward_vesting_steem.amount + db->get_account( BLURT_TREASURY_ACCOUNT ).balance.amount == db->get_comment( "alice", string( "test" ) ).beneficiary_payout_value.amount );
-      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_vesting_steem.amount + db->get_account( BLURT_TREASURY_ACCOUNT ).balance.amount ) == db->get_account( "bob" ).reward_vesting_steem.amount );
-      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_vesting_steem.amount + db->get_account( BLURT_TREASURY_ACCOUNT ).balance.amount ) == ( db->get_account( "sam" ).reward_vesting_steem.amount ) / 2 );
-      BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_steem.amount == 45);
-      BOOST_REQUIRE( db->get_account( "sam" ).reward_vesting_steem.amount == 90 );
+      BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_blurt.amount + db->get_account( "sam" ).reward_vesting_blurt.amount + db->get_account( BLURT_TREASURY_ACCOUNT ).balance.amount == db->get_comment( "alice", string( "test" ) ).beneficiary_payout_value.amount );
+      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_vesting_blurt.amount + db->get_account( BLURT_TREASURY_ACCOUNT ).balance.amount ) == db->get_account( "bob" ).reward_vesting_blurt.amount );
+      BOOST_REQUIRE( ( db->get_account( "alice" ).reward_vesting_blurt.amount + db->get_account( BLURT_TREASURY_ACCOUNT ).balance.amount ) == ( db->get_account( "sam" ).reward_vesting_blurt.amount ) / 2 );
+      BOOST_REQUIRE( db->get_account( "bob" ).reward_vesting_blurt.amount == 45);
+      BOOST_REQUIRE( db->get_account( "sam" ).reward_vesting_blurt.amount == 90 );
    }
    FC_LOG_AND_RETHROW()
 }
@@ -5426,7 +5426,7 @@ BOOST_AUTO_TEST_CASE( witness_set_properties_validate )
       op.url = "foo.bar";
       op.fee = ASSET( "1.000 TESTS" );
       op.block_signing_key = signing_key.get_public_key();
-      op.props.account_creation_fee = legacy_steem_asset::from_asset( asset(BLURT_MIN_ACCOUNT_CREATION_FEE + 10, BLURT_SYMBOL) );
+      op.props.account_creation_fee = legacy_blurt_asset::from_asset( asset(BLURT_MIN_ACCOUNT_CREATION_FEE + 10, BLURT_SYMBOL) );
       op.props.maximum_block_size = BLURT_MIN_BLOCK_SIZE_LIMIT + 100;
 
       signed_transaction tx;
@@ -5584,7 +5584,7 @@ BOOST_AUTO_TEST_CASE( witness_set_properties_apply )
       op.url = "foo.bar";
       op.fee = ASSET( "1.000 TESTS" );
       op.block_signing_key = signing_key.get_public_key();
-      op.props.account_creation_fee = legacy_steem_asset::from_asset( asset(BLURT_MIN_ACCOUNT_CREATION_FEE + 10, BLURT_SYMBOL) );
+      op.props.account_creation_fee = legacy_blurt_asset::from_asset( asset(BLURT_MIN_ACCOUNT_CREATION_FEE + 10, BLURT_SYMBOL) );
       op.props.maximum_block_size = BLURT_MIN_BLOCK_SIZE_LIMIT + 100;
 
       signed_transaction tx;

@@ -5,7 +5,7 @@
 #include <blurt/utilities/database_configuration.hpp>
 
 #include <blurt/chain/history_object.hpp>
-#include <blurt/chain/steem_objects.hpp>
+#include <blurt/chain/blurt_objects.hpp>
 #include <blurt/chain/sps_objects.hpp>
 
 #include <blurt/plugins/account_history/account_history_plugin.hpp>

@@ -1,5 +1,5 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 #include <blurt/plugins/account_history/account_history_plugin.hpp>
 #include <blurt/plugins/json_rpc/json_rpc_plugin.hpp>
 

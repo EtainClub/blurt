@@ -1,7 +1,7 @@
 #pragma once
 
 #include <blurt/protocol/types.hpp>
-#include <blurt/chain/steem_object_types.hpp>
+#include <blurt/chain/blurt_object_types.hpp>
 #include <blurt/chain/database.hpp>
 
 namespace blurt { namespace plugins{ namespace follow {

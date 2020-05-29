@@ -1,5 +1,5 @@
 #pragma once
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <blurt/plugins/database_api/database_api.hpp>
 #include <blurt/plugins/block_api/block_api.hpp>
@@ -93,9 +93,9 @@ struct api_account_object
       balance( legacy_asset::from_asset( a.balance ) ),
       savings_balance( legacy_asset::from_asset( a.savings_balance ) ),
       savings_withdraw_requests( a.savings_withdraw_requests ),
-      reward_steem_balance( legacy_asset::from_asset( a.reward_steem_balance ) ),
+      reward_blurt_balance( legacy_asset::from_asset( a.reward_blurt_balance ) ),
       reward_vesting_balance( legacy_asset::from_asset( a.reward_vesting_balance ) ),
-      reward_vesting_steem( legacy_asset::from_asset( a.reward_vesting_steem ) ),
+      reward_vesting_blurt( legacy_asset::from_asset( a.reward_vesting_blurt ) ),
       curation_rewards( a.curation_rewards ),
       posting_rewards( a.posting_rewards ),
       vesting_shares( legacy_asset::from_asset( a.vesting_shares ) ),
@@ -153,9 +153,9 @@ struct api_account_object
 
    uint8_t           savings_withdraw_requests = 0;
 
-   legacy_asset      reward_steem_balance;
+   legacy_asset      reward_blurt_balance;
    legacy_asset      reward_vesting_balance;
-   legacy_asset      reward_vesting_steem;
+   legacy_asset      reward_vesting_blurt;
 
    share_type        curation_rewards;
    share_type        posting_rewards;
@@ -187,7 +187,7 @@ struct extended_account : public api_account_object
    extended_account( const database_api::api_account_object& a ) :
       api_account_object( a ) {}
 
-   legacy_asset                                             vesting_balance;  /// convert vesting_shares to vesting steem
+   legacy_asset                                             vesting_balance;  /// convert vesting_shares to vesting blurt
    share_type                                               reputation = 0;
    map< uint64_t, api_operation_object >   transfer_history; /// transfer to/from vesting
    map< uint64_t, api_operation_object >   market_history;   /// limit order / cancel / fill
@@ -308,12 +308,12 @@ struct extended_dynamic_global_properties
       num_pow_witnesses( o.num_pow_witnesses ),
       current_supply( legacy_asset::from_asset( o.current_supply ) ),
       confidential_supply( legacy_asset::from_asset( o.confidential_supply ) ),
-      total_vesting_fund_steem( legacy_asset::from_asset( o.total_vesting_fund_steem ) ),
+      total_vesting_fund_blurt( legacy_asset::from_asset( o.total_vesting_fund_blurt ) ),
       total_vesting_shares( legacy_asset::from_asset( o.total_vesting_shares ) ),
-      total_reward_fund_steem( legacy_asset::from_asset( o.total_reward_fund_steem ) ),
+      total_reward_fund_blurt( legacy_asset::from_asset( o.total_reward_fund_blurt ) ),
       total_reward_shares2( o.total_reward_shares2 ),
       pending_rewarded_vesting_shares( legacy_asset::from_asset( o.pending_rewarded_vesting_shares ) ),
-      pending_rewarded_vesting_steem( legacy_asset::from_asset( o.pending_rewarded_vesting_steem ) ),
+      pending_rewarded_vesting_blurt( legacy_asset::from_asset( o.pending_rewarded_vesting_blurt ) ),
       maximum_block_size( o.maximum_block_size ),
       current_aslot( o.current_aslot ),
       recent_slots_filled( o.recent_slots_filled ),
@@ -342,12 +342,12 @@ struct extended_dynamic_global_properties
 
    legacy_asset      current_supply;
    legacy_asset      confidential_supply;
-   legacy_asset      total_vesting_fund_steem;
+   legacy_asset      total_vesting_fund_blurt;
    legacy_asset      total_vesting_shares;
-   legacy_asset      total_reward_fund_steem;
+   legacy_asset      total_reward_fund_blurt;
    fc::uint128       total_reward_shares2;
    legacy_asset      pending_rewarded_vesting_shares;
-   legacy_asset      pending_rewarded_vesting_steem;
+   legacy_asset      pending_rewarded_vesting_blurt;
 
    uint32_t          maximum_block_size = 0;
    uint64_t          current_aslot = 0;
@@ -521,7 +521,7 @@ struct api_escrow_object
       agent( e.agent ),
       ratification_deadline( e.ratification_deadline ),
       escrow_expiration( e.escrow_expiration ),
-      steem_balance( legacy_asset::from_asset( e.steem_balance ) ),
+      blurt_balance( legacy_asset::from_asset( e.blurt_balance ) ),
       pending_fee( legacy_asset::from_asset( e.pending_fee ) ),
       to_approved( e.to_approved ),
       disputed( e.disputed ),
@@ -535,7 +535,7 @@ struct api_escrow_object
    account_name_type agent;
    time_point_sec    ratification_deadline;
    time_point_sec    escrow_expiration;
-   legacy_asset      steem_balance;
+   legacy_asset      blurt_balance;
    legacy_asset      pending_fee;
    bool              to_approved = false;
    bool              disputed = false;
@@ -742,10 +742,10 @@ struct get_version_return
 {
    get_version_return() {}
    get_version_return( fc::string bc_v, fc::string s_v, fc::string fc_v )
-      :blockchain_version( bc_v ), steem_revision( s_v ), fc_revision( fc_v ) {}
+      :blockchain_version( bc_v ), blurt_revision( s_v ), fc_revision( fc_v ) {}
 
    fc::string blockchain_version;
-   fc::string steem_revision;
+   fc::string blurt_revision;
    fc::string fc_revision;
 };
 
@@ -1002,7 +1002,7 @@ FC_REFLECT( blurt::plugins::condenser_api::api_account_object,
              (balance)
              (savings_balance)
              (savings_withdraw_requests)
-             (reward_steem_balance)(reward_vesting_balance)(reward_vesting_steem)
+             (reward_blurt_balance)(reward_vesting_balance)(reward_vesting_blurt)
              (vesting_shares)(delegated_vesting_shares)(received_vesting_shares)(vesting_withdraw_rate)(next_vesting_withdrawal)(withdrawn)(to_withdraw)(withdraw_routes)
              (curation_rewards)
              (posting_rewards)
@@ -1031,8 +1031,8 @@ FC_REFLECT( blurt::plugins::condenser_api::extended_dynamic_global_properties,
             (head_block_number)(head_block_id)(time)
             (current_witness)(total_pow)(num_pow_witnesses)
             (current_supply)(confidential_supply)
-            (total_vesting_fund_steem)(total_vesting_shares)
-            (total_reward_fund_steem)(total_reward_shares2)(pending_rewarded_vesting_shares)(pending_rewarded_vesting_steem)
+            (total_vesting_fund_blurt)(total_vesting_shares)
+            (total_reward_fund_blurt)(total_reward_shares2)(pending_rewarded_vesting_shares)(pending_rewarded_vesting_blurt)
             (maximum_block_size)(current_aslot)(recent_slots_filled)(participation_count)(last_irreversible_block_num)
             (vote_power_reserve_rate)(delegation_return_period)(reverse_auction_seconds)(available_account_subsidies)
             (next_maintenance_time)(last_budget_time)(content_reward_percent)(vesting_reward_percent)(sps_fund_percent)(sps_interval_ledger)
@@ -1094,7 +1094,7 @@ FC_REFLECT( blurt::plugins::condenser_api::api_reward_fund_object,
 FC_REFLECT( blurt::plugins::condenser_api::api_escrow_object,
              (id)(escrow_id)(from)(to)(agent)
              (ratification_deadline)(escrow_expiration)
-             (steem_balance)(pending_fee)
+             (blurt_balance)(pending_fee)
              (to_approved)(agent_approved)(disputed) )
 
 FC_REFLECT( blurt::plugins::condenser_api::api_savings_withdraw_object,
@@ -1133,7 +1133,7 @@ FC_REFLECT( blurt::plugins::condenser_api::tag_index, (trending) )
 FC_REFLECT_ENUM( blurt::plugins::condenser_api::withdraw_route_type, (incoming)(outgoing)(all) )
 
 FC_REFLECT( blurt::plugins::condenser_api::get_version_return,
-            (blockchain_version)(steem_revision)(fc_revision) )
+            (blockchain_version)(blurt_revision)(fc_revision) )
 
 FC_REFLECT( blurt::plugins::condenser_api::broadcast_transaction_synchronous_return,
             (id)(block_num)(trx_num)(expired) )

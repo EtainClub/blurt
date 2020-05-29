@@ -5,7 +5,7 @@ add_library( account_by_key_plugin
              ${HEADERS}
            )
 
-target_link_libraries( account_by_key_plugin chain_plugin steem_chain steem_protocol )
+target_link_libraries( account_by_key_plugin chain_plugin blurt_chain blurt_protocol )
 target_include_directories( account_by_key_plugin
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 

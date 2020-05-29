@@ -12,8 +12,8 @@ template< typename Storage = fc::uint128 >
 class fixed_string_impl;
 
 class asset_symbol_type;
-class legacy_steem_asset_symbol_type;
-struct legacy_steem_asset;
+class legacy_blurt_asset_symbol_type;
+struct legacy_blurt_asset;
 } } // blurt::protocol
 
 using boost::container::flat_set;
@@ -54,9 +54,9 @@ template< typename Stream >
 inline void unpack( Stream& s, blurt::protocol::asset_symbol_type& sym, uint32_t depth = 0 );
 
 template< typename Stream >
-inline void pack( Stream& s, const blurt::protocol::legacy_steem_asset_symbol_type& sym );
+inline void pack( Stream& s, const blurt::protocol::legacy_blurt_asset_symbol_type& sym );
 template< typename Stream >
-inline void unpack( Stream& s, blurt::protocol::legacy_steem_asset_symbol_type& sym, uint32_t depth = 0 );
+inline void unpack( Stream& s, blurt::protocol::legacy_blurt_asset_symbol_type& sym, uint32_t depth = 0 );
 
 } // raw
 
@@ -73,8 +73,8 @@ inline void from_variant( const variant& v, blurt::protocol::fixed_string_impl< 
 
 inline void to_variant( const blurt::protocol::asset_symbol_type& sym, fc::variant& v );
 
-inline void from_variant( const fc::variant& v, blurt::protocol::legacy_steem_asset& leg );
-inline void to_variant( const blurt::protocol::legacy_steem_asset& leg, fc::variant& v );
+inline void from_variant( const fc::variant& v, blurt::protocol::legacy_blurt_asset& leg );
+inline void to_variant( const blurt::protocol::legacy_blurt_asset& leg, fc::variant& v );
 
 template<typename T> struct get_typename<flat_set_ex<T>>
 {

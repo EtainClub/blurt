@@ -12,10 +12,10 @@ endif()
 if( BLURT_STATIC_BUILD )
    target_link_libraries( cli_wallet PRIVATE
                           "-static-libstdc++ -static-libgcc -lreadline"
-                          graphene_net steem_chain steem_protocol steem_utilities steem_wallet condenser_api_plugin fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
+                          graphene_net blurt_chain blurt_protocol blurt_utilities blurt_wallet condenser_api_plugin fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
 else( BLURT_STATIC_BUILD )
    target_link_libraries( cli_wallet PRIVATE
-                          graphene_net steem_chain steem_protocol steem_utilities steem_wallet condenser_api_plugin fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
+                          graphene_net blurt_chain blurt_protocol blurt_utilities blurt_wallet condenser_api_plugin fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
 endif( BLURT_STATIC_BUILD )
 
 if( CLANG_TIDY_EXE )

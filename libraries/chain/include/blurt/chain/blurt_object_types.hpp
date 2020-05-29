@@ -1,6 +1,6 @@
 #pragma once
 
-#include <blurt/chain/steem_fwd.hpp>
+#include <blurt/chain/blurt_fwd.hpp>
 
 #include <chainbase/chainbase.hpp>
 
