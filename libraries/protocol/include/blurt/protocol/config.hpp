@@ -141,11 +141,8 @@
 #define BLURT_MAX_COMMENT_DEPTH               0xffff // 64k
 #define BLURT_SOFT_MAX_COMMENT_DEPTH          0xff // 255
 
-#define BLURT_MAX_RESERVE_RATIO               (20000)
-
 #define BLURT_CREATE_ACCOUNT_WITH_BLURT_MODIFIER 30
 #define BLURT_CREATE_ACCOUNT_DELEGATION_RATIO    5
-#define BLURT_CREATE_ACCOUNT_DELEGATION_TIME     fc::days(30)
 
 #define BLURT_MIN_CONTENT_REWARD              asset( 1000, BLURT_SYMBOL )
 #define BLURT_MIN_CURATE_REWARD               asset( 1000, BLURT_SYMBOL )
@@ -158,7 +155,6 @@
 
 #define BLURT_POST_REWARD_FUND_NAME           ("post")
 #define BLURT_COMMENT_REWARD_FUND_NAME        ("comment")
-#define BLURT_RECENT_RSHARES_DECAY_TIME_HF17    (fc::days(30))
 #define BLURT_RECENT_RSHARES_DECAY_TIME_HF19    (fc::days(15))
 #define BLURT_CONTENT_CONSTANT_HF0            (uint128_t(uint64_t(2000000000000ll)))
 // note, if redefining these constants make sure calculate_claims doesn't overflow
@@ -189,12 +185,6 @@
 
 // chosen to be the maximal value such that BLURT_APR_PERCENT_MULTIPLY_PER_HOUR * 2**64 * 100000 < 2**128
 #define BLURT_APR_PERCENT_SHIFT_PER_HOUR              77
-
-// These constants add up to GRAPHENE_100_PERCENT.  Each GRAPHENE_1_PERCENT is equivalent to 1% per year APY
-// *including the corresponding 9x vesting rewards*
-#define BLURT_CURATE_APR_PERCENT              3875
-#define BLURT_CONTENT_APR_PERCENT             3875
-#define BLURT_PRODUCER_APR_PERCENT             750
 
 #define BLURT_MIN_PAYOUT                      (asset(20,BLURT_SYMBOL))
 
