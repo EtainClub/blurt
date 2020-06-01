@@ -2600,24 +2600,24 @@ void database::init_genesis( uint64_t init_supply )
                gpo.available_account_subsidies = 0;
             });
 
-            const auto& wso = get_witness_schedule_object();
-
-            for( const auto& witness : wso.current_shuffled_witnesses )
-            {
-               // Required check when applying hardfork at genesis
-               if( witness != account_name_type() )
-               {
-                  modify( get< witness_object, by_name >( witness ), [&]( witness_object& w )
-                  {
-                     w.props.account_creation_fee = asset( w.props.account_creation_fee.amount * BLURT_CREATE_ACCOUNT_WITH_BLURT_MODIFIER, BLURT_SYMBOL );
-                  });
-               }
-            }
-
-            modify( wso, [&]( witness_schedule_object& wso )
-            {
-               wso.median_props.account_creation_fee = asset( wso.median_props.account_creation_fee.amount * BLURT_CREATE_ACCOUNT_WITH_BLURT_MODIFIER, BLURT_SYMBOL );
-            });
+//            const auto& wso = get_witness_schedule_object();
+//
+//            for( const auto& witness : wso.current_shuffled_witnesses )
+//            {
+//               // Required check when applying hardfork at genesis
+//               if( witness != account_name_type() )
+//               {
+//                  modify( get< witness_object, by_name >( witness ), [&]( witness_object& w )
+//                  {
+//                     w.props.account_creation_fee = asset( w.props.account_creation_fee.amount , BLURT_SYMBOL );
+//                  });
+//               }
+//            }
+//
+//            modify( wso, [&]( witness_schedule_object& wso )
+//            {
+//               wso.median_props.account_creation_fee = asset( wso.median_props.account_creation_fee.amount, BLURT_SYMBOL );
+//            });
         }
 
         { // BLURT_HARDFORK_0_21:

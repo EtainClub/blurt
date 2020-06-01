@@ -332,7 +332,7 @@ const account_object& database_fixture::account_create(
          name,
          BLURT_INIT_MINER_NAME,
          init_account_priv_key,
-         std::max( db->get_witness_schedule_object().median_props.account_creation_fee.amount * BLURT_CREATE_ACCOUNT_WITH_BLURT_MODIFIER, share_type( 100 ) ),
+         std::max( db->get_witness_schedule_object().median_props.account_creation_fee.amount, share_type( 100 ) ),
          key,
          post_key,
          "" );
