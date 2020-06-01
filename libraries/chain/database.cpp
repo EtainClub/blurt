@@ -2016,22 +2016,6 @@ asset database::get_producer_reward()
    return pay;
 }
 
-asset database::get_pow_reward()const
-{
-   const auto& props = get_dynamic_global_properties();
-
-#ifndef IS_TEST_NET
-   /// 0 block rewards until at least BLURT_MAX_WITNESSES have produced a POW
-   if( props.num_pow_witnesses < BLURT_MAX_WITNESSES && props.head_block_number < BLURT_START_VESTING_BLOCK )
-      return asset( 0, BLURT_SYMBOL );
-#endif
-
-   static_assert( BLURT_BLOCK_INTERVAL == 3, "this code assumes a 3-second time interval" );
-   static_assert( BLURT_MAX_WITNESSES == 21, "this code assumes 21 per round" );
-   asset percent( calc_percent_reward_per_round< BLURT_POW_APR_PERCENT >( props.current_supply.amount ), BLURT_SYMBOL);
-   return std::max( percent, BLURT_MIN_POW_REWARD );
-}
-
 uint16_t database::get_curation_rewards_percent( const comment_object& c ) const
 {
    return get_reward_fund( c ).percent_curation_rewards;

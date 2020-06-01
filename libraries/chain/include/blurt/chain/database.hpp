@@ -382,7 +382,6 @@ namespace blurt { namespace chain {
          asset get_content_reward()const;
          asset get_producer_reward();
          asset get_curation_reward()const;
-         asset get_pow_reward()const;
 
          uint16_t get_curation_rewards_percent( const comment_object& c ) const;
 
