@@ -132,8 +132,6 @@ namespace blurt { namespace chain {
          fc::uint128       virtual_scheduled_time = fc::uint128::max_value();
          ///@}
 
-         digest_type       last_work;
-
          /**
           * This field represents the Steem blockchain version the witness is running.
           */
@@ -199,7 +197,6 @@ namespace blurt { namespace chain {
 
 
    struct by_vote_name;
-   struct by_work;
    struct by_schedule_time;
    /**
     * @ingroup object_index
@@ -208,12 +205,6 @@ namespace blurt { namespace chain {
       witness_object,
       indexed_by<
          ordered_unique< tag< by_id >, member< witness_object, witness_id_type, &witness_object::id > >,
-         ordered_unique< tag< by_work >,
-            composite_key< witness_object,
-               member< witness_object, digest_type, &witness_object::last_work >,
-               member< witness_object, witness_id_type, &witness_object::id >
-            >
-         >,
          ordered_unique< tag< by_name >, member< witness_object, account_name_type, &witness_object::owner > >,
          ordered_unique< tag< by_vote_name >,
             composite_key< witness_object,
@@ -291,7 +282,6 @@ FC_REFLECT( blurt::chain::witness_object,
              (url)(votes)(schedule)(virtual_last_update)(virtual_position)(virtual_scheduled_time)(total_missed)
              (last_aslot)(last_confirmed_block_num)(signing_key)
              (props)
-             (last_work)
              (running_version)
              (hardfork_version_vote)(hardfork_time_vote)
              (available_witness_account_subsidies)

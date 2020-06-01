@@ -375,7 +375,6 @@ struct api_witness_object
       virtual_last_update( w.virtual_last_update ),
       virtual_position( w.virtual_position ),
       virtual_scheduled_time( w.virtual_scheduled_time ),
-      last_work( w.last_work ),
       running_version( w.running_version ),
       hardfork_version_vote( w.hardfork_version_vote ),
       hardfork_time_vote( w.hardfork_time_vote ),
@@ -397,7 +396,6 @@ struct api_witness_object
    fc::uint128       virtual_last_update;
    fc::uint128       virtual_position;
    fc::uint128       virtual_scheduled_time;
-   digest_type       last_work;
    version           running_version;
    hardfork_version  hardfork_version_vote;
    time_point_sec    hardfork_time_vote;
@@ -631,7 +629,6 @@ FC_REFLECT( blurt::plugins::database_api::api_witness_object,
              (url)(votes)(virtual_last_update)(virtual_position)(virtual_scheduled_time)(total_missed)
              (last_aslot)(last_confirmed_block_num)(signing_key)
              (props)
-             (last_work)
              (running_version)
              (hardfork_version_vote)(hardfork_time_vote)
              (available_witness_account_subsidies)
