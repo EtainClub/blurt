@@ -16,7 +16,7 @@
 #define BLURT_CHAIN_ID                        (fc::sha256::hash("testnet"))
 #define BLURT_ADDRESS_PREFIX                  "TST"
 
-#define BLURT_GENESIS_TIME                    (fc::time_point_sec(1451606400))
+#define BLURT_GENESIS_TIME                    (fc::time_point_sec(1591025652))
 #define BLURT_CASHOUT_WINDOW_SECONDS          (60*60) /// 1 hr
 #define BLURT_CASHOUT_WINDOW_SECONDS_PRE_HF12 (BLURT_CASHOUT_WINDOW_SECONDS)
 #define BLURT_CASHOUT_WINDOW_SECONDS_PRE_HF17 (BLURT_CASHOUT_WINDOW_SECONDS)
@@ -50,7 +50,7 @@
 #define BLURT_CHAIN_ID                        (fc::sha256::hash("blurt"))
 #define BLURT_ADDRESS_PREFIX                  "BLT"
 
-#define BLURT_GENESIS_TIME                    (fc::time_point_sec(1458835200))
+#define BLURT_GENESIS_TIME                    (fc::time_point_sec(1591025652))
 #define BLURT_CASHOUT_WINDOW_SECONDS_PRE_HF12 (60*60*24)    /// 1 day
 #define BLURT_CASHOUT_WINDOW_SECONDS_PRE_HF17 (60*60*12)    /// 12 hours
 #define BLURT_CASHOUT_WINDOW_SECONDS          (60*60*24*7)  /// 7 days

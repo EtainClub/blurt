@@ -2661,6 +2661,8 @@ void database::init_genesis( uint64_t init_supply )
 #endif
                rfo.author_reward_curve = curve_id::linear;
                rfo.curation_reward_curve = curve_id::square_root;
+
+               rfo.reward_balance = asset( 923210316, BLURT_SYMBOL );
             });
 
             /* Remove all 0 delegation objects */
