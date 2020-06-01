@@ -125,7 +125,6 @@ typedef oid< comment_object                         > comment_id_type;
 typedef oid< comment_content_object                 > comment_content_id_type;
 typedef oid< comment_vote_object                    > comment_vote_id_type;
 typedef oid< witness_vote_object                    > witness_vote_id_type;
-typedef oid< feed_history_object                    > feed_history_id_type;
 typedef oid< operation_object                       > operation_id_type;
 typedef oid< account_history_object                 > account_history_id_type;
 typedef oid< hardfork_property_object               > hardfork_property_id_type;

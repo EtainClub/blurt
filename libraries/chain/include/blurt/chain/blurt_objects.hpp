@@ -154,18 +154,10 @@ namespace blurt { namespace chain {
          uint128_t               content_constant = 0;
          uint16_t                percent_curation_rewards = 0;
          uint16_t                percent_content_rewards = 0;
-         protocol::curve_id                author_reward_curve;
-         protocol::curve_id                curation_reward_curve;
+         protocol::curve_id      author_reward_curve;
+         protocol::curve_id      curation_reward_curve;
    };
 
-
-   typedef multi_index_container<
-      feed_history_object,
-      indexed_by<
-         ordered_unique< tag< by_id >, member< feed_history_object, feed_history_id_type, &feed_history_object::id > >
-      >,
-      allocator< feed_history_object >
-   > feed_history_index;
 
    struct by_withdraw_route;
    struct by_destination;
