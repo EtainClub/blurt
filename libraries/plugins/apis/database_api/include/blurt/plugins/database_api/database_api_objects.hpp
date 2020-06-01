@@ -344,21 +344,6 @@ struct api_savings_withdraw_object
    time_point_sec             complete;
 };
 
-struct api_feed_history_object
-{
-   api_feed_history_object( const feed_history_object& f ) :
-      id( f.id ),
-      current_median_history( f.current_median_history ),
-      price_history( f.price_history.begin(), f.price_history.end() )
-   {}
-
-   api_feed_history_object() {}
-
-   feed_history_id_type id;
-   price                current_median_history;
-   deque< price >       price_history;
-};
-
 struct api_witness_object
 {
    api_witness_object( const witness_object& w ) :
@@ -614,12 +599,6 @@ FC_REFLECT( blurt::plugins::database_api::api_savings_withdraw_object,
              (request_id)
              (amount)
              (complete)
-          )
-
-FC_REFLECT( blurt::plugins::database_api::api_feed_history_object,
-             (id)
-             (current_median_history)
-             (price_history)
           )
 
 FC_REFLECT( blurt::plugins::database_api::api_witness_object,

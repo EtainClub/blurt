@@ -451,23 +451,6 @@ struct api_witness_schedule_object
    int64_t                       min_witness_account_subsidy_decay = 0;
 };
 
-struct api_feed_history_object
-{
-   api_feed_history_object() {}
-   api_feed_history_object( const database_api::api_feed_history_object& f ) :
-      current_median_history( f.current_median_history )
-   {
-      for( auto& p : f.price_history )
-      {
-         price_history.push_back( legacy_price( p ) );
-      }
-   }
-
-   feed_history_id_type   id;
-   legacy_price           current_median_history;
-   deque< legacy_price >  price_history;
-};
-
 struct api_reward_fund_object
 {
    api_reward_fund_object() {}
@@ -1053,12 +1036,6 @@ FC_REFLECT( blurt::plugins::condenser_api::api_witness_schedule_object,
              (account_subsidy_rd)
              (account_subsidy_witness_rd)
              (min_witness_account_subsidy_decay)
-          )
-
-FC_REFLECT( blurt::plugins::condenser_api::api_feed_history_object,
-             (id)
-             (current_median_history)
-             (price_history)
           )
 
 FC_REFLECT( blurt::plugins::condenser_api::api_reward_fund_object,
