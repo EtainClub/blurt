@@ -284,7 +284,6 @@ template<> struct is_static_length< blurt::chain::reward_fund_object > : public 
 
 FC_REFLECT( blurt::chain::feed_history_object,
              (id)(current_median_history)(price_history) )
-CHAINBASE_SET_INDEX_TYPE( blurt::chain::feed_history_object, blurt::chain::feed_history_index )
 
 FC_REFLECT( blurt::chain::withdraw_vesting_route_object,
              (id)(from_account)(to_account)(percent)(auto_vest) )
