@@ -88,7 +88,6 @@
 
 #define BLURT_INIT_MINER_NAME                 "initminer"
 #define BLURT_NUM_INIT_MINERS                 1
-#define BLURT_INIT_TIME                       (fc::time_point_sec());
 
 #define BLURT_MAX_WITNESSES                   21
 #define BLURT_MAX_VOTED_WITNESSES_HF17        20
@@ -148,13 +147,9 @@
 #define BLURT_CREATE_ACCOUNT_DELEGATION_RATIO    5
 #define BLURT_CREATE_ACCOUNT_DELEGATION_TIME     fc::days(30)
 
-#define BLURT_MINING_REWARD                   asset( 1000, BLURT_SYMBOL )
-#define BLURT_EQUIHASH_N                      140
-#define BLURT_EQUIHASH_K                      6
-
-#define BLURT_MIN_CONTENT_REWARD              BLURT_MINING_REWARD
-#define BLURT_MIN_CURATE_REWARD               BLURT_MINING_REWARD
-#define BLURT_MIN_PRODUCER_REWARD             BLURT_MINING_REWARD
+#define BLURT_MIN_CONTENT_REWARD              asset( 1000, BLURT_SYMBOL )
+#define BLURT_MIN_CURATE_REWARD               asset( 1000, BLURT_SYMBOL )
+#define BLURT_MIN_PRODUCER_REWARD             asset( 1000, BLURT_SYMBOL )
 
 #define BLURT_ACTIVE_CHALLENGE_FEE            asset( 2000, BLURT_SYMBOL )
 #define BLURT_OWNER_CHALLENGE_FEE             asset( 30000, BLURT_SYMBOL )
