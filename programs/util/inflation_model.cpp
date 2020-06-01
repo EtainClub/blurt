@@ -79,7 +79,7 @@ int main( int argc, char** argv, char** envp )
 
    auto block_inflation_model = [&]( uint32_t block_num, share_type& current_supply )
    {
-      uint32_t vesting_factor = (block_num < BLURT_START_VESTING_BLOCK) ? 0 : 9;
+      uint32_t vesting_factor = 9;
 
       share_type curate_reward   = calc_percent_reward_per_block< BLURT_CURATE_APR_PERCENT >( current_supply );
       reward_delta[ CURATE_OFF ] = std::max( curate_reward, BLURT_MIN_CURATE_REWARD.amount );
