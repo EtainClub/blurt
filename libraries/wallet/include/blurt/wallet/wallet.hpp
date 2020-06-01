@@ -392,37 +392,6 @@ class wallet_api
          bool broadcast );
 
       /**
-       * This method is used by faucets to create new accounts for other users which must
-       * provide their desired keys. The resulting account may not be controllable by this
-       * wallet. There is a fee associated with account creation that is paid by the creator.
-       * The current account creation fee can be found with the 'info' wallet command.
-       *
-       * These accounts are created with combination of BLURT and delegated SP
-       *
-       * @param creator The account creating the new account
-       * @param blurt_fee The amount of the fee to be paid with BLURT
-       * @param delegated_vests The amount of the fee to be paid with delegation
-       * @param newname The name of the new account
-       * @param json_meta JSON Metadata associated with the new account
-       * @param owner public owner key of the new account
-       * @param active public active key of the new account
-       * @param posting public posting key of the new account
-       * @param memo public memo key of the new account
-       * @param broadcast true if you wish to broadcast the transaction
-       */
-      condenser_api::legacy_signed_transaction create_account_with_keys_delegated(
-         string creator,
-         condenser_api::legacy_asset blurt_fee,
-         condenser_api::legacy_asset delegated_vests,
-         string newname,
-         string json_meta,
-         public_key_type owner,
-         public_key_type active,
-         public_key_type posting,
-         public_key_type memo,
-         bool broadcast )const;
-
-      /**
        * This method updates the keys of an existing account.
        *
        * @param accountname The name of the account
