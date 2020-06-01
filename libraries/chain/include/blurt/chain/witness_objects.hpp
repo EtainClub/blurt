@@ -187,7 +187,7 @@ namespace blurt { namespace chain {
 
          fc::uint128                                                       current_virtual_time;
          uint32_t                                                          next_shuffle_block_num = 1;
-         fc::array< account_name_type, BLURT_MAX_WITNESSES >             current_shuffled_witnesses;
+         fc::array< account_name_type, BLURT_MAX_WITNESSES >               current_shuffled_witnesses;
          uint8_t                                                           num_scheduled_witnesses = 1;
          uint8_t                                                           elected_weight = 1;
          uint8_t                                                           timeshare_weight = 5;
@@ -197,7 +197,7 @@ namespace blurt { namespace chain {
          version                                                           majority_version;
 
          uint8_t max_voted_witnesses            = BLURT_MAX_VOTED_WITNESSES_HF17;
-         uint8_t max_miner_witnesses            = BLURT_MAX_MINER_WITNESSES_HF0;
+         uint8_t max_miner_witnesses            = BLURT_MAX_MINER_WITNESSES_HF17;
          uint8_t max_runner_witnesses           = BLURT_MAX_RUNNER_WITNESSES_HF0;
          uint8_t hardfork_required_witnesses    = BLURT_HARDFORK_REQUIRED_WITNESSES;
 
