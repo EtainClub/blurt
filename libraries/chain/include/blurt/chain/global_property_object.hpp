@@ -39,13 +39,6 @@ namespace blurt { namespace chain {
          time_point_sec    time;
          account_name_type current_witness;
 
-
-         /**
-          * The current count of how many pending POW witnesses there are, determines the difficulty
-          * of doing pow
-          */
-         uint32_t num_pow_witnesses = 0;
-
          asset       current_supply             = asset( 0, BLURT_SYMBOL );
          asset       confidential_supply        = asset( 0, BLURT_SYMBOL ); ///< total asset held in confidential balances
          asset       total_vesting_fund_blurt   = asset( 0, BLURT_SYMBOL );
@@ -153,7 +146,6 @@ FC_REFLECT( blurt::chain::dynamic_global_property_object,
              (head_block_id)
              (time)
              (current_witness)
-             (num_pow_witnesses)
              (current_supply)
              (confidential_supply)
              (total_vesting_fund_blurt)

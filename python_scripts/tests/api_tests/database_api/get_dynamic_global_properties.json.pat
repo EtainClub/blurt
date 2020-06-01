@@ -11,7 +11,6 @@
     "id": 0,
     "last_irreversible_block_num": 0,
     "maximum_block_size": 393216000,
-    "num_pow_witnesses": 0,
     "participation_count": 128,
     "pending_rewarded_vesting_shares": "0.000000 VESTS",
     "pending_rewarded_vesting_blurt": "0.000 TESTS",

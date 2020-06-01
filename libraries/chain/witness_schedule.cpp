@@ -161,10 +161,6 @@ void update_witness_schedule4( database& db )
 //      {
 //         wit.pow_worker = 0;
 //      } );
-//      db.modify( gprops, [&]( dynamic_global_property_object& obj )
-//      {
-//         obj.num_pow_witnesses--;
-//      } );
 //   }
 //
 //   auto num_miners = selected_miners.size();
@@ -174,7 +170,7 @@ void update_witness_schedule4( database& db )
    const auto& schedule_idx = db.get_index<witness_index>().indices().get<by_schedule_time>();
    auto sitr = schedule_idx.begin();
    vector<decltype(sitr)> processed_witnesses;
-   for( auto witness_count = selected_voted.size() + selected_miners.size();
+   for( auto witness_count = selected_voted.size();
         sitr != schedule_idx.end() && witness_count < BLURT_MAX_WITNESSES;
         ++sitr )
    {
