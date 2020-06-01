@@ -9,11 +9,6 @@
 
 Blurt is a public social blockchain with a diverse and vibrant community that strictly upholds [property rights](https://twitter.com/cz_binance/status/1236373815447506945?s=20).
 
-## Social Media
-* [Twitter](https://twitter.com/BlurtOfficial)
-* [Steemit](https://steemit.com/steem/@blurt)
-* [Hive](https://hive.blog/@blurt)
-
 ## Features
 
 * Remove the downvote function.
@@ -57,6 +52,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 ## Software Status
 
 Blurt will launch with steem balances from block 43526969  on  July 4, 2020.   Work is ongoing in the `dev` branch.  
+The snapshot-verification code can be found in the `snapshot` branch.  
 
 ## Build
 
