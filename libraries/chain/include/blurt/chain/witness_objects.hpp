@@ -198,7 +198,7 @@ namespace blurt { namespace chain {
 
          uint8_t max_voted_witnesses            = BLURT_MAX_VOTED_WITNESSES_HF17;
          uint8_t max_miner_witnesses            = BLURT_MAX_MINER_WITNESSES_HF17;
-         uint8_t max_runner_witnesses           = BLURT_MAX_RUNNER_WITNESSES_HF0;
+         uint8_t max_runner_witnesses           = BLURT_MAX_RUNNER_WITNESSES_HF17;
          uint8_t hardfork_required_witnesses    = BLURT_HARDFORK_REQUIRED_WITNESSES;
 
          // Derived fields that are stored for easy caching and reading of values.

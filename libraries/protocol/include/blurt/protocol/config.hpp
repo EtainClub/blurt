@@ -93,9 +93,6 @@
 #define BLURT_INIT_TIME                       (fc::time_point_sec());
 
 #define BLURT_MAX_WITNESSES                   21
-
-#define BLURT_MAX_RUNNER_WITNESSES_HF0        1
-
 #define BLURT_MAX_VOTED_WITNESSES_HF17        20
 #define BLURT_MAX_MINER_WITNESSES_HF17        0
 #define BLURT_MAX_RUNNER_WITNESSES_HF17       1
