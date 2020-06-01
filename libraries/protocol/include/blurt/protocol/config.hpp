@@ -202,7 +202,6 @@
 #define BLURT_CURATE_APR_PERCENT              3875
 #define BLURT_CONTENT_APR_PERCENT             3875
 #define BLURT_PRODUCER_APR_PERCENT             750
-#define BLURT_POW_APR_PERCENT                  750
 
 #define BLURT_MIN_PAYOUT                      (asset(20,BLURT_SYMBOL))
 
