@@ -95,7 +95,7 @@ namespace blurt { namespace chain {
           * "wasting" voting power through spillover; any user voting faster than this rate will have
           * their votes reduced.
           */
-         uint32_t vote_power_reserve_rate = BLURT_INITIAL_VOTE_POWER_RATE;
+         uint32_t vote_power_reserve_rate = BLURT_REDUCED_VOTE_POWER_RATE;
 
          uint32_t delegation_return_period = BLURT_DELEGATION_RETURN_PERIOD_HF0;
 

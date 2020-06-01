@@ -151,8 +151,7 @@
 #define BLURT_OWNER_CHALLENGE_COOLDOWN        fc::days(1)
 
 #define BLURT_POST_REWARD_FUND_NAME           ("post")
-#define BLURT_COMMENT_REWARD_FUND_NAME        ("comment")
-#define BLURT_RECENT_RSHARES_DECAY_TIME_HF19    (fc::days(15))
+#define BLURT_RECENT_RSHARES_DECAY_TIME_HF19  (fc::days(15))
 #define BLURT_CONTENT_CONSTANT_HF0            (uint128_t(uint64_t(2000000000000ll)))
 // note, if redefining these constants make sure calculate_claims doesn't overflow
 
@@ -222,11 +221,9 @@
 
 #define BLURT_IRREVERSIBLE_THRESHOLD          (75 * BLURT_1_PERCENT)
 
-#define BLURT_VIRTUAL_SCHEDULE_LAP_LENGTH  ( fc::uint128(uint64_t(-1)) )
 #define BLURT_VIRTUAL_SCHEDULE_LAP_LENGTH2 ( fc::uint128::max_value() )
 
-#define BLURT_INITIAL_VOTE_POWER_RATE (40)
-#define BLURT_REDUCED_VOTE_POWER_RATE (10)
+#define BLURT_REDUCED_VOTE_POWER_RATE        (10)
 
 #define BLURT_DELEGATION_RETURN_PERIOD_HF0   (BLURT_CASHOUT_WINDOW_SECONDS)
 #define BLURT_DELEGATION_RETURN_PERIOD_HF20  (BLURT_VOTING_MANA_REGENERATION_SECONDS)

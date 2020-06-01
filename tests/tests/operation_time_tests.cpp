@@ -263,10 +263,8 @@ BOOST_AUTO_TEST_CASE( reward_funds )
 
       {
          const auto& post_rf = db->get< reward_fund_object, by_name >( BLURT_POST_REWARD_FUND_NAME );
-         const auto& comment_rf = db->get< reward_fund_object, by_name >( BLURT_COMMENT_REWARD_FUND_NAME );
 
          BOOST_REQUIRE( post_rf.reward_balance.amount == 0 );
-         BOOST_REQUIRE( comment_rf.reward_balance.amount > 0 );
          BOOST_REQUIRE( db->get_account( "alice" ).reward_sbd_balance.amount > 0 );
          BOOST_REQUIRE( db->get_account( "bob" ).reward_sbd_balance.amount == 0 );
          validate_database();
@@ -276,10 +274,8 @@ BOOST_AUTO_TEST_CASE( reward_funds )
 
       {
          const auto& post_rf = db->get< reward_fund_object, by_name >( BLURT_POST_REWARD_FUND_NAME );
-         const auto& comment_rf = db->get< reward_fund_object, by_name >( BLURT_COMMENT_REWARD_FUND_NAME );
 
          BOOST_REQUIRE( post_rf.reward_balance.amount > 0 );
-         BOOST_REQUIRE( comment_rf.reward_balance.amount == 0 );
          BOOST_REQUIRE( db->get_account( "alice" ).reward_sbd_balance.amount > 0 );
          BOOST_REQUIRE( db->get_account( "bob" ).reward_sbd_balance.amount > 0 );
          validate_database();
