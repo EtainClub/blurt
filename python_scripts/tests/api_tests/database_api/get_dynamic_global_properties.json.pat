@@ -20,7 +20,6 @@
     "sbd_print_rate": 10000,
     "smt_creation_fee": "1000.000 TBD",
     "time": "2016-01-01T00:00:00",
-    "total_pow": "18446744073709551615",
     "total_reward_fund_blurt": "0.000 TESTS",
     "total_reward_shares2": "0",
     "total_vesting_fund_blurt": "0.000 TESTS",
