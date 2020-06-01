@@ -2382,7 +2382,7 @@ void database::init_genesis( uint64_t init_supply )
          {
             w.owner        = BLURT_INIT_MINER_NAME + ( i ? fc::to_string(i) : std::string() );
             w.signing_key  = init_public_key;
-            w.schedule = witness_object::miner;
+            w.schedule = witness_object::elected;
          } );
       }
 

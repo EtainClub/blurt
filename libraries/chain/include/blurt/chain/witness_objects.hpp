@@ -69,7 +69,6 @@ namespace blurt { namespace chain {
          {
             elected,
             timeshare,
-            miner,
             none
          };
 
@@ -291,7 +290,7 @@ template<> struct is_static_length< blurt::chain::witness_schedule_object > : pu
 } // mira
 #endif
 
-FC_REFLECT_ENUM( blurt::chain::witness_object::witness_schedule_type, (elected)(timeshare)(miner)(none) )
+FC_REFLECT_ENUM( blurt::chain::witness_object::witness_schedule_type, (elected)(timeshare)(none) )
 
 FC_REFLECT( blurt::chain::chain_properties,
              (account_creation_fee)
