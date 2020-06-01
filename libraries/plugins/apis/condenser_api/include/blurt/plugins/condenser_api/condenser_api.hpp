@@ -434,7 +434,6 @@ struct api_witness_schedule_object
       median_props( w.median_props ),
       majority_version( w.majority_version ),
       max_voted_witnesses( w.max_voted_witnesses ),
-      max_miner_witnesses( w.max_miner_witnesses ),
       max_runner_witnesses( w.max_runner_witnesses ),
       hardfork_required_witnesses( w.hardfork_required_witnesses ),
       account_subsidy_rd( w.account_subsidy_rd ),
@@ -1063,7 +1062,6 @@ FC_REFLECT( blurt::plugins::condenser_api::api_witness_schedule_object,
              (median_props)
              (majority_version)
              (max_voted_witnesses)
-             (max_miner_witnesses)
              (max_runner_witnesses)
              (hardfork_required_witnesses)
              (account_subsidy_rd)

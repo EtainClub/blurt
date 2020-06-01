@@ -26,7 +26,6 @@
     "hardfork_required_witnesses": 17,
     "id": 0,
     "majority_version": "0.0.0",
-    "max_miner_witnesses": 1,
     "max_runner_witnesses": 1,
     "max_voted_witnesses": 19,
     "median_props": {

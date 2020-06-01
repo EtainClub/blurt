@@ -323,7 +323,6 @@ FC_REFLECT( blurt::chain::witness_schedule_object,
              (elected_weight)(timeshare_weight)(miner_weight)(witness_pay_normalization_factor)
              (median_props)(majority_version)
              (max_voted_witnesses)
-             (max_miner_witnesses)
              (max_runner_witnesses)
              (hardfork_required_witnesses)
              (account_subsidy_rd)
