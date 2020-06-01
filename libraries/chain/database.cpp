@@ -1947,14 +1947,6 @@ void database::process_subsidized_accounts()
    }
 }
 
-asset database::get_content_reward()const
-{
-   const auto& props = get_dynamic_global_properties();
-   static_assert( BLURT_BLOCK_INTERVAL == 3, "this code assumes a 3-second time interval" );
-   asset percent( protocol::calc_percent_reward_per_block< BLURT_CONTENT_APR_PERCENT >( props.current_supply.amount ), BLURT_SYMBOL );
-   return std::max( percent, BLURT_MIN_CONTENT_REWARD );
-}
-
 uint16_t database::get_curation_rewards_percent( const comment_object& c ) const
 {
    return get_reward_fund( c ).percent_curation_rewards;

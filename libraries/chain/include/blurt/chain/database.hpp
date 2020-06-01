@@ -377,8 +377,6 @@ namespace blurt { namespace chain {
          void expire_escrow_ratification();
          void process_decline_voting_rights();
 
-         asset get_content_reward()const;
-
          uint16_t get_curation_rewards_percent( const comment_object& c ) const;
 
          share_type pay_reward_funds( share_type reward );
