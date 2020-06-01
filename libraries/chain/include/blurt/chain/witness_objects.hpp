@@ -191,7 +191,6 @@ namespace blurt { namespace chain {
          uint8_t                                                           num_scheduled_witnesses = 1;
          uint8_t                                                           elected_weight = 1;
          uint8_t                                                           timeshare_weight = 5;
-         uint8_t                                                           miner_weight = 1;
          uint32_t                                                          witness_pay_normalization_factor = 25;
          chain_properties                                                  median_props;
          version                                                           majority_version;
@@ -320,7 +319,7 @@ CHAINBASE_SET_INDEX_TYPE( blurt::chain::witness_vote_object, blurt::chain::witne
 
 FC_REFLECT( blurt::chain::witness_schedule_object,
              (id)(current_virtual_time)(next_shuffle_block_num)(current_shuffled_witnesses)(num_scheduled_witnesses)
-             (elected_weight)(timeshare_weight)(miner_weight)(witness_pay_normalization_factor)
+             (elected_weight)(timeshare_weight)(witness_pay_normalization_factor)
              (median_props)(majority_version)
              (max_voted_witnesses)
              (max_runner_witnesses)

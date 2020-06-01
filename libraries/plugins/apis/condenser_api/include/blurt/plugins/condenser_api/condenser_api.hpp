@@ -429,7 +429,6 @@ struct api_witness_schedule_object
       num_scheduled_witnesses( w.num_scheduled_witnesses ),
       elected_weight( w.elected_weight ),
       timeshare_weight( w.timeshare_weight ),
-      miner_weight( w.miner_weight ),
       witness_pay_normalization_factor( w.witness_pay_normalization_factor ),
       median_props( w.median_props ),
       majority_version( w.majority_version ),
@@ -450,7 +449,6 @@ struct api_witness_schedule_object
    uint8_t                       num_scheduled_witnesses = 1;
    uint8_t                       elected_weight = 1;
    uint8_t                       timeshare_weight = 5;
-   uint8_t                       miner_weight = 1;
    uint32_t                      witness_pay_normalization_factor = 25;
    api_chain_properties          median_props;
    version                       majority_version;
@@ -1057,7 +1055,6 @@ FC_REFLECT( blurt::plugins::condenser_api::api_witness_schedule_object,
              (num_scheduled_witnesses)
              (elected_weight)
              (timeshare_weight)
-             (miner_weight)
              (witness_pay_normalization_factor)
              (median_props)
              (majority_version)
