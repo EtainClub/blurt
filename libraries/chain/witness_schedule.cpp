@@ -150,18 +150,6 @@ void update_witness_schedule4( database& db )
 //   /// Add miners from the top of the mining queue
 //   flat_set< witness_id_type > selected_miners;
 //   const auto& gprops = db.get_dynamic_global_properties();
-//   const auto& pow_idx      = db.get_index<witness_index>().indices().get<by_pow>();
-//   auto mitr = pow_idx.upper_bound(0);
-//   while( mitr != pow_idx.end() && selected_miners.size() < wso.max_miner_witnesses )
-//   {
-//      // Remove processed miner from the queue
-//      auto itr = mitr;
-//      ++mitr;
-//      db.modify( *itr, [&](witness_object& wit )
-//      {
-//         wit.pow_worker = 0;
-//      } );
-//   }
 //
 //   auto num_miners = selected_miners.size();
 
