@@ -94,7 +94,6 @@
 
 #define BLURT_MAX_WITNESSES                   21
 #define BLURT_MAX_VOTED_WITNESSES_HF17        20
-#define BLURT_MAX_MINER_WITNESSES_HF17        0
 #define BLURT_MAX_RUNNER_WITNESSES_HF17       1
 
 #define BLURT_HARDFORK_REQUIRED_WITNESSES     17 // 17 of the 21 dpos witnesses (20 elected and 1 virtual time) required for hardfork. This guarantees 75% participation on all subsequent rounds.
