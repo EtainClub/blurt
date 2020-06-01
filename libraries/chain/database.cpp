@@ -1116,18 +1116,6 @@ asset database::create_vesting( const account_object& to_account, asset liquid, 
    return create_vesting2( *this, to_account, liquid, to_reward_balance, []( asset vests_created ) {} );
 }
 
-fc::sha256 database::get_pow_target()const
-{
-   const auto& dgp = get_dynamic_global_properties();
-   fc::sha256 target;
-   target._hash[0] = -1;
-   target._hash[1] = -1;
-   target._hash[2] = -1;
-   target._hash[3] = -1;
-   target = target >> ((dgp.num_pow_witnesses/4)+4);
-   return target;
-}
-
 uint32_t database::get_pow_summary_target()const
 {
    const dynamic_global_property_object& dgp = get_dynamic_global_properties();
