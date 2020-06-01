@@ -31,7 +31,6 @@
     "median_props": {
         "account_creation_fee": "0.000 TESTS",
         "maximum_block_size": 131072,
-        "sbd_interest_rate": 1000
     },
     "next_shuffle_block_num": 1,
     "num_scheduled_witnesses": 1,

@@ -54,10 +54,6 @@ tests = [
       "params": []
    },
    {
-      "method": "condenser_api.get_feed_history",
-      "params": []
-   },
-   {
       "method": "condenser_api.get_witness_schedule",
       "params": []
    },
@@ -485,14 +481,6 @@ tests = [
    },
    {
       "method": "database_api.get_reward_funds",
-      "params": {}
-   },
-   {
-      "method": "database_api.get_current_price_feed",
-      "params": {}
-   },
-   {
-      "method": "database_api.get_feed_history",
       "params": {}
    },
    {

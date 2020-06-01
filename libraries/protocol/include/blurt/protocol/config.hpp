@@ -224,9 +224,6 @@
 #define BLURT_SOFT_MAX_BLOCK_SIZE             (2*1024*1024)
 #define BLURT_MIN_BLOCK_SIZE                  115
 #define BLURT_BLOCKS_PER_HOUR                 (60*60/BLURT_BLOCK_INTERVAL)
-#define BLURT_FEED_INTERVAL_BLOCKS            (BLURT_BLOCKS_PER_HOUR)
-#define BLURT_FEED_HISTORY_WINDOW_PRE_HF_16   (24*7) /// 7 days * 24 hours per day
-#define BLURT_MAX_FEED_AGE_SECONDS            (60*60*24*7) // 7 days
 
 #define BLURT_MIN_UNDO_HISTORY                10
 #define BLURT_MAX_UNDO_HISTORY                10000
