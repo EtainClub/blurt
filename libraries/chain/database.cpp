@@ -3376,51 +3376,35 @@ void database::update_last_irreversible_block()
 { try {
    const dynamic_global_property_object& dpo = get_dynamic_global_properties();
    auto old_last_irreversible = dpo.last_irreversible_block_num;
+   const witness_schedule_object& wso = get_witness_schedule_object();
 
-   /**
-    * Prior to voting taking over, we must be more conservative...
-    *
-    */
-   if( head_block_num() < BLURT_START_MINER_VOTING_BLOCK )
+   vector< const witness_object* > wit_objs;
+   wit_objs.reserve( wso.num_scheduled_witnesses );
+   for( int i = 0; i < wso.num_scheduled_witnesses; i++ )
+      wit_objs.push_back( &get_witness( wso.current_shuffled_witnesses[i] ) );
+
+   static_assert( BLURT_IRREVERSIBLE_THRESHOLD > 0, "irreversible threshold must be nonzero" );
+
+   // 1 1 1 2 2 2 2 2 2 2 -> 2     .7*10 = 7
+   // 1 1 1 1 1 1 1 2 2 2 -> 1
+   // 3 3 3 3 3 3 3 3 3 3 -> 3
+
+   size_t offset = ((BLURT_100_PERCENT - BLURT_IRREVERSIBLE_THRESHOLD) * wit_objs.size() / BLURT_100_PERCENT);
+
+   std::nth_element( wit_objs.begin(), wit_objs.begin() + offset, wit_objs.end(),
+      []( const witness_object* a, const witness_object* b )
+      {
+         return a->last_confirmed_block_num < b->last_confirmed_block_num;
+      } );
+
+   uint32_t new_last_irreversible_block_num = wit_objs[offset]->last_confirmed_block_num;
+
+   if( new_last_irreversible_block_num > dpo.last_irreversible_block_num )
    {
       modify( dpo, [&]( dynamic_global_property_object& _dpo )
       {
-         if ( head_block_num() > BLURT_MAX_WITNESSES )
-            _dpo.last_irreversible_block_num = head_block_num() - BLURT_MAX_WITNESSES;
+         _dpo.last_irreversible_block_num = new_last_irreversible_block_num;
       } );
-   }
-   else
-   {
-      const witness_schedule_object& wso = get_witness_schedule_object();
-
-      vector< const witness_object* > wit_objs;
-      wit_objs.reserve( wso.num_scheduled_witnesses );
-      for( int i = 0; i < wso.num_scheduled_witnesses; i++ )
-         wit_objs.push_back( &get_witness( wso.current_shuffled_witnesses[i] ) );
-
-      static_assert( BLURT_IRREVERSIBLE_THRESHOLD > 0, "irreversible threshold must be nonzero" );
-
-      // 1 1 1 2 2 2 2 2 2 2 -> 2     .7*10 = 7
-      // 1 1 1 1 1 1 1 2 2 2 -> 1
-      // 3 3 3 3 3 3 3 3 3 3 -> 3
-
-      size_t offset = ((BLURT_100_PERCENT - BLURT_IRREVERSIBLE_THRESHOLD) * wit_objs.size() / BLURT_100_PERCENT);
-
-      std::nth_element( wit_objs.begin(), wit_objs.begin() + offset, wit_objs.end(),
-         []( const witness_object* a, const witness_object* b )
-         {
-            return a->last_confirmed_block_num < b->last_confirmed_block_num;
-         } );
-
-      uint32_t new_last_irreversible_block_num = wit_objs[offset]->last_confirmed_block_num;
-
-      if( new_last_irreversible_block_num > dpo.last_irreversible_block_num )
-      {
-         modify( dpo, [&]( dynamic_global_property_object& _dpo )
-         {
-            _dpo.last_irreversible_block_num = new_last_irreversible_block_num;
-         } );
-      }
    }
 
    for( uint32_t i = old_last_irreversible; i <= dpo.last_irreversible_block_num; ++i )

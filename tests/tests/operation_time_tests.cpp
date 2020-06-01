@@ -1454,46 +1454,46 @@ BOOST_AUTO_TEST_CASE( steem_inflation )
 
       BOOST_TEST_MESSAGE( "Testing up to the start block for miner voting" );
 
-      while( db->head_block_num() < BLURT_START_MINER_VOTING_BLOCK - 1 )
-      {
-         virtual_supply = gpo.virtual_supply;
-         witness_name = db->get_scheduled_witness(1);
-         old_witness_balance = db->get_account( witness_name ).balance;
-
-         new_rewards = std::max( BLURT_MIN_CONTENT_REWARD, asset( ( BLURT_CONTENT_APR * gpo.virtual_supply.amount ) / ( BLURT_BLOCKS_PER_YEAR * 100 ), BLURT_SYMBOL ) )
-            + std::max( BLURT_MIN_CURATE_REWARD, asset( ( BLURT_CURATE_APR * gpo.virtual_supply.amount ) / ( BLURT_BLOCKS_PER_YEAR * 100 ), BLURT_SYMBOL ) );
-         witness_pay = std::max( BLURT_MIN_PRODUCER_REWARD, asset( ( BLURT_PRODUCER_APR * gpo.virtual_supply.amount ) / ( BLURT_BLOCKS_PER_YEAR * 100 ), BLURT_SYMBOL ) );
-         auto witness_pay_shares = asset( 0, VESTS_SYMBOL );
-         new_vesting_steem = asset( ( witness_pay + new_rewards ).amount * 9, BLURT_SYMBOL );
-         new_vesting_shares = gpo.total_vesting_shares;
-
-         if ( db->get_account( witness_name ).vesting_shares.amount.value == 0 )
-         {
-            new_vesting_steem += witness_pay;
-            witness_pay_shares = witness_pay * gpo.get_vesting_share_price();
-            new_vesting_shares += witness_pay_shares;
-            new_supply += witness_pay;
-            witness_pay = asset( 0, BLURT_SYMBOL );
-         }
-
-         new_supply = gpo.current_supply + new_rewards + witness_pay + new_vesting_steem;
-         new_rewards += gpo.total_reward_fund_blurt;
-         new_vesting_steem += gpo.total_vesting_fund_blurt;
-
-         generate_block();
-
-         gpo = db->get_dynamic_global_properties();
-
-         BOOST_REQUIRE( gpo.current_supply.amount.value == new_supply.amount.value );
-         BOOST_REQUIRE( gpo.virtual_supply.amount.value == new_supply.amount.value );
-         BOOST_REQUIRE( gpo.total_reward_fund_blurt.amount.value == new_rewards.amount.value );
-         BOOST_REQUIRE( gpo.total_vesting_fund_blurt.amount.value == new_vesting_steem.amount.value );
-         BOOST_REQUIRE( gpo.total_vesting_shares.amount.value == new_vesting_shares.amount.value );
-         BOOST_REQUIRE( db->get_account( witness_name ).balance.amount.value == ( old_witness_balance + witness_pay ).amount.value );
-         BOOST_REQUIRE( db->get_account( witness_name ).vesting_shares.amount.value == ( old_witness_shares + witness_pay_shares ).amount.value );
-
-         validate_database();
-      }
+//      while( db->head_block_num() < BLURT_START_MINER_VOTING_BLOCK - 1 )
+//      {
+//         virtual_supply = gpo.virtual_supply;
+//         witness_name = db->get_scheduled_witness(1);
+//         old_witness_balance = db->get_account( witness_name ).balance;
+//
+//         new_rewards = std::max( BLURT_MIN_CONTENT_REWARD, asset( ( BLURT_CONTENT_APR * gpo.virtual_supply.amount ) / ( BLURT_BLOCKS_PER_YEAR * 100 ), BLURT_SYMBOL ) )
+//            + std::max( BLURT_MIN_CURATE_REWARD, asset( ( BLURT_CURATE_APR * gpo.virtual_supply.amount ) / ( BLURT_BLOCKS_PER_YEAR * 100 ), BLURT_SYMBOL ) );
+//         witness_pay = std::max( BLURT_MIN_PRODUCER_REWARD, asset( ( BLURT_PRODUCER_APR * gpo.virtual_supply.amount ) / ( BLURT_BLOCKS_PER_YEAR * 100 ), BLURT_SYMBOL ) );
+//         auto witness_pay_shares = asset( 0, VESTS_SYMBOL );
+//         new_vesting_steem = asset( ( witness_pay + new_rewards ).amount * 9, BLURT_SYMBOL );
+//         new_vesting_shares = gpo.total_vesting_shares;
+//
+//         if ( db->get_account( witness_name ).vesting_shares.amount.value == 0 )
+//         {
+//            new_vesting_steem += witness_pay;
+//            witness_pay_shares = witness_pay * gpo.get_vesting_share_price();
+//            new_vesting_shares += witness_pay_shares;
+//            new_supply += witness_pay;
+//            witness_pay = asset( 0, BLURT_SYMBOL );
+//         }
+//
+//         new_supply = gpo.current_supply + new_rewards + witness_pay + new_vesting_steem;
+//         new_rewards += gpo.total_reward_fund_blurt;
+//         new_vesting_steem += gpo.total_vesting_fund_blurt;
+//
+//         generate_block();
+//
+//         gpo = db->get_dynamic_global_properties();
+//
+//         BOOST_REQUIRE( gpo.current_supply.amount.value == new_supply.amount.value );
+//         BOOST_REQUIRE( gpo.virtual_supply.amount.value == new_supply.amount.value );
+//         BOOST_REQUIRE( gpo.total_reward_fund_blurt.amount.value == new_rewards.amount.value );
+//         BOOST_REQUIRE( gpo.total_vesting_fund_blurt.amount.value == new_vesting_steem.amount.value );
+//         BOOST_REQUIRE( gpo.total_vesting_shares.amount.value == new_vesting_shares.amount.value );
+//         BOOST_REQUIRE( db->get_account( witness_name ).balance.amount.value == ( old_witness_balance + witness_pay ).amount.value );
+//         BOOST_REQUIRE( db->get_account( witness_name ).vesting_shares.amount.value == ( old_witness_shares + witness_pay_shares ).amount.value );
+//
+//         validate_database();
+//      }
 
       for( int i = 0; i < BLURT_BLOCKS_PER_DAY; i++ )
       {

@@ -85,7 +85,6 @@
 #define BLURT_BLOCK_INTERVAL                  3
 #define BLURT_BLOCKS_PER_YEAR                 (365*24*60*60/BLURT_BLOCK_INTERVAL)
 #define BLURT_BLOCKS_PER_DAY                  (24*60*60/BLURT_BLOCK_INTERVAL)
-#define BLURT_START_MINER_VOTING_BLOCK        (BLURT_BLOCKS_PER_DAY * 30)
 
 #define BLURT_INIT_MINER_NAME                 "initminer"
 #define BLURT_NUM_INIT_MINERS                 1
