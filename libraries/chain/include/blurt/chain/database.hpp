@@ -378,7 +378,6 @@ namespace blurt { namespace chain {
          void process_decline_voting_rights();
 
          asset get_content_reward()const;
-         asset get_curation_reward()const;
 
          uint16_t get_curation_rewards_percent( const comment_object& c ) const;
 
