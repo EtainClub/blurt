@@ -1116,15 +1116,6 @@ asset database::create_vesting( const account_object& to_account, asset liquid, 
    return create_vesting2( *this, to_account, liquid, to_reward_balance, []( asset vests_created ) {} );
 }
 
-uint32_t database::get_pow_summary_target()const
-{
-   const dynamic_global_property_object& dgp = get_dynamic_global_properties();
-   if( dgp.num_pow_witnesses >= 1004 )
-      return 0;
-
-   return (0xFE00 - 0x0040 * dgp.num_pow_witnesses ) << 0x10;
-}
-
 void database::adjust_proxied_witness_votes( const account_object& a,
                                    const std::array< share_type, BLURT_MAX_PROXY_RECURSION_DEPTH+1 >& delta,
                                    int depth )
