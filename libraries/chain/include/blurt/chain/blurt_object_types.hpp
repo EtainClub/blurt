@@ -64,7 +64,6 @@ enum object_type
    comment_content_object_type,
    comment_vote_object_type,
    witness_vote_object_type,
-   feed_history_object_type,
    operation_object_type,
    account_history_object_type,
    hardfork_property_object_type,
@@ -95,7 +94,6 @@ class comment_object;
 class comment_content_object;
 class comment_vote_object;
 class witness_vote_object;
-class feed_history_object;
 class operation_object;
 class account_history_object;
 class hardfork_property_object;
@@ -318,7 +316,6 @@ FC_REFLECT_ENUM( blurt::chain::object_type,
                  (comment_content_object_type)
                  (comment_vote_object_type)
                  (witness_vote_object_type)
-                 (feed_history_object_type)
                  (operation_object_type)
                  (account_history_object_type)
                  (hardfork_property_object_type)
