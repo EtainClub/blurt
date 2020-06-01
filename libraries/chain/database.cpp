@@ -2559,9 +2559,6 @@ void database::init_genesis( uint64_t init_supply )
 
          { // BLURT_HARDFORK_0_17:
             static_assert(
-               BLURT_MAX_VOTED_WITNESSES_HF0 + BLURT_MAX_MINER_WITNESSES_HF0 + BLURT_MAX_RUNNER_WITNESSES_HF0 == BLURT_MAX_WITNESSES,
-               "HF0 witness counts must add up to BLURT_MAX_WITNESSES" );
-            static_assert(
                BLURT_MAX_VOTED_WITNESSES_HF17 + BLURT_MAX_MINER_WITNESSES_HF17 + BLURT_MAX_RUNNER_WITNESSES_HF17 == BLURT_MAX_WITNESSES,
                "HF17 witness counts must add up to BLURT_MAX_WITNESSES" );
 

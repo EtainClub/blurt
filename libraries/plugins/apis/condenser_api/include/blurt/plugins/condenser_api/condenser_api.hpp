@@ -455,7 +455,7 @@ struct api_witness_schedule_object
    uint32_t                      witness_pay_normalization_factor = 25;
    api_chain_properties          median_props;
    version                       majority_version;
-   uint8_t                       max_voted_witnesses           = BLURT_MAX_VOTED_WITNESSES_HF0;
+   uint8_t                       max_voted_witnesses           = BLURT_MAX_VOTED_WITNESSES_HF17;
    uint8_t                       max_miner_witnesses           = BLURT_MAX_MINER_WITNESSES_HF0;
    uint8_t                       max_runner_witnesses          = BLURT_MAX_RUNNER_WITNESSES_HF0;
    uint8_t                       hardfork_required_witnesses   = BLURT_HARDFORK_REQUIRED_WITNESSES;

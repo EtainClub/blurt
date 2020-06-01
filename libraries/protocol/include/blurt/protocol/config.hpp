@@ -94,7 +94,6 @@
 
 #define BLURT_MAX_WITNESSES                   21
 
-#define BLURT_MAX_VOTED_WITNESSES_HF0         19
 #define BLURT_MAX_MINER_WITNESSES_HF0         1
 #define BLURT_MAX_RUNNER_WITNESSES_HF0        1
 
