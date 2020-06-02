@@ -2327,6 +2327,11 @@ void database::init_genesis( uint64_t init_supply )
          p.last_budget_time = BLURT_GENESIS_TIME;
          p.regent_init_vesting_shares = asset(init_supply / 2, BLURT_SYMBOL) * p.get_vesting_share_price(); // 50% of the init_supply
          p.regent_vesting_shares = p.regent_init_vesting_shares;
+         p.total_reward_fund_blurt = asset( 0, BLURT_SYMBOL );
+         p.total_reward_shares2 = 0;
+         p.sps_fund_percent = BLURT_PROPOSAL_FUND_PERCENT_HF21;
+         p.content_reward_percent = BLURT_CONTENT_REWARD_PERCENT_HF21;
+         p.reverse_auction_seconds = BLURT_REVERSE_AUCTION_WINDOW_SECONDS_HF21;
       } );
 
       for( int i = 0; i < 0x10000; i++ )
@@ -2366,45 +2371,25 @@ void database::init_genesis( uint64_t init_supply )
 
       //////////////////////////////
       { // pre-apply HF 1 to 22 here
-          { // BLURT_HARDFORK_0_1:
-          }
+          // BLURT_HARDFORK_0_1:
+          // BLURT_HARDFORK_0_2
+          // BLURT_HARDFORK_0_3
+          // BLURT_HARDFORK_0_4
+          // BLURT_HARDFORK_0_5
+          // BLURT_HARDFORK_0_6
+          // BLURT_HARDFORK_0_7:
+          // BLURT_HARDFORK_0_8:
+          // BLURT_HARDFORK_0_9:
+          // BLURT_HARDFORK_0_10:
+          // BLURT_HARDFORK_0_11:
 
-          { // BLURT_HARDFORK_0_2
-//            retally_witness_votes();
-          }
+          // retally_witness_votes();
+          retally_witness_votes();
+          reset_virtual_schedule_time(*this);
+          retally_witness_vote_counts();
+          retally_comment_children();
+          retally_witness_vote_counts(true);
 
-          { // BLURT_HARDFORK_0_3
-            retally_witness_votes();
-          }
-
-          { // BLURT_HARDFORK_0_4
-            reset_virtual_schedule_time(*this);
-          }
-
-          { // BLURT_HARDFORK_0_5
-          }
-
-          { // BLURT_HARDFORK_0_6
-            retally_witness_vote_counts();
-            retally_comment_children();
-          }
-
-          { // BLURT_HARDFORK_0_7:
-          }
-
-          { // BLURT_HARDFORK_0_8:
-            retally_witness_vote_counts(true);
-          }
-
-          { // BLURT_HARDFORK_0_9:
-          }
-
-          { // BLURT_HARDFORK_0_10:
-//            retally_liquidity_weight();
-          }
-
-          { // BLURT_HARDFORK_0_11:
-          }
 
           { // BLURT_HARDFORK_0_12:
 //            const auto& comment_idx = get_index< comment_index >().indices();
@@ -2427,27 +2412,14 @@ void database::init_genesis( uint64_t init_supply )
 //            });
          }
 
-         { // BLURT_HARDFORK_0_13:
-         }
-
-         { // BLURT_HARDFORK_0_14:
-         }
-
-         { // BLURT_HARDFORK_0_15:
-         }
-
-         { // BLURT_HARDFORK_0_16:
-         }
+         // BLURT_HARDFORK_0_13:
+         // BLURT_HARDFORK_0_14:
+         // BLURT_HARDFORK_0_15:
+         // BLURT_HARDFORK_0_16:
 
          { // BLURT_HARDFORK_0_17:
             static_assert(BLURT_MAX_VOTED_WITNESSES_HF17 + BLURT_MAX_RUNNER_WITNESSES_HF17 == BLURT_MAX_WITNESSES,
                "HF17 witness counts must add up to BLURT_MAX_WITNESSES" );
-
-            modify( get_witness_schedule_object(), [&]( witness_schedule_object& wso )
-            {
-               wso.max_voted_witnesses = BLURT_MAX_VOTED_WITNESSES_HF17;
-               wso.max_runner_witnesses = BLURT_MAX_RUNNER_WITNESSES_HF17;
-            });
 
             const auto& gpo = get_dynamic_global_properties();
 
@@ -2456,110 +2428,24 @@ void database::init_genesis( uint64_t init_supply )
                rfo.name = BLURT_POST_REWARD_FUND_NAME;
                rfo.last_update = head_block_time();
                rfo.content_constant = BLURT_CONTENT_CONSTANT_HF21;
-               rfo.percent_curation_rewards = BLURT_1_PERCENT * 25;
+               rfo.percent_curation_rewards = 50 * BLURT_1_PERCENT;
                rfo.percent_content_rewards = BLURT_100_PERCENT;
                rfo.reward_balance = gpo.total_reward_fund_blurt;
-//  #ifndef IS_TEST_NET
-//               rfo.recent_claims = BLURT_HF_17_RECENT_CLAIMS; // set to BLURT_HF_19_RECENT_CLAIMS
-//  #endif
-               rfo.author_reward_curve = curve_id::quadratic;
-               rfo.curation_reward_curve = curve_id::bounded_curation;
+#ifndef IS_TEST_NET
+               rfo.recent_claims = BLURT_HF21_CONVERGENT_LINEAR_RECENT_CLAIMS;
+               rfo.reward_balance = asset( BLURT_INIT_POST_REWARD_BALANCE, BLURT_SYMBOL );
+#endif
+               rfo.author_reward_curve = curve_id::convergent_linear;
+               rfo.curation_reward_curve = curve_id::convergent_square_root;
             });
 
             // As a shortcut in payout processing, we use the id as an array index.
             // The IDs must be assigned this way. The assertion is a dummy check to ensure this happens.
             FC_ASSERT( post_rf.id._id == 0 );
-
-            modify( gpo, [&]( dynamic_global_property_object& g )
-            {
-               g.total_reward_fund_blurt = asset( 0, BLURT_SYMBOL );
-               g.total_reward_shares2 = 0;
-            });
-
-//            /*
-//            * For all current comments we will either keep their current cashout time, or extend it to 1 week
-//            * after creation.
-//            *
-//            * We cannot do a simple iteration by cashout time because we are editting cashout time.
-//            * More specifically, we will be adding an explicit cashout time to all comments with parents.
-//            * To find all discussions that have not been paid out we fir iterate over posts by cashout time.
-//            * Before the hardfork these are all root posts. Iterate over all of their children, adding each
-//            * to a specific list. Next, update payout times for all discussions on the root post. This defines
-//            * the min cashout time for each child in the discussion. Then iterate over the children and set
-//            * their cashout time in a similar way, grabbing the root post as their inherent cashout time.
-//            */
-//            const auto& comment_idx = get_index< comment_index, by_cashout_time >();
-//            const auto& by_root_idx = get_index< comment_index, by_root >();
-//            vector< const comment_object* > root_posts;
-//            root_posts.reserve( BLURT_HF_17_NUM_POSTS );
-//            vector< const comment_object* > replies;
-//            replies.reserve( BLURT_HF_17_NUM_REPLIES );
-//
-//            for( auto itr = comment_idx.begin(); itr != comment_idx.end() && itr->cashout_time < fc::time_point_sec::maximum(); ++itr )
-//            {
-//               root_posts.push_back( &(*itr) );
-//
-//               for( auto reply_itr = by_root_idx.lower_bound( itr->id ); reply_itr != by_root_idx.end() && reply_itr->root_comment == itr->id; ++reply_itr )
-//               {
-//                  replies.push_back( &(*reply_itr) );
-//               }
-//            }
-//
-//            for( const auto& itr : root_posts )
-//            {
-//               modify( *itr, [&]( comment_object& c )
-//               {
-//                  c.cashout_time = std::max( c.created + BLURT_CASHOUT_WINDOW_SECONDS, c.cashout_time );
-//               });
-//            }
-//
-//            for( const auto& itr : replies )
-//            {
-//               modify( *itr, [&]( comment_object& c )
-//               {
-//                  c.cashout_time = std::max( calculate_discussion_payout_time( c ), c.created + BLURT_CASHOUT_WINDOW_SECONDS );
-//               });
-//            }
         }
 
-        { // BLURT_HARDFORK_0_18:
-        }
-
-        { //  BLURT_HARDFORK_0_19:
-            modify( get_dynamic_global_properties(), [&]( dynamic_global_property_object& gpo )
-            {
-               gpo.vote_power_reserve_rate = BLURT_REDUCED_VOTE_POWER_RATE;
-            });
-
-            modify( get< reward_fund_object, by_name >( BLURT_POST_REWARD_FUND_NAME ), [&]( reward_fund_object &rfo )
-            {
-#ifndef IS_TEST_NET
-               rfo.recent_claims = BLURT_HF_19_RECENT_CLAIMS;
-#endif
-               rfo.author_reward_curve = curve_id::linear;
-               rfo.curation_reward_curve = curve_id::square_root;
-
-               rfo.reward_balance = asset( 923210316, BLURT_SYMBOL );
-            });
-
-            /* Remove all 0 delegation objects */
-            vector< const vesting_delegation_object* > to_remove;
-            const auto& delegation_idx = get_index< vesting_delegation_index, by_id >();
-            auto delegation_itr = delegation_idx.begin();
-
-            while( delegation_itr != delegation_idx.end() )
-            {
-               if( delegation_itr->vesting_shares.amount == 0 )
-                  to_remove.push_back( &(*delegation_itr) );
-
-               ++delegation_itr;
-            }
-
-            for( const vesting_delegation_object* delegation_ptr: to_remove )
-            {
-               remove( *delegation_ptr );
-            }
-        }
+        // BLURT_HARDFORK_0_18:
+        // BLURT_HARDFORK_0_19:
 
         { // BLURT_HARDFORK_0_20:
 //            const auto& wso = get_witness_schedule_object();
@@ -2583,13 +2469,6 @@ void database::init_genesis( uint64_t init_supply )
         }
 
         { // BLURT_HARDFORK_0_21:
-           modify( get_dynamic_global_properties(), [&]( dynamic_global_property_object& gpo )
-           {
-              gpo.sps_fund_percent = BLURT_PROPOSAL_FUND_PERCENT_HF21;
-              gpo.content_reward_percent = BLURT_CONTENT_REWARD_PERCENT_HF21;
-              gpo.reverse_auction_seconds = BLURT_REVERSE_AUCTION_WINDOW_SECONDS_HF21;
-           });
-
            auto account_auth = find< account_authority_object, by_account >( BLURT_TREASURY_ACCOUNT );
            if( account_auth == nullptr )
               create< account_authority_object >( [&]( account_authority_object& auth )
@@ -2624,16 +2503,6 @@ void database::init_genesis( uint64_t init_supply )
            auto change_request = find< change_recovery_account_request_object, by_account >( BLURT_TREASURY_ACCOUNT );
            if( change_request )
               remove( *change_request );
-
-           modify( get< reward_fund_object, by_name >( BLURT_POST_REWARD_FUND_NAME ), [&]( reward_fund_object& rfo )
-           {
-              rfo.percent_curation_rewards = 50 * BLURT_1_PERCENT;
-              rfo.author_reward_curve = convergent_linear;
-              rfo.curation_reward_curve = convergent_square_root;
-  #ifndef  IS_TEST_NET
-              rfo.recent_claims = BLURT_HF21_CONVERGENT_LINEAR_RECENT_CLAIMS;
-  #endif
-           });
         }
       } // ~end  pre-apply HF 1 to 21
    }
