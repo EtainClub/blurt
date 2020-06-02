@@ -87,7 +87,7 @@ clean_database_fixture::clean_database_fixture( uint16_t shared_file_size_in_mb 
    vest( "initminer", 10000 );
 
    // Fill up the rest of the required miners
-   for( int i = BLURT_NUM_INIT_MINERS; i < BLURT_MAX_WITNESSES; i++ )
+   for( int i = 1; i < BLURT_MAX_WITNESSES; i++ )
    {
       account_create( BLURT_INIT_MINER_NAME + fc::to_string( i ), init_account_pub_key );
       fund( BLURT_INIT_MINER_NAME + fc::to_string( i ), BLURT_MIN_PRODUCER_REWARD.amount.value );
@@ -161,7 +161,7 @@ void clean_database_fixture::resize_shared_mem( uint64_t size )
    vest( "initminer", 10000 );
 
    // Fill up the rest of the required miners
-   for( int i = BLURT_NUM_INIT_MINERS; i < BLURT_MAX_WITNESSES; i++ )
+   for( int i = 1; i < BLURT_MAX_WITNESSES; i++ )
    {
       account_create( BLURT_INIT_MINER_NAME + fc::to_string( i ), init_account_pub_key );
       fund( BLURT_INIT_MINER_NAME + fc::to_string( i ), BLURT_MIN_PRODUCER_REWARD.amount.value );
@@ -788,7 +788,7 @@ json_rpc_database_fixture::json_rpc_database_fixture()
    vest( "initminer", 10000 );
 
    // Fill up the rest of the required miners
-   for( int i = BLURT_NUM_INIT_MINERS; i < BLURT_MAX_WITNESSES; i++ )
+   for( int i = 1; i < BLURT_MAX_WITNESSES; i++ )
    {
       account_create( BLURT_INIT_MINER_NAME + fc::to_string( i ), init_account_pub_key );
       fund( BLURT_INIT_MINER_NAME + fc::to_string( i ), BLURT_MIN_PRODUCER_REWARD.amount.value );

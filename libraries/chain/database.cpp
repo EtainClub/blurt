@@ -2275,7 +2275,7 @@ void database::init_genesis( uint64_t init_supply )
          auth.active.weight_threshold = 0;
       });
 
-      for( int i = 0; i < BLURT_NUM_INIT_MINERS; ++i )
+      for( int i = 0; i < BLURT_MAX_WITNESSES; ++i )
       {
          create< account_object >( [&]( account_object& a )
          {

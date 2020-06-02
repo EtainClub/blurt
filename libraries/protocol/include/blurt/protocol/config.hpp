@@ -42,12 +42,14 @@
 
 #define BLURT_VOTE_DUST_THRESHOLD             (0)
 
+#define BLURT_INIT_MINER_NAME                 "initminer"
+
 #else // IS LIVE BLURT NETWORK
 
 #define BLURT_BLOCKCHAIN_VERSION              ( version(0, 0, 0) )
 
-#define BLURT_INIT_PUBLIC_KEY_STR             "BLT8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"
-#define BLURT_CHAIN_ID                        (fc::sha256::hash("blurt"))
+#define BLURT_INIT_PUBLIC_KEY_STR             "BLT875YGJ2rXwEhUr4hRXduZguwJKEJufsS4oYT6ehHWiDhev7hah"
+#define BLURT_CHAIN_ID                        (fc::sha256::hash("blurt-testbed")) // cd8d90f29ae273abec3eaa7731e25934c63eb654d55080caff2ebb7f5df6381f
 #define BLURT_ADDRESS_PREFIX                  "BLT"
 
 #define BLURT_GENESIS_TIME                    (fc::time_point_sec(1591025652))
@@ -68,9 +70,11 @@
 #define BLURT_OWNER_UPDATE_LIMIT                          fc::minutes(60)
 #define BLURT_OWNER_AUTH_HISTORY_TRACKING_START_BLOCK_NUM 3186477
 
-#define BLURT_INIT_SUPPLY                     int64_t(0)
+#define BLURT_INIT_SUPPLY                     int64_t(388031775139)
 
 #define BLURT_VOTE_DUST_THRESHOLD             (50000000)
+
+#define BLURT_INIT_MINER_NAME                 "blurtinitminer"
 
 #endif
 
@@ -85,9 +89,6 @@
 #define BLURT_BLOCK_INTERVAL                  3
 #define BLURT_BLOCKS_PER_YEAR                 (365*24*60*60/BLURT_BLOCK_INTERVAL)
 #define BLURT_BLOCKS_PER_DAY                  (24*60*60/BLURT_BLOCK_INTERVAL)
-
-#define BLURT_INIT_MINER_NAME                 "initminer"
-#define BLURT_NUM_INIT_MINERS                 1
 
 #define BLURT_MAX_WITNESSES                   21
 #define BLURT_MAX_VOTED_WITNESSES_HF17        20
