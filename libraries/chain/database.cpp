@@ -3146,8 +3146,7 @@ void database::create_block_summary(const signed_block& next_block)
 
 void database::update_global_dynamic_data( const signed_block& b )
 { try {
-   const dynamic_global_property_object& _dgp =
-      get_dynamic_global_properties();
+   const dynamic_global_property_object& _dgp = get_dynamic_global_properties();
 
    uint32_t missed_blocks = 0;
    if( head_block_time() != fc::time_point_sec() )
