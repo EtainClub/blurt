@@ -410,7 +410,6 @@ namespace blurt { namespace chain {
          std::deque< signed_transaction >       _popped_tx;
          vector< signed_transaction >           _pending_tx;
 
-         void perform_vesting_share_split( uint32_t magnitude );
          void retally_comment_children();
          void retally_witness_votes();
          void retally_witness_vote_counts( bool force = false );
