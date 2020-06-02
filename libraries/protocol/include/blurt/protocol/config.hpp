@@ -18,11 +18,7 @@
 
 #define BLURT_GENESIS_TIME                    (fc::time_point_sec(1591025652))
 #define BLURT_CASHOUT_WINDOW_SECONDS          (60*60) /// 1 hr
-#define BLURT_CASHOUT_WINDOW_SECONDS_PRE_HF12 (BLURT_CASHOUT_WINDOW_SECONDS)
-#define BLURT_CASHOUT_WINDOW_SECONDS_PRE_HF17 (BLURT_CASHOUT_WINDOW_SECONDS)
-#define BLURT_SECOND_CASHOUT_WINDOW           (60*60*24*3) /// 3 days
 #define BLURT_MAX_CASHOUT_WINDOW_SECONDS      (60*60*24) /// 1 day
-#define BLURT_UPVOTE_LOCKOUT_HF7              (fc::minutes(1))
 #define BLURT_UPVOTE_LOCKOUT_SECONDS          (60*5)    /// 5 minutes
 #define BLURT_UPVOTE_LOCKOUT_HF17             (fc::minutes(5))
 
@@ -33,7 +29,6 @@
 #define BLURT_OWNER_AUTH_RECOVERY_PERIOD                  fc::seconds(60)
 #define BLURT_ACCOUNT_RECOVERY_REQUEST_EXPIRATION_PERIOD  fc::seconds(12)
 #define BLURT_OWNER_UPDATE_LIMIT                          fc::seconds(0)
-#define BLURT_OWNER_AUTH_HISTORY_TRACKING_START_BLOCK_NUM 1
 
 #define BLURT_INIT_SUPPLY                     (int64_t( 250 ) * int64_t( 1000000 ) * int64_t( 1000 ))
 
@@ -53,12 +48,8 @@
 #define BLURT_ADDRESS_PREFIX                  "BLT"
 
 #define BLURT_GENESIS_TIME                    (fc::time_point_sec(1591025652))
-#define BLURT_CASHOUT_WINDOW_SECONDS_PRE_HF12 (60*60*24)    /// 1 day
-#define BLURT_CASHOUT_WINDOW_SECONDS_PRE_HF17 (60*60*12)    /// 12 hours
 #define BLURT_CASHOUT_WINDOW_SECONDS          (60*60*24*7)  /// 7 days
-#define BLURT_SECOND_CASHOUT_WINDOW           (60*60*24*30) /// 30 days
 #define BLURT_MAX_CASHOUT_WINDOW_SECONDS      (60*60*24*14) /// 2 weeks
-#define BLURT_UPVOTE_LOCKOUT_HF7              (fc::minutes(1))
 #define BLURT_UPVOTE_LOCKOUT_SECONDS          (60*60*12)    /// 12 hours
 #define BLURT_UPVOTE_LOCKOUT_HF17             (fc::hours(12))
 
@@ -68,7 +59,6 @@
 #define BLURT_OWNER_AUTH_RECOVERY_PERIOD                  fc::days(30)
 #define BLURT_ACCOUNT_RECOVERY_REQUEST_EXPIRATION_PERIOD  fc::days(1)
 #define BLURT_OWNER_UPDATE_LIMIT                          fc::minutes(60)
-#define BLURT_OWNER_AUTH_HISTORY_TRACKING_START_BLOCK_NUM 3186477
 
 #define BLURT_INIT_SUPPLY                     int64_t(388031775139)
 
@@ -105,13 +95,10 @@
 #define BLURT_SAVINGS_WITHDRAW_REQUEST_LIMIT  100
 #define BLURT_VOTING_MANA_REGENERATION_SECONDS (5*60*60*24) // 5 day
 #define BLURT_MAX_VOTE_CHANGES                5
-#define BLURT_REVERSE_AUCTION_WINDOW_SECONDS_HF6 (60*30) /// 30 minutes
-#define BLURT_REVERSE_AUCTION_WINDOW_SECONDS_HF20 (60*15) /// 15 minutes
 #define BLURT_REVERSE_AUCTION_WINDOW_SECONDS_HF21 (60*5) /// 5 minutes
 #define BLURT_MIN_VOTE_INTERVAL_SEC           3
 
 #define BLURT_MIN_ROOT_COMMENT_INTERVAL       (fc::seconds(60*5)) // 5 minutes
-#define BLURT_MIN_REPLY_INTERVAL              (fc::seconds(20)) // 20 seconds
 #define BLURT_MIN_REPLY_INTERVAL_HF20         (fc::seconds(3)) // 3 seconds
 #define BLURT_MIN_COMMENT_EDIT_INTERVAL       (fc::seconds(3)) // 3 seconds
 #define BLURT_POST_AVERAGE_WINDOW             (60*60*24u) // 1 day
@@ -122,18 +109,12 @@
 #define BLURT_INFLATION_RATE_START_PERCENT    (978) // Fixes block 7,000,000 to 9.5%
 #define BLURT_INFLATION_RATE_STOP_PERCENT     (95) // 0.95%
 #define BLURT_INFLATION_NARROWING_PERIOD      (250000) // Narrow 0.01% every 250k blocks
-#define BLURT_CONTENT_REWARD_PERCENT_HF16     (75*BLURT_1_PERCENT) //75% of inflation, 7.125% inflation
 #define BLURT_VESTING_FUND_PERCENT_HF16       (15*BLURT_1_PERCENT) //15% of inflation, 1.425% inflation
-#define BLURT_PROPOSAL_FUND_PERCENT_HF0       (0)
-
 #define BLURT_CONTENT_REWARD_PERCENT_HF21     (65*BLURT_1_PERCENT)
 #define BLURT_PROPOSAL_FUND_PERCENT_HF21      (10*BLURT_1_PERCENT)
 
 #define BLURT_HF21_CONVERGENT_LINEAR_RECENT_CLAIMS (fc::uint128_t(0,503600561838938636ull))
 #define BLURT_CONTENT_CONSTANT_HF21           (fc::uint128_t(0,2000000000000ull))
-
-#define BLURT_MINER_PAY_PERCENT               (BLURT_1_PERCENT) // 1%
-#define BLURT_MAX_RATION_DECAY_RATE           (1000000)
 
 #define BLURT_BANDWIDTH_AVERAGE_WINDOW_SECONDS (60*60*24*7) ///< 1 week
 #define BLURT_BANDWIDTH_PRECISION             (uint64_t(1000000)) ///< 1 million
@@ -151,7 +132,6 @@
 
 #define BLURT_POST_REWARD_FUND_NAME           ("post")
 #define BLURT_RECENT_RSHARES_DECAY_TIME_HF19  (fc::days(15))
-#define BLURT_CONTENT_CONSTANT_HF0            (uint128_t(uint64_t(2000000000000ll)))
 // note, if redefining these constants make sure calculate_claims doesn't overflow
 
 // 5ccc e802 de5f

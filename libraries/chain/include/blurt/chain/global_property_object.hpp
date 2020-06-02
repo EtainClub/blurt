@@ -99,7 +99,7 @@ namespace blurt { namespace chain {
 
          uint32_t delegation_return_period = BLURT_DELEGATION_RETURN_PERIOD_HF20;
 
-         uint64_t reverse_auction_seconds = 0;
+         uint64_t reverse_auction_seconds = BLURT_REVERSE_AUCTION_WINDOW_SECONDS_HF21;
 
          int64_t available_account_subsidies = 0;
 
@@ -107,9 +107,9 @@ namespace blurt { namespace chain {
          time_point_sec next_maintenance_time;
          time_point_sec last_budget_time;
 
-         uint16_t content_reward_percent = BLURT_CONTENT_REWARD_PERCENT_HF16;
+         uint16_t content_reward_percent = BLURT_CONTENT_REWARD_PERCENT_HF21;
          uint16_t vesting_reward_percent = BLURT_VESTING_FUND_PERCENT_HF16;
-         uint16_t sps_fund_percent = BLURT_PROPOSAL_FUND_PERCENT_HF0;
+         uint16_t sps_fund_percent = BLURT_PROPOSAL_FUND_PERCENT_HF21;
 
          asset sps_interval_ledger = asset( 0, BLURT_SYMBOL );
 

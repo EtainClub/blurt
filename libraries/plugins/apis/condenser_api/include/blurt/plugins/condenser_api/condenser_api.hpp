@@ -360,9 +360,9 @@ struct extended_dynamic_global_properties
    time_point_sec    next_maintenance_time;
    time_point_sec    last_budget_time;
 
-   uint16_t          content_reward_percent = BLURT_CONTENT_REWARD_PERCENT_HF16;
+   uint16_t          content_reward_percent = BLURT_CONTENT_REWARD_PERCENT_HF21;
    uint16_t          vesting_reward_percent = BLURT_VESTING_FUND_PERCENT_HF16;
-   uint16_t          sps_fund_percent = BLURT_PROPOSAL_FUND_PERCENT_HF0;
+   uint16_t          sps_fund_percent = BLURT_PROPOSAL_FUND_PERCENT_HF21;
 
    legacy_asset      sps_interval_ledger;
 };

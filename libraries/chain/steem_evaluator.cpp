@@ -539,7 +539,6 @@ void comment_evaluator::do_apply( const comment_operation& o )
             from_string( com.parent_permlink, o.parent_permlink );
             from_string( com.category, o.parent_permlink );
             com.root_comment = com.id;
-            com.cashout_time = _db.head_block_time() + BLURT_CASHOUT_WINDOW_SECONDS_PRE_HF17;
          }
          else
          {
@@ -548,7 +547,6 @@ void comment_evaluator::do_apply( const comment_operation& o )
             com.depth = parent->depth + 1;
             com.category = parent->category;
             com.root_comment = parent->root_comment;
-            com.cashout_time = fc::time_point_sec::maximum();
          }
 
          com.cashout_time = com.created + BLURT_CASHOUT_WINDOW_SECONDS;
@@ -1130,7 +1128,7 @@ void vote_evaluator::do_apply( const vote_operation& o )
       });
 
       /// if the current net_rshares is less than 0, the post is getting 0 rewards so it is not factored into total rshares^2
-      fc::uint128_t old_rshares = std::max(comment.net_rshares.value, int64_t(0));
+//      fc::uint128_t old_rshares = std::max(comment.net_rshares.value, int64_t(0));
       const auto& root = _db.get( comment.root_comment );
 
       auto old_vote_rshares = comment.vote_rshares;
@@ -1152,11 +1150,11 @@ void vote_evaluator::do_apply( const vote_operation& o )
          c.children_abs_rshares += abs_rshares;
       });
 
-      fc::uint128_t new_rshares = std::max( comment.net_rshares.value, int64_t(0) );
-
-      /// calculate rshares2 value
-      new_rshares = util::evaluate_reward_curve( new_rshares );
-      old_rshares = util::evaluate_reward_curve( old_rshares );
+//      fc::uint128_t new_rshares = std::max( comment.net_rshares.value, int64_t(0) );
+//
+//      /// calculate rshares2 value
+//      new_rshares = util::evaluate_reward_curve( new_rshares );
+//      old_rshares = util::evaluate_reward_curve( old_rshares );
 
       uint64_t max_vote_weight = 0;
 
@@ -1248,7 +1246,7 @@ void vote_evaluator::do_apply( const vote_operation& o )
       });
 
       /// if the current net_rshares is less than 0, the post is getting 0 rewards so it is not factored into total rshares^2
-      fc::uint128_t old_rshares = std::max( comment.net_rshares.value, int64_t( 0 ) );
+//      fc::uint128_t old_rshares = std::max( comment.net_rshares.value, int64_t( 0 ) );
       const auto& root = _db.get( comment.root_comment );
 
       _db.modify( comment, [&]( comment_object& c )
@@ -1277,11 +1275,11 @@ void vote_evaluator::do_apply( const vote_operation& o )
          c.children_abs_rshares += abs_rshares;
       });
 
-      fc::uint128_t new_rshares = std::max( comment.net_rshares.value, int64_t(0));
-
-      /// calculate rshares2 value
-      new_rshares = util::evaluate_reward_curve( new_rshares );
-      old_rshares = util::evaluate_reward_curve( old_rshares );
+//      fc::uint128_t new_rshares = std::max( comment.net_rshares.value, int64_t(0));
+//
+//      /// calculate rshares2 value
+//      new_rshares = util::evaluate_reward_curve( new_rshares );
+//      old_rshares = util::evaluate_reward_curve( old_rshares );
 
       _db.modify( comment, [&]( comment_object& c )
       {

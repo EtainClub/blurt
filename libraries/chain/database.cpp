@@ -1369,15 +1369,12 @@ void database::adjust_rshares2( const comment_object& c, fc::uint128_t old_rshar
 
 void database::update_owner_authority( const account_object& account, const authority& owner_authority )
 {
-   if( head_block_num() >= BLURT_OWNER_AUTH_HISTORY_TRACKING_START_BLOCK_NUM )
+   create< owner_authority_history_object >( [&]( owner_authority_history_object& hist )
    {
-      create< owner_authority_history_object >( [&]( owner_authority_history_object& hist )
-      {
-         hist.account = account.name;
-         hist.previous_owner_authority = get< account_authority_object, by_account >( account.name ).owner;
-         hist.last_valid_time = head_block_time();
-      });
-   }
+      hist.account = account.name;
+      hist.previous_owner_authority = get< account_authority_object, by_account >( account.name ).owner;
+      hist.last_valid_time = head_block_time();
+   });
 
    modify( get< account_authority_object, by_account >( account.name ), [&]( account_authority_object& auth )
    {
@@ -2325,7 +2322,7 @@ void database::init_genesis( uint64_t init_supply )
          p.participation_count = 128;
          p.current_supply = asset( init_supply, BLURT_SYMBOL );
          p.maximum_block_size = BLURT_MAX_BLOCK_SIZE;
-         p.reverse_auction_seconds = BLURT_REVERSE_AUCTION_WINDOW_SECONDS_HF6;
+         p.reverse_auction_seconds = BLURT_REVERSE_AUCTION_WINDOW_SECONDS_HF21;
          p.next_maintenance_time = BLURT_GENESIS_TIME;
          p.last_budget_time = BLURT_GENESIS_TIME;
          p.regent_init_vesting_shares = asset(init_supply / 2, BLURT_SYMBOL) * p.get_vesting_share_price(); // 50% of the init_supply
@@ -2411,33 +2408,6 @@ void database::init_genesis( uint64_t init_supply )
 
           { // BLURT_HARDFORK_0_12:
 //            const auto& comment_idx = get_index< comment_index >().indices();
-//
-//            for( auto itr = comment_idx.begin(); itr != comment_idx.end(); ++itr )
-//            {
-//               // At the hardfork time, all new posts with no votes get their cashout time set to +12 hrs from head block time.
-//               // All posts with a payout get their cashout time set to +30 days. This hardfork takes place within 30 days
-//               // initial payout so we don't have to handle the case of posts that should be frozen that aren't
-//               if( itr->parent_author == BLURT_ROOT_POST_PARENT )
-//               {
-//                  // Post has not been paid out and has no votes (cashout_time == 0 === net_rshares == 0, under current semmantics)
-//                  if( itr->last_payout == fc::time_point_sec::min() && itr->cashout_time == fc::time_point_sec::maximum() )
-//                  {
-//                     modify( *itr, [&]( comment_object & c )
-//                     {
-//                        c.cashout_time = head_block_time() + BLURT_CASHOUT_WINDOW_SECONDS_PRE_HF17;
-//                     });
-//                  }
-//                  // Has been paid out, needs to be on second cashout window
-//                  else if( itr->last_payout > fc::time_point_sec() )
-//                  {
-//                     modify( *itr, [&]( comment_object& c )
-//                     {
-//                        c.cashout_time = c.last_payout + BLURT_SECOND_CASHOUT_WINDOW;
-//                     });
-//                  }
-//               }
-//            }
-//
 //            modify( get< account_authority_object, by_account >( BLURT_MINER_ACCOUNT ), [&]( account_authority_object& auth )
 //            {
 //               auth.posting = authority();
@@ -2485,7 +2455,7 @@ void database::init_genesis( uint64_t init_supply )
             {
                rfo.name = BLURT_POST_REWARD_FUND_NAME;
                rfo.last_update = head_block_time();
-               rfo.content_constant = BLURT_CONTENT_CONSTANT_HF0;
+               rfo.content_constant = BLURT_CONTENT_CONSTANT_HF21;
                rfo.percent_curation_rewards = BLURT_1_PERCENT * 25;
                rfo.percent_content_rewards = BLURT_100_PERCENT;
                rfo.reward_balance = gpo.total_reward_fund_blurt;
@@ -2592,13 +2562,6 @@ void database::init_genesis( uint64_t init_supply )
         }
 
         { // BLURT_HARDFORK_0_20:
-            modify( get_dynamic_global_properties(), [&]( dynamic_global_property_object& gpo )
-            {
-               gpo.delegation_return_period = BLURT_DELEGATION_RETURN_PERIOD_HF20;
-               gpo.reverse_auction_seconds = BLURT_REVERSE_AUCTION_WINDOW_SECONDS_HF20;
-               gpo.available_account_subsidies = 0;
-            });
-
 //            const auto& wso = get_witness_schedule_object();
 //
 //            for( const auto& witness : wso.current_shuffled_witnesses )
@@ -2667,7 +2630,6 @@ void database::init_genesis( uint64_t init_supply )
               rfo.percent_curation_rewards = 50 * BLURT_1_PERCENT;
               rfo.author_reward_curve = convergent_linear;
               rfo.curation_reward_curve = convergent_square_root;
-              rfo.content_constant = BLURT_CONTENT_CONSTANT_HF21;
   #ifndef  IS_TEST_NET
               rfo.recent_claims = BLURT_HF21_CONVERGENT_LINEAR_RECENT_CLAIMS;
   #endif
