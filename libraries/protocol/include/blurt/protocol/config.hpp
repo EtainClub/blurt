@@ -101,8 +101,6 @@
 #define BLURT_MIN_ROOT_COMMENT_INTERVAL       (fc::seconds(60*5)) // 5 minutes
 #define BLURT_MIN_REPLY_INTERVAL_HF20         (fc::seconds(3)) // 3 seconds
 #define BLURT_MIN_COMMENT_EDIT_INTERVAL       (fc::seconds(3)) // 3 seconds
-#define BLURT_POST_AVERAGE_WINDOW             (60*60*24u) // 1 day
-#define BLURT_POST_WEIGHT_CONSTANT            (uint64_t(4*BLURT_100_PERCENT) * (4*BLURT_100_PERCENT))// (4*BLURT_100_PERCENT) -> 2 posts per 1 days, average 1 every 12 hours
 
 #define BLURT_MAX_ACCOUNT_WITNESS_VOTES       30
 
