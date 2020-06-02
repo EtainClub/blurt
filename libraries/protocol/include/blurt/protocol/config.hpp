@@ -137,7 +137,6 @@
 
 #define BLURT_BANDWIDTH_AVERAGE_WINDOW_SECONDS (60*60*24*7) ///< 1 week
 #define BLURT_BANDWIDTH_PRECISION             (uint64_t(1000000)) ///< 1 million
-#define BLURT_MAX_COMMENT_DEPTH_PRE_HF17      6
 #define BLURT_MAX_COMMENT_DEPTH               0xffff // 64k
 #define BLURT_SOFT_MAX_COMMENT_DEPTH          0xff // 255
 
