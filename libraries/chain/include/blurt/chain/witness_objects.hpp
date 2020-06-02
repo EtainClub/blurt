@@ -32,27 +32,26 @@ namespace blurt { namespace chain {
        *  fee requires all accounts to have some kind of commitment to the network that includes the
        *  ability to vote and make transactions.
        */
-      asset             account_creation_fee =
-         asset( BLURT_MIN_ACCOUNT_CREATION_FEE, BLURT_SYMBOL );
+      asset account_creation_fee = asset( BLURT_MIN_ACCOUNT_CREATION_FEE, BLURT_SYMBOL );
 
       /**
        *  This witnesses vote for the maximum_block_size which is used by the network
        *  to tune rate limiting and capacity
        */
-      uint32_t          maximum_block_size = BLURT_MIN_BLOCK_SIZE_LIMIT * 2;
+      uint32_t maximum_block_size = BLURT_MIN_BLOCK_SIZE_LIMIT * 2;
 
       /**
        * How many free accounts should be created per elected witness block.
        * Scaled so that BLURT_ACCOUNT_SUBSIDY_PRECISION represents one account.
        */
-      int32_t           account_subsidy_budget = BLURT_DEFAULT_ACCOUNT_SUBSIDY_BUDGET;
+      int32_t account_subsidy_budget = BLURT_DEFAULT_ACCOUNT_SUBSIDY_BUDGET;
 
       /**
        * What fraction of the "stockpiled" free accounts "expire" per elected witness block.
        * Scaled so that 1 << BLURT_RD_DECAY_DENOM_SHIFT represents 100% of accounts
        * expiring.
        */
-      uint32_t          account_subsidy_decay = BLURT_DEFAULT_ACCOUNT_SUBSIDY_DECAY;
+      uint32_t account_subsidy_decay = BLURT_DEFAULT_ACCOUNT_SUBSIDY_DECAY;
    };
 
    /**

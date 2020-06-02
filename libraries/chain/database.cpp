@@ -2298,7 +2298,7 @@ void database::init_genesis( uint64_t init_supply )
          {
             w.owner        = BLURT_INIT_MINER_NAME + ( i ? fc::to_string(i) : std::string() );
             w.signing_key  = init_public_key;
-            w.schedule = witness_object::elected;
+            w.schedule = (i < BLURT_MAX_VOTED_WITNESSES_HF17) ? witness_object::elected : witness_object::timeshare;
          } );
       }
 
@@ -2332,9 +2332,9 @@ void database::init_genesis( uint64_t init_supply )
          p.regent_init_vesting_shares = asset(init_supply / 2, BLURT_SYMBOL) * p.get_vesting_share_price(); // 50% of the init_supply
          p.regent_vesting_shares = p.regent_init_vesting_shares;
 #ifdef IS_TEST_NET
-            p.total_reward_fund_blurt = asset( 0, BLURT_SYMBOL );
+         p.total_reward_fund_blurt = asset( 0, BLURT_SYMBOL );
 #else
-            p.total_reward_fund_blurt = asset( BLURT_INIT_POST_REWARD_BALANCE, BLURT_SYMBOL );
+         p.total_reward_fund_blurt = asset( BLURT_INIT_POST_REWARD_BALANCE, BLURT_SYMBOL );
 #endif
          p.total_reward_shares2 = 0;
          p.sps_fund_percent = BLURT_PROPOSAL_FUND_PERCENT_HF21;
@@ -2392,11 +2392,11 @@ void database::init_genesis( uint64_t init_supply )
           // BLURT_HARDFORK_0_11:
 
           // retally_witness_votes();
-          retally_witness_votes();
+//          retally_witness_votes();
           reset_virtual_schedule_time(*this);
-          retally_witness_vote_counts();
-          retally_comment_children();
-          retally_witness_vote_counts(true);
+//          retally_witness_vote_counts();
+//          retally_comment_children();
+//          retally_witness_vote_counts(true);
 
 
           { // BLURT_HARDFORK_0_12:

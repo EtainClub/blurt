@@ -44,7 +44,7 @@
 #define BLURT_BLOCKCHAIN_VERSION              ( version(0, 0, 0) )
 
 #define BLURT_INIT_PUBLIC_KEY_STR             "BLT875YGJ2rXwEhUr4hRXduZguwJKEJufsS4oYT6ehHWiDhev7hah"
-#define BLURT_CHAIN_ID                        (fc::sha256::hash("blurt-testbed")) // cd8d90f29ae273abec3eaa7731e25934c63eb654d55080caff2ebb7f5df6381f
+#define BLURT_CHAIN_ID                        (fc::sha256::hash("blurt-testbed")) // afa547e2e0adef898219d7f74abf36e6e957460a70120db21a03fed76cc0e8b6
 #define BLURT_ADDRESS_PREFIX                  "BLT"
 
 #define BLURT_GENESIS_TIME                    (fc::time_point_sec(1591025652))
@@ -64,7 +64,7 @@
 
 #define BLURT_VOTE_DUST_THRESHOLD             (50000000)
 
-#define BLURT_INIT_MINER_NAME                 "blurtinitminer"
+#define BLURT_INIT_MINER_NAME                 "initblurt"
 
 #endif
 

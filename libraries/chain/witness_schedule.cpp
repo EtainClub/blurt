@@ -147,12 +147,6 @@ void update_witness_schedule4( database& db )
 
    auto num_elected = active_witnesses.size();
 
-//   /// Add miners from the top of the mining queue
-//   flat_set< witness_id_type > selected_miners;
-//   const auto& gprops = db.get_dynamic_global_properties();
-//
-//   auto num_miners = selected_miners.size();
-
    /// Add the running witnesses in the lead
    fc::uint128 new_virtual_time = wso.current_virtual_time;
    const auto& schedule_idx = db.get_index<witness_index>().indices().get<by_schedule_time>();
@@ -168,13 +162,12 @@ void update_witness_schedule4( database& db )
       if( sitr->signing_key == public_key_type() )
          continue; /// skip witnesses without a valid block signing key
 
-//      if( selected_miners.find(sitr->id) == selected_miners.end()
-//          && selected_voted.find(sitr->id) == selected_voted.end() )
-//      {
-//         active_witnesses.push_back(sitr->owner);
-//         db.modify( *sitr, [&]( witness_object& wo ) { wo.schedule = witness_object::timeshare; } );
-//         ++witness_count;
-//      }
+      if( selected_voted.find(sitr->id) == selected_voted.end() )
+      {
+         active_witnesses.push_back(sitr->owner);
+         db.modify( *sitr, [&]( witness_object& wo ) { wo.schedule = witness_object::timeshare; } );
+         ++witness_count;
+      }
    }
 
    auto num_timeshare = active_witnesses.size() - num_elected;
