@@ -2278,7 +2278,11 @@ void database::init_genesis( uint64_t init_supply )
          {
             a.name = BLURT_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
             a.memo_key = init_public_key;
+#ifdef IS_TEST_NET
             a.balance  = asset( i ? 0 : init_supply, BLURT_SYMBOL );
+#else
+            a.balance  = asset( i ? 0 : init_supply - BLURT_INIT_POST_REWARD_BALANCE, BLURT_SYMBOL );
+#endif
          } );
 
          create< account_authority_object >( [&]( account_authority_object& auth )
@@ -2327,7 +2331,11 @@ void database::init_genesis( uint64_t init_supply )
          p.last_budget_time = BLURT_GENESIS_TIME;
          p.regent_init_vesting_shares = asset(init_supply / 2, BLURT_SYMBOL) * p.get_vesting_share_price(); // 50% of the init_supply
          p.regent_vesting_shares = p.regent_init_vesting_shares;
-         p.total_reward_fund_blurt = asset( 0, BLURT_SYMBOL );
+#ifdef IS_TEST_NET
+            p.total_reward_fund_blurt = asset( 0, BLURT_SYMBOL );
+#else
+            p.total_reward_fund_blurt = asset( BLURT_INIT_POST_REWARD_BALANCE, BLURT_SYMBOL );
+#endif
          p.total_reward_shares2 = 0;
          p.sps_fund_percent = BLURT_PROPOSAL_FUND_PERCENT_HF21;
          p.content_reward_percent = BLURT_CONTENT_REWARD_PERCENT_HF21;
@@ -2433,7 +2441,6 @@ void database::init_genesis( uint64_t init_supply )
                rfo.reward_balance = gpo.total_reward_fund_blurt;
 #ifndef IS_TEST_NET
                rfo.recent_claims = BLURT_HF21_CONVERGENT_LINEAR_RECENT_CLAIMS;
-               rfo.reward_balance = asset( BLURT_INIT_POST_REWARD_BALANCE, BLURT_SYMBOL );
 #endif
                rfo.author_reward_curve = curve_id::convergent_linear;
                rfo.curation_reward_curve = curve_id::convergent_square_root;
