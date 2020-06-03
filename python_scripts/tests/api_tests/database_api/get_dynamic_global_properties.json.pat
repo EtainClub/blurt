@@ -1,8 +1,5 @@
 {
-    "confidential_sbd_supply": "0.000 TBD",
-    "confidential_supply": "0.000 TESTS",
     "current_aslot": 0,
-    "init_sbd_supply": "0.000 TBD",
     "current_supply": "0.000 TESTS",
     "current_witness": "initminer",
     "head_block_id": "0000000000000000000000000000000000000000",

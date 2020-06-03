@@ -40,7 +40,6 @@ namespace blurt { namespace chain {
          account_name_type current_witness;
 
          asset       current_supply             = asset( 0, BLURT_SYMBOL );
-         asset       confidential_supply        = asset( 0, BLURT_SYMBOL ); ///< total asset held in confidential balances
          asset       total_vesting_fund_blurt   = asset( 0, BLURT_SYMBOL );
          asset       total_vesting_shares       = asset( 0, VESTS_SYMBOL );
          asset       total_reward_fund_blurt    = asset( 0, BLURT_SYMBOL );
@@ -147,7 +146,6 @@ FC_REFLECT( blurt::chain::dynamic_global_property_object,
              (time)
              (current_witness)
              (current_supply)
-             (confidential_supply)
              (total_vesting_fund_blurt)
              (total_vesting_shares)
              (total_reward_fund_blurt)

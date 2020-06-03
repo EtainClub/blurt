@@ -305,7 +305,6 @@ struct extended_dynamic_global_properties
       time( o.time ),
       current_witness( o.current_witness ),
       current_supply( legacy_asset::from_asset( o.current_supply ) ),
-      confidential_supply( legacy_asset::from_asset( o.confidential_supply ) ),
       total_vesting_fund_blurt( legacy_asset::from_asset( o.total_vesting_fund_blurt ) ),
       total_vesting_shares( legacy_asset::from_asset( o.total_vesting_shares ) ),
       total_reward_fund_blurt( legacy_asset::from_asset( o.total_reward_fund_blurt ) ),
@@ -335,7 +334,6 @@ struct extended_dynamic_global_properties
    account_name_type current_witness;
 
    legacy_asset      current_supply;
-   legacy_asset      confidential_supply;
    legacy_asset      total_vesting_fund_blurt;
    legacy_asset      total_vesting_shares;
    legacy_asset      total_reward_fund_blurt;
@@ -999,7 +997,7 @@ FC_REFLECT( blurt::plugins::condenser_api::api_comment_object,
 FC_REFLECT( blurt::plugins::condenser_api::extended_dynamic_global_properties,
             (head_block_number)(head_block_id)(time)
             (current_witness)
-            (current_supply)(confidential_supply)
+            (current_supply)
             (total_vesting_fund_blurt)(total_vesting_shares)
             (total_reward_fund_blurt)(total_reward_shares2)(pending_rewarded_vesting_shares)(pending_rewarded_vesting_blurt)
             (maximum_block_size)(current_aslot)(recent_slots_filled)(participation_count)(last_irreversible_block_num)
