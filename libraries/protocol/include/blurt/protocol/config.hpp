@@ -30,8 +30,6 @@
 #define BLURT_ACCOUNT_RECOVERY_REQUEST_EXPIRATION_PERIOD  fc::seconds(12)
 #define BLURT_OWNER_UPDATE_LIMIT                          fc::seconds(0)
 
-#define BLURT_INIT_SUPPLY                     (int64_t( 250 ) * int64_t( 1000000 ) * int64_t( 1000 ))
-
 #define BLURT_VOTE_DUST_THRESHOLD             (0)
 
 #define BLURT_INIT_MINER_NAME                 "initminer"
@@ -57,13 +55,13 @@
 #define BLURT_ACCOUNT_RECOVERY_REQUEST_EXPIRATION_PERIOD  fc::days(1)
 #define BLURT_OWNER_UPDATE_LIMIT                          fc::minutes(60)
 
-#define BLURT_INIT_SUPPLY                     int64_t(388031775139)
-
 #define BLURT_VOTE_DUST_THRESHOLD             (50000000)
 
 #define BLURT_INIT_MINER_NAME                 "initblurt"
 
 #endif
+
+#define BLURT_INIT_SUPPLY                     int64_t(388031775139)
 
 #define VESTS_SYMBOL  (blurt::protocol::asset_symbol_type::from_asset_num( BLURT_ASSET_NUM_VESTS ) )
 #define BLURT_SYMBOL  (blurt::protocol::asset_symbol_type::from_asset_num( BLURT_ASSET_NUM_BLURT ) )

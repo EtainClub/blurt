@@ -123,8 +123,14 @@ void update_median_witness_props( database& db )
    } );
 }
 
-void update_witness_schedule4( database& db )
+/**
+ *
+ *  See @ref witness_object::virtual_last_update
+ */
+void update_witness_schedule(database& db)
 {
+   if( (db.head_block_num() % BLURT_MAX_WITNESSES) != 0 ) return;
+
    const witness_schedule_object& wso = db.get_witness_schedule_object();
    vector< account_name_type > active_witnesses;
    active_witnesses.reserve( BLURT_MAX_WITNESSES );
@@ -310,19 +316,6 @@ void update_witness_schedule4( database& db )
    } );
 
    update_median_witness_props(db);
-}
-
-
-/**
- *
- *  See @ref witness_object::virtual_last_update
- */
-void update_witness_schedule(database& db)
-{
-   if( (db.head_block_num() % BLURT_MAX_WITNESSES) == 0 ) //wso.next_shuffle_block_num )
-   {
-      update_witness_schedule4(db);
-   }
 }
 
 } }

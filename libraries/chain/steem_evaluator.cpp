@@ -256,23 +256,9 @@ void account_create_evaluator::do_apply( const account_create_operation& o )
    const auto& props = _db.get_dynamic_global_properties();
    const witness_schedule_object& wso = _db.get_witness_schedule_object();
 
-   {
-      FC_TODO( "Move to validate() after HF20" );
-      FC_ASSERT( o.fee <= asset( BLURT_MAX_ACCOUNT_CREATION_FEE, BLURT_SYMBOL ), "Account creation fee cannot be too large" );
-   }
-
-   {
-      FC_ASSERT( o.fee == wso.median_props.account_creation_fee, "Must pay the exact account creation fee. paid: ${p} fee: ${f}",
-                  ("p", o.fee)
-                  ("f", wso.median_props.account_creation_fee) );
-   }
-
-   FC_TODO( "Check and move to validate post HF20" );
-   {
-      validate_auth_size( o.owner );
-      validate_auth_size( o.active );
-      validate_auth_size( o.posting );
-   }
+   FC_ASSERT( o.fee == wso.median_props.account_creation_fee, "Must pay the exact account creation fee. paid: ${p} fee: ${f}",
+               ("p", o.fee)
+               ("f", wso.median_props.account_creation_fee) );
 
    {
       verify_authority_accounts_exist( _db, o.owner, o.new_account_name, authority::owner );
@@ -282,7 +268,6 @@ void account_create_evaluator::do_apply( const account_create_operation& o )
 
    _db.adjust_balance( creator, -o.fee );
    _db.adjust_balance( _db.get< account_object, by_name >( BLURT_NULL_ACCOUNT ), o.fee );
-
 
    const auto& new_account = _db.create< account_object >( [&]( account_object& acc )
    {

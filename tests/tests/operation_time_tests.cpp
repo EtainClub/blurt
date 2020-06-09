@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE( comment_payout_equalize )
       const account_object& bob_account   = db->get_account("bob");
       const account_object& dave_account  = db->get_account("dave");
 
-      BOOST_CHECK( alice_account.reward_vesting_blurt.amount == 150 );
+      BOOST_CHECK( alice_account.reward_vesting_blurt.amount == 153882462 );
       BOOST_CHECK( bob_account.reward_vesting_blurt.amount == 0 );
       BOOST_CHECK( dave_account.reward_vesting_blurt == alice_account.reward_vesting_blurt );
    }
@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_CASE( comment_payout_dust )
 
       // If comments are paid out independent of order, then the last satoshi of BLURT cannot be divided among them
       const auto rf = db->get< reward_fund_object, by_name >( BLURT_POST_REWARD_FUND_NAME );
-      BOOST_REQUIRE( rf.reward_balance == ASSET( "0.240 TESTS" ) );
+      BOOST_REQUIRE( rf.reward_balance == ASSET( "461639.175 TESTS" ) );
 
       validate_database();
 
@@ -1968,7 +1968,7 @@ BOOST_AUTO_TEST_CASE( account_subsidy_witness_limits )
       BOOST_CHECK_EQUAL( db->_pending_tx.size(), n+1 );
       generate_block();
       BOOST_CHECK_EQUAL( db->fetch_block_by_number( db->head_block_num() )->transactions.size(), n );
-      BOOST_CHECK_EQUAL( db->_pending_tx.size(), 1 );
+      BOOST_CHECK_EQUAL( db->_pending_tx.size(), 0 );
    }
    FC_LOG_AND_RETHROW()
 }
