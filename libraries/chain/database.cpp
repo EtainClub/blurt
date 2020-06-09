@@ -2228,71 +2228,96 @@ void database::init_genesis( uint64_t init_supply )
       // Create blockchain accounts
       public_key_type      init_public_key(BLURT_INIT_PUBLIC_KEY);
 
-      create< account_object >( [&]( account_object& a )
-      {
-         a.name = BLURT_MINER_ACCOUNT;
-      } );
-      create< account_authority_object >( [&]( account_authority_object& auth )
-      {
-         auth.account = BLURT_MINER_ACCOUNT;
-         auth.owner.weight_threshold = 1;
-         auth.active.weight_threshold = 1;
-      });
-
-      create< account_object >( [&]( account_object& a )
-      {
-         a.name = BLURT_NULL_ACCOUNT;
-      } );
-      create< account_authority_object >( [&]( account_authority_object& auth )
-      {
-         auth.account = BLURT_NULL_ACCOUNT;
-         auth.owner.weight_threshold = 1;
-         auth.active.weight_threshold = 1;
-      });
-
-      create< account_object >( [&]( account_object& a )
-      {
-         a.name = BLURT_TREASURY_ACCOUNT;
-      } );
-
-      create< account_object >( [&]( account_object& a )
-      {
-         a.name = BLURT_TEMP_ACCOUNT;
-      } );
-      create< account_authority_object >( [&]( account_authority_object& auth )
-      {
-         auth.account = BLURT_TEMP_ACCOUNT;
-         auth.owner.weight_threshold = 0;
-         auth.active.weight_threshold = 0;
-      });
-
-      for( int i = 0; i < BLURT_MAX_WITNESSES; ++i )
-      {
+      { // BLURT_MINER_ACCOUNT
          create< account_object >( [&]( account_object& a )
          {
-            a.name = BLURT_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
-            a.memo_key = init_public_key;
-            a.balance  = asset( i ? 0 : init_supply - BLURT_INIT_POST_REWARD_BALANCE, BLURT_SYMBOL );
+            a.name = BLURT_MINER_ACCOUNT;
+         } );
+         create< account_authority_object >( [&]( account_authority_object& auth )
+         {
+            auth.account = BLURT_MINER_ACCOUNT;
+            auth.owner.weight_threshold = 1;
+            auth.active.weight_threshold = 1;
+            auth.posting = authority();
+            auth.posting.weight_threshold = 1;
+         });
+      }
+
+      { // BLURT_NULL_ACCOUNT
+         create< account_object >( [&]( account_object& a )
+         {
+            a.name = BLURT_NULL_ACCOUNT;
+         } );
+         create< account_authority_object >( [&]( account_authority_object& auth )
+         {
+            auth.account = BLURT_NULL_ACCOUNT;
+            auth.owner.weight_threshold = 1;
+            auth.active.weight_threshold = 1;
+            auth.posting = authority();
+            auth.posting.weight_threshold = 1;
+         });
+      }
+
+      { // BLURT_TREASURY_ACCOUNT
+         create< account_object >( [&]( account_object& a )
+         {
+            a.name = BLURT_TREASURY_ACCOUNT;
+            a.recovery_account = BLURT_TREASURY_ACCOUNT;
          } );
 
          create< account_authority_object >( [&]( account_authority_object& auth )
          {
-            auth.account = BLURT_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
-            auth.owner.add_authority( init_public_key, 1 );
+            auth.account = BLURT_TREASURY_ACCOUNT;
             auth.owner.weight_threshold = 1;
-            auth.active  = auth.owner;
-            auth.posting = auth.active;
+            auth.active.weight_threshold = 1;
+            auth.posting.weight_threshold = 1;
          });
-
-         create< witness_object >( [&]( witness_object& w )
-         {
-            w.owner        = BLURT_INIT_MINER_NAME + ( i ? fc::to_string(i) : std::string() );
-            w.signing_key  = init_public_key;
-            w.schedule = (i < BLURT_MAX_VOTED_WITNESSES_HF17) ? witness_object::elected : witness_object::timeshare;
-         } );
       }
 
-      { // create regent account
+      { // BLURT_TEMP_ACCOUNT
+         create< account_object >( [&]( account_object& a )
+         {
+            a.name = BLURT_TEMP_ACCOUNT;
+         } );
+         create< account_authority_object >( [&]( account_authority_object& auth )
+         {
+            auth.account = BLURT_TEMP_ACCOUNT;
+            auth.owner.weight_threshold = 0;
+            auth.active.weight_threshold = 0;
+            auth.posting = authority();
+            auth.posting.weight_threshold = 1;
+         });
+      }
+
+      { // BLURT_INIT_MINER
+         for( int i = 0; i < BLURT_MAX_WITNESSES; ++i )
+         {
+            create< account_object >( [&]( account_object& a )
+            {
+               a.name = BLURT_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
+               a.memo_key = init_public_key;
+               a.balance  = asset( i ? 0 : init_supply - BLURT_INIT_POST_REWARD_BALANCE, BLURT_SYMBOL );
+            } );
+
+            create< account_authority_object >( [&]( account_authority_object& auth )
+            {
+               auth.account = BLURT_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
+               auth.owner.add_authority( init_public_key, 1 );
+               auth.owner.weight_threshold = 1;
+               auth.active  = auth.owner;
+               auth.posting = auth.active;
+            });
+
+            create< witness_object >( [&]( witness_object& w )
+            {
+               w.owner        = BLURT_INIT_MINER_NAME + ( i ? fc::to_string(i) : std::string() );
+               w.signing_key  = init_public_key;
+               w.schedule = (i < BLURT_MAX_VOTED_WITNESSES_HF17) ? witness_object::elected : witness_object::timeshare;
+            } );
+         }
+      }
+
+      { // BLURT_REGENT_ACCOUNT
          create< account_object >( [&]( account_object& a )
          {
             a.name = BLURT_REGENT_ACCOUNT;
@@ -2384,28 +2409,7 @@ void database::init_genesis( uint64_t init_supply )
 //          retally_comment_children();
 //          retally_witness_vote_counts(true);
 
-
-          { // BLURT_HARDFORK_0_12:
-//            const auto& comment_idx = get_index< comment_index >().indices();
-//            modify( get< account_authority_object, by_account >( BLURT_MINER_ACCOUNT ), [&]( account_authority_object& auth )
-//            {
-//               auth.posting = authority();
-//               auth.posting.weight_threshold = 1;
-//            });
-//
-//            modify( get< account_authority_object, by_account >( BLURT_NULL_ACCOUNT ), [&]( account_authority_object& auth )
-//            {
-//               auth.posting = authority();
-//               auth.posting.weight_threshold = 1;
-//            });
-//
-//            modify( get< account_authority_object, by_account >( BLURT_TEMP_ACCOUNT ), [&]( account_authority_object& auth )
-//            {
-//               auth.posting = authority();
-//               auth.posting.weight_threshold = 1;
-//            });
-         }
-
+         // BLURT_HARDFORK_0_12:
          // BLURT_HARDFORK_0_13:
          // BLURT_HARDFORK_0_14:
          // BLURT_HARDFORK_0_15:
@@ -2437,63 +2441,16 @@ void database::init_genesis( uint64_t init_supply )
 
         // BLURT_HARDFORK_0_18:
         // BLURT_HARDFORK_0_19:
-
-        { // BLURT_HARDFORK_0_20:
-//            const auto& wso = get_witness_schedule_object();
-//
-//            for( const auto& witness : wso.current_shuffled_witnesses )
-//            {
-//               // Required check when applying hardfork at genesis
-//               if( witness != account_name_type() )
-//               {
-//                  modify( get< witness_object, by_name >( witness ), [&]( witness_object& w )
-//                  {
-//                     w.props.account_creation_fee = asset( w.props.account_creation_fee.amount , BLURT_SYMBOL );
-//                  });
-//               }
-//            }
-//
-//            modify( wso, [&]( witness_schedule_object& wso )
-//            {
-//               wso.median_props.account_creation_fee = asset( wso.median_props.account_creation_fee.amount, BLURT_SYMBOL );
-//            });
-        }
+        // BLURT_HARDFORK_0_20:
 
         { // BLURT_HARDFORK_0_21:
-           auto account_auth = find< account_authority_object, by_account >( BLURT_TREASURY_ACCOUNT );
-           if( account_auth == nullptr )
-              create< account_authority_object >( [&]( account_authority_object& auth )
-              {
-                 auth.account = BLURT_TREASURY_ACCOUNT;
-                 auth.owner.weight_threshold = 1;
-                 auth.active.weight_threshold = 1;
-                 auth.posting.weight_threshold = 1;
-              });
-           else
-              modify( *account_auth, [&]( account_authority_object& auth )
-              {
-                 auth.owner.weight_threshold = 1;
-                 auth.owner.clear();
-
-                 auth.active.weight_threshold = 1;
-                 auth.active.clear();
-
-                 auth.posting.weight_threshold = 1;
-                 auth.posting.clear();
-              });
-
-           modify( get_account( BLURT_TREASURY_ACCOUNT ), [&]( account_object& a )
-           {
-              a.recovery_account = BLURT_TREASURY_ACCOUNT;
-           });
-
-           auto rec_req = find< account_recovery_request_object, by_account >( BLURT_TREASURY_ACCOUNT );
-           if( rec_req )
-              remove( *rec_req );
-
-           auto change_request = find< change_recovery_account_request_object, by_account >( BLURT_TREASURY_ACCOUNT );
-           if( change_request )
-              remove( *change_request );
+//           auto rec_req = find< account_recovery_request_object, by_account >( BLURT_TREASURY_ACCOUNT );
+//           if( rec_req )
+//              remove( *rec_req );
+//
+//           auto change_request = find< change_recovery_account_request_object, by_account >( BLURT_TREASURY_ACCOUNT );
+//           if( change_request )
+//              remove( *change_request );
         }
       } // ~end  pre-apply HF 1 to 21
    }
