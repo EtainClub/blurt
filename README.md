@@ -11,36 +11,36 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 ## Features
 
-* Remove the downvote function.
-* Eliminate SBD
+* No Downvotes
+* No SBD
 * Real REST [API](https://github.com/blurt/cachepi)
+* A **regent account** with a controlling stake or special weighted vote has been added to Blurt. 
+  * The regent account votes on consensus Blurt Producers and DAO proposals.
+  * The regent account is programmed to decay over a two-year period. 
+  * **The regent account does not impact**:
+    * circulating supply
+    * new inflation A.K.A. organic supply
+    * the rewards pool.
+* 
+
 
 ## Launch Plans
 
-* Blurt is a fork of the Steem blockchain that begins operating on or before July 4th, 2020 with Steem balances taken in a snapshot at block 43526969.  
+* Blurt is a fork of the Steem blockchain's code that launches on or before July 4th, 2020 with Steem balances taken in a [snapshot](https://gitlab.com/blurt/blurt/-/issues/5) at block 43526969.  
 
-## Centralization
 
-* A regent account with a controlling stake or special weighted vote has been added to Blurt. 
+## Decentralization And Security
+Blurt(1) the blockchain whose code lives here in this repository is the first step towards realizing [Social Money For Enemies](https://steemit.com/steem/@jacobgadikian/3jk4ut-social-money-for-enemies).
+The exclusion at Hive and Zeroing (basically on-chain theft executed by some witnesses) at Steemit made for a very interesting testing ground to learn about systems that can effectively secure both money and speech.
+Our team feels that POS chains have a certain scalability limit, and that the solution past that point is to go multi-chain and allow content to be accessed from a unified mobile app.  
 
-* The regent account votes on consensus Blurt Producers and DAO proposals.
-
-* **The regent account does not impact**:
-  * circulating supply
-  * new inflation A.K.A. organic supply
-  * the rewards pool.
-
-## Decentralization
-
-* The regent account will be programmed to decay to zero or cease to exist after two years.
-* Prior to deprecating the regent account, the Blurt blockchain will be updated to feature secure consensus protocols, such as One-Stake-One-Vote, to reduce the risk of centralised consensus attacks from large stake accounts.
-
+* Blurt will likely move to another consensus protocol at some point during those two years, and the leading candidate for the new consensus is the Cosmos-SDK. 
 
 ## Economy
 
 * Ticker symbol BLURT
 * Staked BLURT is called BLURT POWER
-* There is no stable coin on the Blurt Blockchain. SBD balances are converted to their BLURT equivalent when the snapshot is taken.
+* There is no stablecoin on the Blurt Blockchain. SBD balances are converted to their BLURT equivalent when the snapshot is taken.
 * Initally, Blurt uses Graphene Delegated Proof-of-Stake Consensus (DPOS)
 * 10% APR inflation narrowing to 1% APR over 20 years
     * 65% of inflation to Authors/Curators.
@@ -51,7 +51,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 ## Software Status
 
-Blurt will launch with steem balances from block 43526969  on  July 4, 2020.   Work is ongoing in the `dev` branch.  
+Blurt will launch with steem balances from block 43526969 on or before July 4, 2020.   Work is ongoing in the `dev` branch.  
 The snapshot-verification code can be found in the `snapshot` branch.  
 
 ## Build
