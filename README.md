@@ -20,8 +20,15 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
   * **The regent account does not impact**:
     * circulating supply
     * new inflation A.K.A. organic supply
-    * the rewards pool.
-* 
+    * the rewards pool
+* **Imported to Blurt From Steem**:
+  * Balances
+* **Not Imported to Blurt From Steem**:
+  * Content
+  * Followers
+  * Profile Pic
+  * Name
+  * Location
 
 
 ## Launch Plans
@@ -71,8 +78,4 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc) blurtd
 make -j$(nproc) cli_wallet
-  ```
-
-
-
-
+```
