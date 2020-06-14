@@ -253,7 +253,7 @@
 /// Represents the account with NO authority which holds resources for payouts according to given proposals
 #define BLURT_TREASURY_ACCOUNT                "blurt.dao"
 /// This regent account controls the chain within 2 years
-#define BLURT_REGENT_ACCOUNT                  "regent"
+#define BLURT_REGENT_ACCOUNT                  "blurt.regent"
 ///@}
 
 /// BLURT PROPOSAL SYSTEM support

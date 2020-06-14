@@ -397,7 +397,7 @@ namespace blurt { namespace chain {
          /// Reset the object graph in-memory
          void initialize_indexes();
          void init_schema();
-         void init_genesis(uint64_t initial_supply = BLURT_INIT_SUPPLY );
+         void init_genesis(const open_args& args );
 
          /**
           *  This method validates transactions without adding it to the pending state.

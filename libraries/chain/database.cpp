@@ -65,11 +65,22 @@ struct db_schema
    std::vector< operation_schema_repr > custom_operation_types;
 };
 
+struct account_snapshot {
+   account_name_type name;
+   authority owner;
+   authority active;
+   authority posting;
+   public_key_type memo;
+   share_type balance; // BLURT
+   share_type power; // BLURT POWER
+};
+
 } }
 
 FC_REFLECT( blurt::chain::object_schema_repr, (space_type)(type) )
 FC_REFLECT( blurt::chain::operation_schema_repr, (id)(type) )
 FC_REFLECT( blurt::chain::db_schema, (types)(object_types)(operation_type)(custom_operation_types) )
+FC_REFLECT( blurt::chain::account_snapshot, (name)(owner)(active)(posting)(memo)(balance)(power) )
 
 namespace blurt { namespace chain {
 
@@ -115,7 +126,7 @@ void database::open( const open_args& args )
       if( !find< dynamic_global_property_object >() )
          with_write_lock( [&]()
          {
-            init_genesis( args.initial_supply );
+            init_genesis( args );
          });
 
       _benchmark_dumper.set_enabled( args.benchmark_is_enabled );
@@ -2210,7 +2221,7 @@ void database::init_schema()
    return;*/
 }
 
-void database::init_genesis( uint64_t init_supply )
+void database::init_genesis( const open_args& args )
 {
    try
    {
@@ -2296,7 +2307,7 @@ void database::init_genesis( uint64_t init_supply )
             {
                a.name = BLURT_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
                a.memo_key = init_public_key;
-               a.balance  = asset( i ? 0 : init_supply - BLURT_INIT_POST_REWARD_BALANCE, BLURT_SYMBOL );
+               a.balance  = asset( i ? 0 : args.initial_supply - BLURT_INIT_POST_REWARD_BALANCE, BLURT_SYMBOL );
             } );
 
             create< account_authority_object >( [&]( account_authority_object& auth )
@@ -2339,12 +2350,12 @@ void database::init_genesis( uint64_t init_supply )
          p.time = BLURT_GENESIS_TIME;
          p.recent_slots_filled = fc::uint128::max_value();
          p.participation_count = 128;
-         p.current_supply = asset( init_supply, BLURT_SYMBOL );
+         p.current_supply = asset( args.initial_supply, BLURT_SYMBOL );
          p.maximum_block_size = BLURT_MAX_BLOCK_SIZE;
          p.reverse_auction_seconds = BLURT_REVERSE_AUCTION_WINDOW_SECONDS_HF21;
          p.next_maintenance_time = BLURT_GENESIS_TIME;
          p.last_budget_time = BLURT_GENESIS_TIME;
-         p.regent_init_vesting_shares = asset(init_supply / 2, BLURT_SYMBOL) * p.get_vesting_share_price(); // 50% of the init_supply
+         p.regent_init_vesting_shares = asset(args.initial_supply / 2, BLURT_SYMBOL) * p.get_vesting_share_price(); // 50% of the init_supply
          p.regent_vesting_shares = p.regent_init_vesting_shares;
          p.total_reward_fund_blurt = asset( 0, BLURT_SYMBOL );
          p.total_reward_shares2 = 0;
@@ -2387,6 +2398,98 @@ void database::init_genesis( uint64_t init_supply )
          util::rd_setup_dynamics_params( account_subsidy_per_witness_user_params, account_subsidy_system_params, wso.account_subsidy_witness_rd );
       } );
 
+#ifndef IS_TEST_NET
+      { // IMPORT snapshot.json
+         /**
+          * Path: {data_dir}/snapshot.json
+          *
+          * Sample data each line:
+          * {
+          *     "name":"a-0",
+          *     "owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["BLT5RrTRNDhhrMaA24SzSeE5AvmUcutb1q1VZp1imnT8p871s3UjN",1]]},
+          *     "active":{"weight_threshold":1,"account_auths":[],"key_auths":[["BLT5RrTRNDhhrMaA24SzSeE5AvmUcutb1q1VZp1imnT8p871s3UjN",1]]},
+          *     "posting":{"weight_threshold":1,"account_auths":[],"key_auths":[["BLT5RrTRNDhhrMaA24SzSeE5AvmUcutb1q1VZp1imnT8p871s3UjN",1]]},
+          *     "memo":"BLT5RrTRNDhhrMaA24SzSeE5AvmUcutb1q1VZp1imnT8p871s3UjN",
+          *     "balance":1,
+          *     "power":7107
+          *  }
+          */
+
+         auto snapshot_path = args.data_dir.string() + std::string("/../snapshot.json");
+         FC_ASSERT(boost::filesystem::exists(snapshot_path), "Snapshot '${path}' was not found.", ("path", snapshot_path));
+         ilog( "importing snapshot.json..." );
+
+         std::ifstream snapshot(snapshot_path);
+         const auto& gpo = get_dynamic_global_properties();
+         price vesting_share_price = gpo.get_vesting_share_price();
+         asset snapshot_total_balance = asset( 0, BLURT_SYMBOL );
+         asset snapshot_total_vesting_fund_blurt = asset( 0, BLURT_SYMBOL );
+         asset snapshot_total_vesting_shares = asset( 0, VESTS_SYMBOL );
+
+         // Create account first
+         ilog( "creating accounts..." );
+         uint32_t counter = 0;
+         std::string line;
+         while (std::getline(snapshot, line)) {
+            if (line.length() > 0) {
+               account_snapshot ss_account = fc::json::from_string(line).as<account_snapshot>();
+//               ilog( "creating account ${a}", ("a", ss_account.name) );
+
+               auto blurt_power = asset( ss_account.power, BLURT_SYMBOL );
+
+               create< account_object >( [&]( account_object& a ) {
+                  a.name = ss_account.name;
+                  a.memo_key = ss_account.memo;
+                  a.balance = asset( ss_account.balance, BLURT_SYMBOL );
+                  a.vesting_shares = blurt_power * vesting_share_price;
+
+                  snapshot_total_balance += a.balance;
+                  snapshot_total_vesting_fund_blurt += blurt_power;
+                  snapshot_total_vesting_shares += a.vesting_shares;
+               } );
+
+               if (counter % 100000 == 0) ilog( "creating account ${i}...", ("i", counter) );
+               counter ++;
+            }
+         }
+
+         // Then create authority
+         ilog( "creating authority..." );
+         snapshot.clear();
+         snapshot.seekg (0, snapshot.beg);
+         counter = 0;
+
+         while (std::getline(snapshot, line)) {
+            if (line.length() > 0) {
+               account_snapshot ss_account = fc::json::from_string(line).as<account_snapshot>();
+               create< account_authority_object >( [&]( account_authority_object& auth ) {
+                  auth.account = ss_account.name;
+                  auth.owner = ss_account.owner;
+                  auth.active = ss_account.active;
+                  auth.posting = ss_account.posting;
+               });
+
+               if (counter % 100000 == 0) ilog( "creating authority ${i}...", ("i", counter) );
+               counter ++;
+            }
+         }
+
+         snapshot.close();
+
+
+         // update global properties and initblurt balance
+          modify( get_dynamic_global_properties(), [&]( dynamic_global_property_object& _dgpo ) {
+            _dgpo.total_vesting_fund_blurt = snapshot_total_vesting_fund_blurt;
+            _dgpo.total_vesting_shares = snapshot_total_vesting_shares;
+         } );
+
+         modify( get_account( BLURT_INIT_MINER_NAME ), [&]( account_object& a ) {
+            a.balance -= (snapshot_total_balance + snapshot_total_vesting_fund_blurt);
+         });
+
+         ilog( "importing snapshot.json... OK!" );
+      }
+#endif
 
       //////////////////////////////
       { // pre-apply HF 1 to 22 here
