@@ -3,15 +3,26 @@ image: debian:10
 stages: 
  - build
 
-build_default:
-  stage: build 
-  before_script: 
+# Installs dependencies just once!
+before_script: 
 # Update apt
   - apt-get update -qq
 # Install Blurt Build Dependencies
-  - apt-get install -y -qq autoconf automake cmake g++ git libbz2-dev libsnappy-dev libssl-dev libtool make pkg-config python3 python3-jinja2 doxygen libboost-chrono-dev libboost-context-dev libboost-coroutine-dev libboost-date-time-dev libboost-filesystem-dev libboost-iostreams-dev libboost-locale-dev libboost-program-options-dev libboost-serialization-dev libboost-signals-dev libboost-system-dev libboost-test-dev libboost-thread-dev libncurses5-dev libreadline-dev perl
+  - apt-get install -y -qq autoconf automake cmake g++ git libbz2-dev libsnappy-dev libssl-dev libtool make pkg-config python3 python3-jinja2 doxygen libboost-chrono-dev libboost-context-dev libboost-coroutine-dev libboost-date-time-dev libboost-filesystem-dev libboost-iostreams-dev libboost-locale-dev libboost-program-options-dev libboost-serialization-dev libboost-signals-dev libboost-system-dev libboost-test-dev libboost-thread-dev libncurses5-dev libreadline-dev perl ccache
 # Pull in submodules
   - git submodule update --init --recursive
+# ccache for acceleration
+  - mkdir -p ccache
+  - export CCACHE_BASEDIR=${PWD}
+  - export CCACHE_DIR=${PWD}/ccache
+
+# caches ccache for future use (how is this going to work out with the parallelism I wonder?)
+cache:
+  paths:
+  - ccache/
+
+build_default:
+  stage: build 
   script:
   - mkdir build
   - cd build
@@ -26,13 +37,6 @@ build_default:
 
 build_witness:
   stage: build 
-  before_script:
-# Update apt   
-  - apt-get update -qq
-# Install Blurt Build Dependencies  
-  - apt-get install -y -qq autoconf automake cmake g++ git libbz2-dev libsnappy-dev libssl-dev libtool make pkg-config python3 python3-jinja2 doxygen libboost-chrono-dev libboost-context-dev libboost-coroutine-dev libboost-date-time-dev libboost-filesystem-dev libboost-iostreams-dev libboost-locale-dev libboost-program-options-dev libboost-serialization-dev libboost-signals-dev libboost-system-dev libboost-test-dev libboost-thread-dev libncurses5-dev libreadline-dev perl
-# Pull in submodules
-  - git submodule update --init --recursive
   script:
   - mkdir build
   - cd build
@@ -48,13 +52,6 @@ build_witness:
 
 build_fullnode:
   stage: build 
-  before_script: 
-# Update apt
-  - apt-get update -qq
-# Install Blurt Build Dependencies
-  - apt-get install -y -qq autoconf automake cmake g++ git libbz2-dev libsnappy-dev libssl-dev libtool make pkg-config python3 python3-jinja2 doxygen libboost-chrono-dev libboost-context-dev libboost-coroutine-dev libboost-date-time-dev libboost-filesystem-dev libboost-iostreams-dev libboost-locale-dev libboost-program-options-dev libboost-serialization-dev libboost-signals-dev libboost-system-dev libboost-test-dev libboost-thread-dev libncurses5-dev libreadline-dev perl
-# Pull in submodules
-  - git submodule update --init --recursive
   script:
   - mkdir build
   - cd build
@@ -65,4 +62,7 @@ build_fullnode:
   artifacts:
     paths:
     - /build/programs/blurtd_fullnode
+
+
+
   
