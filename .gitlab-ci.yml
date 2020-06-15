@@ -34,7 +34,7 @@ build_default:
   - pwd
   artifacts:
     paths:
-    - /build/programs/blurtd/blurtd_debug
+    - /builds/blurt/blurt/build/programs/blurtd/blurtd_debug
 
 
 build_witness:
@@ -51,8 +51,8 @@ build_witness:
 # cli wallet is only used for witness, so we capture it from the witness build
   artifacts:
     paths:
-    - /build/programs/blurtd/blurtd_witness
-    - /build/programs/cli_wallet/cli_wallet
+    - /builds/blurt/blurt/build/programs/blurtd/blurtd_witness
+    - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
 
 build_fullnode:
   stage: build 
@@ -65,7 +65,7 @@ build_fullnode:
   - mv programs/blurtd/blurtd programs/blurtd/blurtd_fullnode
   artifacts:
     paths:
-    - /build/programs/blurtd_fullnode
+    - /builds/blurt/blurt/build/programs/blurtd_fullnode
 
 
 
