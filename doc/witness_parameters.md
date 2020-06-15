@@ -47,14 +47,6 @@ A more detailed explanation of resource dynamics can be found [here](./devs/2018
 
 The maximum size of a single block in bytes. The value must be not less than `65536`. The value must not be more than 2MB (`2097152`).
 
-### sbd_interest_rate
-
-The annual interest rate paid to SBD holders. SBD interest is compounded on balance changes, no more than once every 30 days.
-
-### sbd_exchange_rate
-
-The exchange rate for BLURT/SBD to be used for printing SBD as rewards as well as SBD->BLURT conversions.
-The actual price feed is the median of medians. Every round (21 blocks) the median exchange rate is pushed to a queue and the oldest is removed. The median value of the queue is used for any calculations.
 
 ### url
 
