@@ -43,6 +43,7 @@ Your Witness machine spec is entirely **your** choice.  This recommended spec sh
 Accurate as of **June 15, 2020**:
 
 **Blurt Witness Spec**
+
 |  Component |  Size     |
 |----------|-------------|
 | **CPU** |  2+ Cores |
