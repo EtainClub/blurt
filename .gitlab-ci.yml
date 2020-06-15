@@ -18,9 +18,10 @@ build_default:
 # Debug Build Config: (Note: DCMAKE_BUILD_TYPE=Debug)
   - cmake -DBLURT_STATIC_BUILD=OFF -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Debug ..
   - make blurtd
+  - mv programs/blurtd/blurtd programs/blurtd/blurtd_debug
   artifacts:
     paths:
-    - build/blurtd_debug
+    - programs/blurtd/blurtd_debug
 
 build_witness:
   stage: build 
@@ -37,10 +38,10 @@ build_witness:
 # Witness Build Config: -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON
   - cmake -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
   - make blurtd
-  - mv blurtd blurtd_witness
+  - mv programs/blurtd/blurtd programs/blurtd/blurtd_witness
   artifacts:
     paths:
-    - build/blurtd_witness
+    - /build/programs/blurtd/blurtd_witness
 
 build_fullnode:
   stage: build 
@@ -57,8 +58,8 @@ build_fullnode:
 # Full Node Build Configuration -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF
   - cmake -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
   - make blurtd
-  - mv blurtd blurtd_fullnode
+  - mv programs/blurtd/blurtd programs/blurtd/blurtd_fullnode
   artifacts:
     paths:
-    - build/blurtd_fullnode
+    - /build/programs/blurtd_fullnode
   
