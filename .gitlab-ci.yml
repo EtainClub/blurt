@@ -3,68 +3,70 @@ image: debian:10
 stages: 
  - build
 
-build_default:
-  stage: build 
-  before_script: 
+# Installs dependencies just once!
+before_script: 
 # Update apt
   - apt-get update -qq
 # Install Blurt Build Dependencies
-  - apt-get install -y -qq autoconf automake cmake g++ git libbz2-dev libsnappy-dev libssl-dev libtool make pkg-config python3 python3-jinja2 doxygen libboost-chrono-dev libboost-context-dev libboost-coroutine-dev libboost-date-time-dev libboost-filesystem-dev libboost-iostreams-dev libboost-locale-dev libboost-program-options-dev libboost-serialization-dev libboost-signals-dev libboost-system-dev libboost-test-dev libboost-thread-dev libncurses5-dev libreadline-dev perl
+  - apt-get install -y -qq autoconf automake cmake g++ git libbz2-dev libsnappy-dev libssl-dev libtool make pkg-config python3 python3-jinja2 doxygen libboost-chrono-dev libboost-context-dev libboost-coroutine-dev libboost-date-time-dev libboost-filesystem-dev libboost-iostreams-dev libboost-locale-dev libboost-program-options-dev libboost-serialization-dev libboost-signals-dev libboost-system-dev libboost-test-dev libboost-thread-dev libncurses5-dev libreadline-dev perl ccache
 # Pull in submodules
   - git submodule update --init --recursive
+# ccache for acceleration
+  - mkdir -p ccache
+  - export CCACHE_BASEDIR=${PWD}
+  - export CCACHE_DIR=${PWD}/ccache
+
+# caches ccache for future use (how is this going to work out with the parallelism I wonder?)
+cache:
+  paths:
+  - ccache/
+
+build_default:
+  stage: build 
   script:
   - mkdir build
   - cd build
 # Debug Build Config: (Note: DCMAKE_BUILD_TYPE=Debug)
-  - cmake -DBLURT_STATIC_BUILD=OFF -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Debug ..
+  - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=OFF -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Debug ..
   - make -j$(nproc) blurtd cli_wallet
   - mv programs/blurtd/blurtd programs/blurtd/blurtd_debug
-# debug the artifact situation
+# Fix recovery of artifacts :/
   - pwd
   artifacts:
     paths:
-    - /build/programs/blurtd/blurtd_debug
+    - /builds/blurt/blurt/build/programs/blurtd/blurtd_debug
 
 
 build_witness:
   stage: build 
-  before_script:
-# Update apt   
-  - apt-get update -qq
-# Install Blurt Build Dependencies  
-  - apt-get install -y -qq autoconf automake cmake g++ git libbz2-dev libsnappy-dev libssl-dev libtool make pkg-config python3 python3-jinja2 doxygen libboost-chrono-dev libboost-context-dev libboost-coroutine-dev libboost-date-time-dev libboost-filesystem-dev libboost-iostreams-dev libboost-locale-dev libboost-program-options-dev libboost-serialization-dev libboost-signals-dev libboost-system-dev libboost-test-dev libboost-thread-dev libncurses5-dev libreadline-dev perl
-# Pull in submodules
-  - git submodule update --init --recursive
   script:
   - mkdir build
   - cd build
 # Witness Build Config: -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON
-  - cmake -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
+  - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
   - make -j$(nproc) blurtd cli_wallet
   - mv programs/blurtd/blurtd programs/blurtd/blurtd_witness
+# fix recovery of artifacts :(
+  - pwd
 # cli wallet is only used for witness, so we capture it from the witness build
   artifacts:
     paths:
-    - /build/programs/blurtd/blurtd_witness
-    - /build/programs/cli_wallet/cli_wallet
+    - /builds/blurt/blurt/build/programs/blurtd/blurtd_witness
+    - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
 
 build_fullnode:
   stage: build 
-  before_script: 
-# Update apt
-  - apt-get update -qq
-# Install Blurt Build Dependencies
-  - apt-get install -y -qq autoconf automake cmake g++ git libbz2-dev libsnappy-dev libssl-dev libtool make pkg-config python3 python3-jinja2 doxygen libboost-chrono-dev libboost-context-dev libboost-coroutine-dev libboost-date-time-dev libboost-filesystem-dev libboost-iostreams-dev libboost-locale-dev libboost-program-options-dev libboost-serialization-dev libboost-signals-dev libboost-system-dev libboost-test-dev libboost-thread-dev libncurses5-dev libreadline-dev perl
-# Pull in submodules
-  - git submodule update --init --recursive
   script:
   - mkdir build
   - cd build
 # Full Node Build Configuration -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF
-  - cmake -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
+  - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
   - make -j$(nproc) blurtd cli_wallet
   - mv programs/blurtd/blurtd programs/blurtd/blurtd_fullnode
   artifacts:
     paths:
-    - /build/programs/blurtd_fullnode
+    - /builds/blurt/blurt/build/programs/blurtd_fullnode
+
+
+
   
