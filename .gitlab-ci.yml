@@ -22,7 +22,7 @@ build_default:
   artifacts:
     paths:
     - /build/programs/blurtd/blurtd_debug
-    - /build/programs/blurtd/cli_wallet
+
 
 build_witness:
   stage: build 
@@ -40,9 +40,11 @@ build_witness:
   - cmake -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
   - make -j$(nproc) blurtd cli_wallet
   - mv programs/blurtd/blurtd programs/blurtd/blurtd_witness
+# cli wallet is only used for witness, so we capture it from the witness build
   artifacts:
     paths:
     - /build/programs/blurtd/blurtd_witness
+    - /build/programs/cli_wallet/cli_wallet
 
 build_fullnode:
   stage: build 
