@@ -24,7 +24,7 @@ Collectively, our goal should be to ensure that we do not run on any single infr
 What's important here is that everyone is not using only a single provider.  
 
 | **Provider**   |      **Machine Types**      |  **Price** | **Special Feature** |
-|----------|-------------|------|
+|----------|-------------|------|------------|
 | hetzner.de |  Bare Metal and Cloud |  Competitive | Cheap Bare Metal |
 | privex.io |    Bare Metal and Cloud   |  Mid-range | Privacy, Peering, Cryptocurrency Payments, Witness Optomization, Team has steemed since 2016 |
 | vultr.com | cloud and bare metal |  Mid-Range | Easy and straightforward |
@@ -42,7 +42,8 @@ Your Witness machine spec is entirely **your** choice.  This recommended spec sh
 
 Accurate as of **June 15, 2020**:
 
-| **Blurt Witness Spec** |
+**Blurt Witness Spec**
+|  Component |  Size     |
 |----------|-------------|
 | **CPU** |  2+ Cores |
 | **RAM** |    4GB   |
