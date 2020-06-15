@@ -19,6 +19,8 @@ build_default:
   - cmake -DBLURT_STATIC_BUILD=OFF -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Debug ..
   - make -j$(nproc) blurtd cli_wallet
   - mv programs/blurtd/blurtd programs/blurtd/blurtd_debug
+# debug the artifact situation
+  - pwd
   artifacts:
     paths:
     - /build/programs/blurtd/blurtd_debug
