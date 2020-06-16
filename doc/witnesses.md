@@ -44,11 +44,13 @@ systemctl enable blurtd
 # START BLURTD
 systemctl start blurtd 
 
-# ADD CONFIGURATION TO CONFIG.INI - note that this step cannot be copy/pasted, you must enter your username in the last step. 
-echo "witness = "PUT YOUR USERNAME HERE" 
+# CHECK ON BLURTD 
+systemctl status blurtd
 ```
 
-...and you didn't need to compile a thing!
+There, now you're running a very nice Blurt Full Node, but you are not yet running a Witness.  In order to run a witness, you'll need to import your Steem active key using the `cli_wallet`.  
+
+
 
 ## Witness Hardware
 
