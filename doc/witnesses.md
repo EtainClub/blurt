@@ -2,11 +2,28 @@
 
 The role of a witness in the Blurt Blockchain is to verify incoming transactions, produce blocks when scheduled, participate in governance.  In addition to this, there is a formal expectation that Witnesses advocate for the Blurt blockchain, review software, and build the Blurt community.  
 
-Witnesses are able to use the `witness_set_properties_operation` to change witness specific properties and vote on paramters.
+## Witness Setup Procedure
+**Valid for Testnet 1, June 16, 2020:**
 
-Unless otherwise noted, the median of the top 20 elected witnesses is used for all calculations needing the parameter.
+Assumptions: 
+* You're handling security, this guide covers getting the witness up only at this time.
 
-This operation was added in Steem v0.20.0 to replace the `witness_update_operation` which was not easily extendable. While it is recommended to use `witness_set_properties_operation`, `witness_update_operation` will continue to work.
+
+**SSH into your witness node and run:**
+
+
+(incomplete but comitting for preservation)
+```bash
+apt install unzip
+wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
+unzip download
+mv build/programs/blurtd/blurtd_witness /usr/bin/blurtd
+mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet
+wget -O ~/.blurtd/snapshot.json https://test.blurt.world/_download/snapshot.json
+echo "p2p-seed-node = 95.217.193.163:2001" >> ~/.blurtd/config.ini
+echo "plugin = witness account_by_key account_by_key_api condenser_api database_api network_broadcast_api transaction_status transaction_status_api" >> ~/.blurtd/config.ini
+
+```
 
 ## Witness Hardware
 
