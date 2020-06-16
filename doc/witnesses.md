@@ -73,9 +73,7 @@ Note: the key should start with a 5
 **Add private key to config.ini**
 
 echo "private-key = BRAIN_KEY_PRIVATE_KEY_GOES_HERE" >> ~/.blurtd/config.ini
-echo "
-
-
+echo 'witness = "jacobgadikian"' 
 
 **Declare that you're a Witness** 
 
