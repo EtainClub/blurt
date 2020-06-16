@@ -8,7 +8,6 @@ The role of a witness in the Blurt Blockchain is to verify incoming transactions
 
 **SSH into your witness node and run:**
 
-
 ```bash
 apt install unzip
 wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
@@ -20,6 +19,7 @@ chmod +x /urs/bin/cli_wallet
 wget -O ~/.blurtd/snapshot.json https://test.blurt.world/_download/snapshot.json
 echo "p2p-seed-node = 95.217.193.163:2001" >> ~/.blurtd/config.ini
 echo "plugin = witness account_by_key account_by_key_api condenser_api database_api network_broadcast_api transaction_status transaction_status_api" >> ~/.blurtd/config.ini
+wget https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.service
 
 ```
 
