@@ -155,6 +155,18 @@ Success looks like this:
 }
 ```
 
+It's also a very good idea for you to vote for yourself from the CLI wallet, so that you will begin to make blocks:
+
+```
+vote_for_witness gopher23 gopher23 true true
+```
+
+Success looks like:
+
+```
+success json to go here
+```
+
 ## Failover Script
 
 On Steem / Hive, and also in other blockchain ecosystems, some Witnesses / Validators choose to create automated failover systems that ensure that their nodes do not miss blocks in the event that their Witness / Validator / Block Producer goes down.  If your failover system breaks, you could end up double-signing blocks, which is **very** bad.  
