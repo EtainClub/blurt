@@ -80,7 +80,7 @@ pdfs:
     - apt-get install -y pandoc texlive-xetex
   script:
   # Runs pandoc on all .md files in the repo and outputs them as PDF and DOCX
-    - find . -name '*.md' -exec sh -c 'pandoc $0 --pdf-engine=xelatex --o pdf > $0.pdf' {} \;
+    - pandoc docs/witnesses.md --pdf-engine=xelatex --o pdf 
   artifacts:
     # Attach all untracked files (e.g. files that were recently created and not yet committed to git) as artifacts.
     # These are the files you then download after the job has finished.
@@ -89,7 +89,3 @@ pdfs:
     # Only run on the master branch
     - dev
     - master
-
-
-
-  
