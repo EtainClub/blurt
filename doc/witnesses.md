@@ -13,28 +13,45 @@ Your witness node should be running Debian 10 or higher.
 # UPDATE YOUR DEBIAN 10 SYSTEM TO THE LATEST VERSIONS OF PACKAGES
 apt update
 apt upgrade
+
 # INSTALL UNZIP AND WGET
 apt install unzip wget
+
 # DOWNLOAD BUILD ARTIFACTS
 wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
+
 # UNZIP THE BUILD ARTIFACTS, BLURTD AND CLI_WALLET
 unzip download
+
 # PUT BLURTD AND CLI_WALLET ON YOUR $PATH
 mv build/programs/blurtd/blurtd_witness /usr/bin/blurtd
 mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet
+
 # ENSURE THAT BLURTD AND CLI_WALLET ARE EXECUTABLE
 chmod +x /usr/bin/blurtd
 chmod +x /urs/bin/cli_wallet
+
 # RUN BLURTD TO GENERATE CONFIG.INI AND ~/.BLURTD
 blurtd #blurt will run, then stop.  This is expected and normal.  What actually occurs here is that it creates ~/.blurtd and a config.ini file for you.
 wget -O ~/.blurtd/snapshot.json https://test.blurt.world/_download/snapshot.json
-# ADD CONFIGURATION TO CONFIG.INI
+
+# ADD CONFIGURATION TO CONFIG.INI - note that this step cannot be copy/pasted, you must enter your username in the last step. 
 echo "p2p-seed-node = 95.217.193.163:2001" >> ~/.blurtd/config.ini
 echo "plugin = witness account_by_key account_by_key_api condenser_api database_api network_broadcast_api transaction_status transaction_status_api" >> ~/.blurtd/config.ini
-# INSTALL BLURTD.SERVICE SYSTEMD UINT
+echo "webserver-http-endpoint = 0.0.0.0:8091" >> ~/.blurtd/config.ini
+echo "webserver-ws-endpoint = 0.0.0.0:8090" >> ~/.blurtd/config.ini
+echo "witness = "PUT YOUR USERNAME HERE" 
+
+# INSTALL BLURTD.SERVICE 
 wget -O /etc/systemd/system https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.service
 
+# ENABLE BLURTD SYSTEMD SERVICE
+systemctl enable blurtd
 
+# START BLURTD
+systemctl start blurtd
+
+# 
 ```
 
 ...and you didn't need to compile a thing!
