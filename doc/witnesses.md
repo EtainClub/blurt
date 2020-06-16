@@ -1,3 +1,8 @@
+---
+title:  Blurt Witnesses
+geometry: margin=2cm
+---
+
 # Witnesses
 
 The role of a witness in the Blurt Blockchain is to verify incoming transactions, produce blocks when scheduled, participate in governance.  In addition to this, there is a formal expectation that Witnesses advocate for the Blurt blockchain, review software, and build the Blurt community.  
