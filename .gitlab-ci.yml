@@ -71,9 +71,7 @@ build_fullnode:
 pdfs:
   stage: build
 #makes sure that the document generator does not pick up the cache and do strange things. 
-  cache:
-    paths:
-    - ""
+  cache: {}
   before_script:
     # Download and install pandoc and kramdown before we begin
     # pandoc does PDF, but requires pdflatex, which can be a ~500mb download
