@@ -31,16 +31,9 @@ mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet
 chmod +x /usr/bin/blurtd
 chmod +x /urs/bin/cli_wallet
 
-# RUN BLURTD TO GENERATE CONFIG.INI AND ~/.BLURTD
-blurtd #blurt will run, then stop.  This is expected and normal.  What actually occurs here is that it creates ~/.blurtd and a config.ini file for you.
+# MAKE ~/.blurtd AND FILL IT WITH 1.3 MILLION STEEM ACCOUNTS
+mkdir ~/.blurtd
 wget -O ~/.blurtd/snapshot.json https://test.blurt.world/_download/snapshot.json
-
-# ADD CONFIGURATION TO CONFIG.INI - note that this step cannot be copy/pasted, you must enter your username in the last step. 
-echo "p2p-seed-node = 95.217.193.163:2001" >> ~/.blurtd/config.ini
-echo "plugin = witness account_by_key account_by_key_api condenser_api database_api network_broadcast_api transaction_status transaction_status_api" >> ~/.blurtd/config.ini
-echo "webserver-http-endpoint = 0.0.0.0:8091" >> ~/.blurtd/config.ini
-echo "webserver-ws-endpoint = 0.0.0.0:8090" >> ~/.blurtd/config.ini
-echo "witness = "PUT YOUR USERNAME HERE" 
 
 # INSTALL BLURTD.SERVICE 
 wget -O /etc/systemd/system https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.service
@@ -49,9 +42,10 @@ wget -O /etc/systemd/system https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.
 systemctl enable blurtd
 
 # START BLURTD
-systemctl start blurtd
+systemctl start blurtd 
 
-# 
+# ADD CONFIGURATION TO CONFIG.INI - note that this step cannot be copy/pasted, you must enter your username in the last step. 
+echo "witness = "PUT YOUR USERNAME HERE" 
 ```
 
 ...and you didn't need to compile a thing!
