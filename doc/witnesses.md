@@ -34,9 +34,10 @@ chmod +x /urs/bin/cli_wallet
 # MAKE ~/.blurtd AND FILL IT WITH 1.3 MILLION STEEM ACCOUNTS
 mkdir ~/.blurtd
 wget -O ~/.blurtd/snapshot.json https://test.blurt.world/_download/snapshot.json
+wget -O ~/.blurtd/config.ini https://gitlab.com/blurt/blurt/-/blob/dev/doc/witness_config.ini
 
 # INSTALL BLURTD.SERVICE 
-wget -O /etc/systemd/system https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.service
+wget -O /etc/systemd/system https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.servic
 
 # ENABLE BLURTD SYSTEMD SERVICE
 systemctl enable blurtd
@@ -50,6 +51,41 @@ systemctl status blurtd
 
 There, now you're running a very nice Blurt Full Node, but you are not yet running a Witness.  In order to run a witness, you'll need to import your Steem active key using the `cli_wallet`.  
 
+So now you'll need to run `cli_wallet`. (type cli_wallet and hit enter)
+
+The first thing you should do is set a password, like:
+
+```
+set_password yourpassword
+```
+
+You'll also want to `suggest_brain_key`.  
+
+Copy down its entire output and keep it safely.  You'll be using this brain key to control your Witness.  
+
+**import your Steem Active key**
+
+```
+import_key 5KABCDEFGHIJKLMNOPQRSTUVXYZ
+```
+Note: the key should start with a 5
+
+**Add private key to config.ini**
+
+echo "private-key = BRAIN_KEY_PRIVATE_KEY_GOES_HERE" >> ~/.blurtd/config.ini
+echo "
+
+
+
+**Declare that you're a Witness** 
+
+Go back into the `cli_wallet` and fire off this command, adjusted for your account and public key. 
+```
+update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BLT8mBSoVWNcXqsk2PHTfJCxRz9ebJgz8e1WgAnuqQBpTjs9UXqGh" {"account_creation_fee":"3.000 BLURT","maximum_block_size":65536} true
+```
+
+Success looks like this:
+```
 
 
 ## Witness Hardware
