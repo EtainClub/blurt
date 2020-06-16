@@ -77,13 +77,10 @@ pdfs:
     # pandoc does PDF, but requires pdflatex, which can be a ~500mb download
     # so we go for kramdown, which handles PDF, but doesn't handle DOCX
     - apt-get update -y
-    - apt-get install -y pandoc rubygems
-    - gem install kramdown
-    - gem install prawn
-    - gem install prawn-table
+    - apt-get install -y pandoc rubygems xelatex texlive-xetex
   script:
-    # Runs pandoc on all .md files in the repo and outputs them as PDF and DOCX
-    - find . -name '*.md' -exec sh -c 'kramdown $0 --output pdf > $0.pdf' {} \;
+  # Runs pandoc on all .md files in the repo and outputs them as PDF and DOCX
+    - find . -name '*.md' -exec sh -c 'pandoc $0 --pdf-engine=xelatex --o pdf > $0.pdf' {} \;
   artifacts:
     # Attach all untracked files (e.g. files that were recently created and not yet committed to git) as artifacts.
     # These are the files you then download after the job has finished.
@@ -91,6 +88,7 @@ pdfs:
   only:
     # Only run on the master branch
     - dev
+    - master
 
 
 
