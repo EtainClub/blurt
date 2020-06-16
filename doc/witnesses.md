@@ -57,7 +57,7 @@ apt update
 apt upgrade
 
 # INSTALL UNZIP AND WGET
-apt install unzip wget
+apt install unzip wget ibbz2-dev libsnappy-dev libncurses5-dev libreadline-dev
 
 # DOWNLOAD BUILD ARTIFACTS
 wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
