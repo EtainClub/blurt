@@ -163,7 +163,7 @@ I (Jacob) am of the opinion that double-signing (a single hot key running on mor
 
 It is my (Jacob's) recommendation that you do not use an automated failover system on your Witness.  If it goes down, and misses blocks, it's really not the end of the world.  Yes, your performance is judged by the team and community on missing blocks or not, but we're all quite rational.  At times, machines go down.  My (Jacob's) personal opinion is that **occasional** downtime is preferable to the risk of double signing created by failover systems.   
 
-That said, your Witness is ultimately your responsiibility,  and running a failover scirpt or not is ultimately your decision to make.  
+That said, your Witness is ultimately your responsiibility,  your Witness configuration is your decision to make.  
 
 
 ## Social Expectations
