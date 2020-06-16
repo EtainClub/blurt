@@ -47,7 +47,7 @@ Accurate as of **June 15, 2020**:
 ## Witness Setup Procedure
 **Valid for Testnet 1, June 16, 2020:**
 
-Your witness node should be running Debian 10 or higher.  
+Blurt nodes run well on many Linux distributions, but we recommend Debian 10. 
 
 **SSH into your witness node and run:**
 
