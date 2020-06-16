@@ -71,7 +71,7 @@ mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet
 
 # ENSURE THAT BLURTD AND CLI_WALLET ARE EXECUTABLE
 chmod +x /usr/bin/blurtd
-chmod +x /urs/bin/cli_wallet
+chmod +x /usr/bin/cli_wallet
 
 # MAKE ~/.blurtd AND FILL IT WITH 1.3 MILLION STEEM ACCOUNTS
 mkdir ~/.blurtd
