@@ -75,7 +75,7 @@ pdfs:
     # pandoc does PDF, but requires pdflatex, which can be a ~500mb download
     # so we go for kramdown, which handles PDF, but doesn't handle DOCX
     - apt-get update -y
-    - apt-get install -y pandoc
+    - apt-get install -y pandoc gem
     - gem install kramdown
     - gem install prawn
     - gem install prawn-table
