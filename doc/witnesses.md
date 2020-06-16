@@ -2,12 +2,6 @@
 
 The role of a witness in the Blurt Blockchain is to verify incoming transactions, produce blocks when scheduled, participate in governance.  In addition to this, there is a formal expectation that Witnesses advocate for the Blurt blockchain, review software, and build the Blurt community.  
 
-Witnesses are able to use the `witness_set_properties_operation` to change witness specific properties and vote on paramters.
-
-Unless otherwise noted, the median of the top 20 elected witnesses is used for all calculations needing the parameter.
-
-This operation was added in Steem v0.20.0 to replace the `witness_update_operation` which was not easily extendable. While it is recommended to use `witness_set_properties_operation`, `witness_update_operation` will continue to work.
-
 ## Witness Hardware
 
 As many of you are aware, the hardware spec needed for running a Steem witness has grown significantly over the years!  
@@ -50,6 +44,116 @@ Accurate as of **June 15, 2020**:
 | **RAM** |    4GB   |
 | **Storage** | 80+GB |
 
+## Witness Setup Procedure
+**Valid for Testnet 1, June 16, 2020:**
+
+Your witness node should be running Debian 10 or higher.  
+
+**SSH into your witness node and run:**
+
+```bash
+# UPDATE YOUR DEBIAN 10 SYSTEM TO THE LATEST VERSIONS OF PACKAGES
+apt update
+apt upgrade
+
+# INSTALL UNZIP AND WGET
+apt install unzip wget
+
+# DOWNLOAD BUILD ARTIFACTS
+wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
+
+# UNZIP THE BUILD ARTIFACTS, BLURTD AND CLI_WALLET
+unzip download
+
+# PUT BLURTD AND CLI_WALLET ON YOUR $PATH
+mv build/programs/blurtd/blurtd_witness /usr/bin/blurtd
+mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet
+
+# ENSURE THAT BLURTD AND CLI_WALLET ARE EXECUTABLE
+chmod +x /usr/bin/blurtd
+chmod +x /urs/bin/cli_wallet
+
+# MAKE ~/.blurtd AND FILL IT WITH 1.3 MILLION STEEM ACCOUNTS
+mkdir ~/.blurtd
+wget -O ~/.blurtd/snapshot.json https://test.blurt.world/_download/snapshot.json
+wget -O ~/.blurtd/config.ini https://gitlab.com/blurt/blurt/-/blob/dev/doc/witness_config.ini
+
+# INSTALL BLURTD.SERVICE 
+wget -O /etc/systemd/system https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.servic
+
+# ENABLE BLURTD SYSTEMD SERVICE
+systemctl enable blurtd
+
+# START BLURTD
+systemctl start blurtd 
+
+# CHECK ON BLURTD 
+systemctl status blurtd
+```
+
+There, now you're running a very nice Blurt Full Node, but you are not yet running a Witness.  In order to run a witness, you'll need to import your Steem active key using the `cli_wallet`.  
+
+So now you'll need to run `cli_wallet`. (type cli_wallet and hit enter)
+
+The first thing you should do is set a password, like:
+
+```
+set_password yourpassword
+```
+
+You'll also want to `suggest_brain_key`.  
+
+Copy down its entire output and keep it safely.  You'll be using this brain key to control your Witness.  
+
+**import your Steem Active key**
+
+```
+import_key 5KABCDEFGHIJKLMNOPQRSTUVXYZ
+```
+Note: the key should start with a 5
+
+**Add private key to config.ini**
+
+echo "private-key = BRAIN_KEY_PRIVATE_KEY_GOES_HERE" >> ~/.blurtd/config.ini
+echo 'witness = "jacobgadikian"' 
+
+**Declare that you're a Witness** 
+
+Go back into the `cli_wallet` and fire off this command, adjusted for your account and public key. 
+```
+update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BLT8mBSoVWNcXqsk2PHTfJCxRz9ebJgz8e1WgAnuqQBpTjs9UXqGh" {"account_creation_fee":"3.000 BLURT","maximum_block_size":65536} true
+```
+
+Success looks like this:
+```json
+{
+  "ref_block_num": 12141,
+  "ref_block_prefix": 747640993,
+  "expiration": "2020-06-15T16:54:30",
+  "operations": [[
+      "witness_update",{
+        "owner": "jacobgadikian",
+        "url": "https://whaleshares.io/@faddat",
+        "block_signing_key": "BLT8mBSoVWNcXqsk2PHTfJCxRz9ebJgz8e1WgAnuqQBpTjs9UXqGh",
+        "props": {
+          "account_creation_fee": "3.000 BLURT",
+          "maximum_block_size": 65536,
+          "account_subsidy_budget": 797,
+          "account_subsidy_decay": 347321
+        },
+        "fee": "0.000 BLURT"
+      }
+    ]
+  ],
+  "extensions": [],
+  "signatures": [
+    "1f132ce16452adf8667be7a0bb9bf909396dcea8e21093729a8c1b072fd3ad4f9909aa675a131871b0feb582077ea2b7a78c675155e0125f33c5376c087f2438f7"
+  ],
+  "transaction_id": "d28314a76b29cfb30e8c8de40c819ae38b538181",
+  "block_num": 12142,
+  "transaction_num": 0
+}
+```
 
 ## Failover Script
 
