@@ -8,7 +8,7 @@
 Description=blurtd
 
 [Service]
-ExecStart=/usr/sbin/f
+ExecStart=/usr/bin/blurtd
 
 [Install]
 WantedBy=multi-user.target
