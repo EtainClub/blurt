@@ -69,6 +69,7 @@ build_fullnode:
     - /builds/blurt/blurt/build/programs/blurtd_fullnode
 
 pdfs:
+  stage: build
   before_script:
     # Download and install pandoc and kramdown before we begin
     # pandoc does PDF, but requires pdflatex, which can be a ~500mb download
