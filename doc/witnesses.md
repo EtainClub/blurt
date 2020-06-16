@@ -163,8 +163,27 @@ vote_for_witness gopher23 gopher23 true true
 
 Success looks like:
 
-```
-success json to go here
+```json
+{
+  "ref_block_num": 35495,
+  "ref_block_prefix": 2258033885,
+  "expiration": "2020-06-16T12:23:03",
+  "operations": [[
+      "account_witness_vote",{
+        "account": "gopher23",
+        "witness": "gopher23",
+        "approve": true
+      }
+    ]
+  ],
+  "extensions": [],
+  "signatures": [
+    "1f7f104f99d77fdb397ef2ec01f178185efe7baa01077afd094dd34a9ecee68ea7511659ef3bfb829c333ae967746c8dd14282fe847bce693a96046f29308ead03"
+  ],
+  "transaction_id": "1472efb61fb35a65afe69f4c0f9344009b951462",
+  "block_num": 35496,
+  "transaction_num": 0
+}
 ```
 
 ## Failover Script
