@@ -2,6 +2,48 @@
 
 The role of a witness in the Blurt Blockchain is to verify incoming transactions, produce blocks when scheduled, participate in governance.  In addition to this, there is a formal expectation that Witnesses advocate for the Blurt blockchain, review software, and build the Blurt community.  
 
+## Witness Hardware
+
+As many of you are aware, the hardware spec needed for running a Steem witness has grown significantly over the years!  
+
+[privex.io](https://privex.io) currently offers a highly optomized Hive witness setup that they call Node In A Box(TM).
+
+We have had some discussions about a Blurt-Flavored "Node In A Box(TM), so in the long-term as the chain grows, their services may limit your costs.  
+
+Additionally, a non-docker bash script AND a docker-based bash script will be developed and included in this repository.  
+
+Collectively, our goal should be to ensure that we do not run on any single infrastructure provider.  While many of us have a bit of a [bare-metal server fetish](https://gitlab.com/virgohardware/core), the fact is that for Blurt's launch and likely for at least the first six months of Blurt's operation, you're not going to need a huge machine to operate a Witness.  We are considering further optomizations to Blurtd which would permanently lower the RAM consumption on both Witness and Seed nodes, but that's as of yet incomplete.  Here is a [reasonable machine spec](https://whaleshares.io/@faddat/witness-post#@faddat/re-daking-re-faddat-witness-post-20200612t195020198z) that should give you a ton of growing room.  
+
+**Infrastructure Providers**:
+What's important here is that everyone is not using only a single provider.  
+
+| **Provider**   |      **Machine Types**      |  **Price** | **Special Feature** |
+|----------|-------------|------|------------|
+| hetzner.de |  Bare Metal and Cloud |  Competitive | Cheap Bare Metal |
+| privex.io |    Bare Metal and Cloud   |  Mid-range | Privacy, Peering, Cryptocurrency Payments, Witness Optomization, Team has steemed since 2016 |
+| vultr.com | cloud and bare metal |  Mid-Range | Easy and straightforward |
+| digitalocean.com | cloud | mid-range | tutorial ecosystem |
+| contabo.com | cloud | low | Price AND one time I saw a contabo node outperform nearly all others in a network stress test situation on the [akash.io](https://akash.io) testnet. |
+| Your local hosting provider | bare metal | ? | Diversify the Witness Set |
+| GCE | Cloud | high | admin features |
+| AWS | Cooud | high | industry leader for infrastructure |
+
+
+
+**Machine Spec**:
+Your Witness machine spec is entirely **your** choice.  This recommended spec should be relatively low cost ($5-20 per month) and should also run your Blurt Witness very effectively.  
+
+
+Accurate as of **June 15, 2020**:
+
+**Blurt Witness Spec**
+
+|  Component |  Size     |
+|----------|-------------|
+| **CPU** |  2+ Cores |
+| **RAM** |    4GB   |
+| **Storage** | 80+GB |
+
 ## Witness Setup Procedure
 **Valid for Testnet 1, June 16, 2020:**
 
@@ -83,51 +125,35 @@ update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BLT8mBSoVWNcXqs
 ```
 
 Success looks like this:
+```json
+{
+  "ref_block_num": 12141,
+  "ref_block_prefix": 747640993,
+  "expiration": "2020-06-15T16:54:30",
+  "operations": [[
+      "witness_update",{
+        "owner": "jacobgadikian",
+        "url": "https://whaleshares.io/@faddat",
+        "block_signing_key": "BLT8mBSoVWNcXqsk2PHTfJCxRz9ebJgz8e1WgAnuqQBpTjs9UXqGh",
+        "props": {
+          "account_creation_fee": "3.000 BLURT",
+          "maximum_block_size": 65536,
+          "account_subsidy_budget": 797,
+          "account_subsidy_decay": 347321
+        },
+        "fee": "0.000 BLURT"
+      }
+    ]
+  ],
+  "extensions": [],
+  "signatures": [
+    "1f132ce16452adf8667be7a0bb9bf909396dcea8e21093729a8c1b072fd3ad4f9909aa675a131871b0feb582077ea2b7a78c675155e0125f33c5376c087f2438f7"
+  ],
+  "transaction_id": "d28314a76b29cfb30e8c8de40c819ae38b538181",
+  "block_num": 12142,
+  "transaction_num": 0
+}
 ```
-
-
-## Witness Hardware
-
-As many of you are aware, the hardware spec needed for running a Steem witness has grown significantly over the years!  
-
-[privex.io](https://privex.io) currently offers a highly optomized Hive witness setup that they call Node In A Box(TM).
-
-We have had some discussions about a Blurt-Flavored "Node In A Box(TM), so in the long-term as the chain grows, their services may limit your costs.  
-
-Additionally, a non-docker bash script AND a docker-based bash script will be developed and included in this repository.  
-
-Collectively, our goal should be to ensure that we do not run on any single infrastructure provider.  While many of us have a bit of a [bare-metal server fetish](https://gitlab.com/virgohardware/core), the fact is that for Blurt's launch and likely for at least the first six months of Blurt's operation, you're not going to need a huge machine to operate a Witness.  We are considering further optomizations to Blurtd which would permanently lower the RAM consumption on both Witness and Seed nodes, but that's as of yet incomplete.  Here is a [reasonable machine spec](https://whaleshares.io/@faddat/witness-post#@faddat/re-daking-re-faddat-witness-post-20200612t195020198z) that should give you a ton of growing room.  
-
-**Infrastructure Providers**:
-What's important here is that everyone is not using only a single provider.  
-
-| **Provider**   |      **Machine Types**      |  **Price** | **Special Feature** |
-|----------|-------------|------|------------|
-| hetzner.de |  Bare Metal and Cloud |  Competitive | Cheap Bare Metal |
-| privex.io |    Bare Metal and Cloud   |  Mid-range | Privacy, Peering, Cryptocurrency Payments, Witness Optomization, Team has steemed since 2016 |
-| vultr.com | cloud and bare metal |  Mid-Range | Easy and straightforward |
-| digitalocean.com | cloud | mid-range | tutorial ecosystem |
-| contabo.com | cloud | low | Price AND one time I saw a contabo node outperform nearly all others in a network stress test situation on the [akash.io](https://akash.io) testnet. |
-| Your local hosting provider | bare metal | ? | Diversify the Witness Set |
-| GCE | Cloud | high | admin features |
-| AWS | Cooud | high | industry leader for infrastructure |
-
-
-
-**Machine Spec**:
-Your Witness machine spec is entirely **your** choice.  This recommended spec should be relatively low cost ($5-20 per month) and should also run your Blurt Witness very effectively.  
-
-
-Accurate as of **June 15, 2020**:
-
-**Blurt Witness Spec**
-
-|  Component |  Size     |
-|----------|-------------|
-| **CPU** |  2+ Cores |
-| **RAM** |    4GB   |
-| **Storage** | 80+GB |
-
 
 ## Failover Script
 
