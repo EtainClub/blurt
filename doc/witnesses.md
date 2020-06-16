@@ -79,7 +79,7 @@ wget -O ~/.blurtd/snapshot.json https://test.blurt.world/_download/snapshot.json
 wget -O ~/.blurtd/config.ini https://gitlab.com/blurt/blurt/-/blob/dev/doc/witness_config.ini
 
 # INSTALL BLURTD.SERVICE 
-wget -O /etc/systemd/system https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.servic
+wget -O /etc/systemd/system/blurtd.service https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.service
 
 # ENABLE BLURTD SYSTEMD SERVICE
 systemctl enable blurtd
