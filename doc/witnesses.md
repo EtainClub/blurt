@@ -5,20 +5,18 @@ The role of a witness in the Blurt Blockchain is to verify incoming transactions
 ## Witness Setup Procedure
 **Valid for Testnet 1, June 16, 2020:**
 
-Assumptions: 
-* You're handling security, this guide covers getting the witness up only at this time.
-
 
 **SSH into your witness node and run:**
 
 
-(incomplete but comitting for preservation)
 ```bash
 apt install unzip
 wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
 unzip download
 mv build/programs/blurtd/blurtd_witness /usr/bin/blurtd
 mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet
+chmod +x /usr/bin/blurtd
+chmod +x /urs/bin/cli_wallet
 wget -O ~/.blurtd/snapshot.json https://test.blurt.world/_download/snapshot.json
 echo "p2p-seed-node = 95.217.193.163:2001" >> ~/.blurtd/config.ini
 echo "plugin = witness account_by_key account_by_key_api condenser_api database_api network_broadcast_api transaction_status transaction_status_api" >> ~/.blurtd/config.ini
