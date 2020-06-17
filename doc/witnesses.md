@@ -135,6 +135,8 @@ Success looks like this:
 
 It's also a very good idea for you to vote for yourself from the CLI wallet, so that you will begin to make blocks:
 
+Note: gopher23 is an account name.  You'll want to replace `gopher23` with your own account name in the voting step.  
+
 ```
 vote_for_witness gopher23 gopher23 true true
 ```
