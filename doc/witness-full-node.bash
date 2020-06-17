@@ -26,7 +26,7 @@ chmod +x /usr/bin/cli_wallet
 # MAKE ~/.blurtd AND FILL IT WITH 1.3 MILLION STEEM ACCOUNTS
 mkdir /blurtd
 wget -O /blurtd/snapshot.json https://test.blurt.world/_download/snapshot.json
-wget -O /blurtd/config.ini https://gitlab.com/blurt/blurt/-/blob/dev/doc/witness_config.ini
+wget -O /blurtd/config.ini https://gitlab.com/blurt/blurt/-/raw/dev/doc/witness_config.ini
 
 # INSTALL BLURTD.SERVICE 
 wget -O /etc/systemd/system/blurtd.service https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.service
