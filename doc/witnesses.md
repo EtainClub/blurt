@@ -59,10 +59,10 @@ Blurt nodes run well on many Linux distributions, but we recommend Debian 10.
 ```bash
 # UPDATE YOUR DEBIAN 10 SYSTEM TO THE LATEST VERSIONS OF PACKAGES
 apt update
-apt upgrade
+apt upgrade -y
 
 # INSTALL UNZIP AND WGET
-apt install unzip wget ibbz2-dev libsnappy-dev libncurses5-dev libreadline-dev
+apt install -y unzip wget libbz2-dev libsnappy-dev libncurses5-dev libreadline-dev
 
 # DOWNLOAD BUILD ARTIFACTS
 wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
@@ -71,8 +71,11 @@ wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
 unzip download
 
 # PUT BLURTD AND CLI_WALLET ON YOUR $PATH
+# PUT BLURTD AND CLI_WALLET ON YOUR $PATH
 mv build/programs/blurtd/blurtd_witness /usr/bin/blurtd
 mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet
+rm -rf build
+rm download
 
 # ENSURE THAT BLURTD AND CLI_WALLET ARE EXECUTABLE
 chmod +x /usr/bin/blurtd
