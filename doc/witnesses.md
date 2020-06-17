@@ -54,6 +54,8 @@ Accurate as of **June 15, 2020**:
 
 Blurt nodes run well on many Linux distributions, but we recommend Debian 10. 
 
+We've reduced setting up a full node to a single-line installer:
+
 ```bash
 bash <(curl -s https://gitlab.com/blurt/blurt/-/raw/dev/doc/witness-full-node.bash)
 ```
