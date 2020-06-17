@@ -135,11 +135,18 @@ Success looks like this:
 
 It's also a very good idea for you to vote for yourself from the CLI wallet, so that you will begin to make blocks:
 
-Note: gopher23 is an account name.  You'll want to replace `gopher23` with your own account name in the voting step.  
+Note: gopher23 is an account name.  You'll want to replace `gopher23` with your own account name in the voting step.  The first name is the account that you're voting from, and the second is the account that you're voting for.  
 
+**vote for yoursself**
 ```
 vote_for_witness gopher23 gopher23 true true
 ```
+
+**vote for someone else**
+```
+vote_for_witness gopher23 megadrive true true
+```
+
 
 Success looks like:
 
