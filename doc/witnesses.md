@@ -54,6 +54,8 @@ Accurate as of **June 15, 2020**:
 
 Blurt nodes run well on many Linux distributions, but we recommend Debian 10. 
 
+We've reduced setting up a full node to a single-line installer:
+
 ```bash
 bash <(curl -s https://gitlab.com/blurt/blurt/-/raw/dev/doc/witness-full-node.bash)
 ```
@@ -81,8 +83,12 @@ Note: the key should start with a 5
 
 **Add private key to config.ini**
 
+```
 echo "private-key = BRAIN_KEY_PRIVATE_KEY_GOES_HERE" >> ~/.blurtd/config.ini
 echo 'witness = "jacobgadikian"' 
+systemctl restart blurtd
+systemctl status blurtd
+```
 
 **Declare that you're a Witness** 
 
