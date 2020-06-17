@@ -92,7 +92,7 @@ systemctl status blurtd
 
 **Declare that you're a Witness** 
 
-Go back into the `cli_wallet` and fire off this command, adjusted for your account and public key. 
+Go back into the `cli_wallet`, unlock this wallet, and then fire off this command, adjusted for your account, URL of choice, and brainwallet public key. 
 ```
 update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BLT8mBSoVWNcXqsk2PHTfJCxRz9ebJgz8e1WgAnuqQBpTjs9UXqGh" {"account_creation_fee":"3.000 BLURT","maximum_block_size":65536} true
 ```
