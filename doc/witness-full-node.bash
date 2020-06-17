@@ -37,8 +37,5 @@ systemctl enable blurtd
 # START BLURTD
 systemctl start blurtd 
 
-# CHECK ON BLURTD 
-systemctl status blurtd
-
 # TODO: run as another user, security, system settings
 
