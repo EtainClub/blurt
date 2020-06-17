@@ -13,9 +13,9 @@ As many of you are aware, the hardware spec needed for running a Steem witness h
 
 [privex.io](https://privex.io) currently offers a highly optomized Hive witness setup that they call Node In A Box(TM).
 
-We have had some discussions about a Blurt-Flavored "Node In A Box(TM), so in the long-term as the chain grows, their services may limit your costs.  
+We have had some discussions about a Blurt-Flavored "ode In A Box(TM), so in the long-term as the chain grows, their services may limit your costs.  
 
-Additionally, a non-docker bash script AND a docker-based bash script will be developed and included in this repository.  
+Additionally, a non-docker bash script AND a docker-based script will be developed and included in this repository.  
 
 Collectively, our goal should be to ensure that we do not run on any single infrastructure provider.  While many of us have a bit of a [bare-metal server fetish](https://gitlab.com/virgohardware/core), the fact is that for Blurt's launch and likely for at least the first six months of Blurt's operation, you're not going to need a huge machine to operate a Witness.  We are considering further optomizations to Blurtd which would permanently lower the RAM consumption on both Witness and Seed nodes, but that's as of yet incomplete.  Here is a [reasonable machine spec](https://whaleshares.io/@faddat/witness-post#@faddat/re-daking-re-faddat-witness-post-20200612t195020198z) that should give you a ton of growing room.  
 
@@ -37,7 +37,6 @@ What's important here is that everyone is not using only a single provider.
 
 **Machine Spec**:
 Your Witness machine spec is entirely **your** choice.  This recommended spec should be relatively low cost ($5-20 per month) and should also run your Blurt Witness very effectively.  
-
 
 Accurate as of **June 15, 2020**:
 
@@ -99,7 +98,7 @@ unlock yourpasswordhere
 ```
 
 ```
-update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BLT8mBSoVWNcXqsk2PHTfJCxRz9ebJgz8e1WgAnuqQBpTjs9UXqGh" {"account_creation_fee":"3.000 BLURT","maximum_block_size":65536} true
+update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BRAIN_KEY_PUBLIC_KEY_GOES_HERE" {"account_creation_fee":"3.000 BLURT","maximum_block_size":65536} true
 ```
 
 Success looks like this:
