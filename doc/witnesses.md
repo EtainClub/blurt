@@ -172,6 +172,30 @@ Success looks like:
 }
 ```
 
+## Common Cli Wallet Commands
+
+Open Cli Wallet:
+```
+cli_wallet
+```
+
+Unlock Wallet:
+```
+unlock yourpassword
+```
+
+Exit Cli Wallet:
+```
+Ctrl+D 
+```
+
+## Common Blurtd Commands
+
+Check block production status:
+```
+journalctl -u blurtd --no-pager --since "1 minute ago"
+```
+
 ## Failover Script
 
 On Steem / Hive, and also in other blockchain ecosystems, some Witnesses / Validators choose to create automated failover systems that ensure that their nodes do not miss blocks in the event that their Witness / Validator / Block Producer goes down.  If your failover system breaks, you could end up double-signing blocks, which is **very** bad.  
