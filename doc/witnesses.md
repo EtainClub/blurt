@@ -83,7 +83,7 @@ Note: the key should start with a 5
 **Add private key to config.ini**
 
 ```
-echo "private-key = BRAIN_KEY_PRIVATE_KEY_GOES_HERE" >> /blurtd/config.ini
+echo "private-key = BRAIN_KEY_WIF_PRIV_KEY_GOES_HERE" >> /blurtd/config.ini
 echo 'witness = "jacobgadikian"' >> /blurtd/config.ini
 systemctl restart blurtd
 systemctl status blurtd
