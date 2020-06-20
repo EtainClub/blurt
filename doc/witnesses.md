@@ -82,8 +82,16 @@ Note: the key should start with a 5
 
 **Add private key to config.ini**
 
+First exit the cli_wallet:
+
 ```
-echo "private-key = BRAIN_KEY_WIF_PRIV_KEY_GOES_HERE" >> /blurtd/config.ini
+Ctrl+D
+```
+
+In the code below, replace BRAIN_KEY_WIF_PRIV_KEY with the previously generated Brain wif_priv_key and replace "jacobgadikian" with your own Blurt account name: 
+
+```
+echo "private-key = BRAIN_KEY_WIF_PRIV_KEY" >> /blurtd/config.ini
 echo 'witness = "jacobgadikian"' >> /blurtd/config.ini
 systemctl restart blurtd
 systemctl status blurtd
@@ -91,11 +99,13 @@ systemctl status blurtd
 
 **Declare that you're a Witness** 
 
-Go back into the `cli_wallet` and unlock your wallet like:
+Use the command `cli_wallet` to go back into the wallet and then unlock it with:
 
 ```
 unlock yourpasswordhere
 ```
+
+Use the below code, but first replace the Blurt account name with your own; replace the blog URL with your own blog (Blurt, Hive, Medium, Steem etc) and the Brain public key with yours which you generated previously: 
 
 ```
 update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BRAIN_KEY_PUBLIC_KEY_GOES_HERE" {"account_creation_fee":"3.000 BLURT","maximum_block_size":65536} true
