@@ -13,7 +13,7 @@ As many of you are aware, the hardware spec needed for running a Steem witness h
 
 [privex.io](https://privex.io) currently offers a highly optomized Hive witness setup that they call Node In A Box(TM).
 
-We have had some discussions about a Blurt-Flavored "ode In A Box(TM), so in the long-term as the chain grows, their services may limit your costs.  
+We have had some discussions about a Blurt-Flavored "Node In A Box(TM)", so in the long-term as the chain grows, their services may limit your costs.  
 
 Additionally, a non-docker bash script AND a docker-based script will be developed and included in this repository.  
 
@@ -205,16 +205,6 @@ Check block production status:
 ```
 journalctl -u blurtd --no-pager --since "1 minute ago"
 ```
-
-## Failover Script
-
-On Steem / Hive, and also in other blockchain ecosystems, some Witnesses / Validators choose to create automated failover systems that ensure that their nodes do not miss blocks in the event that their Witness / Validator / Block Producer goes down.  If your failover system breaks, you could end up double-signing blocks, which is **very** bad.  
-
-I (Jacob) am of the opinion that double-signing (a single hot key running on more than one node at the same time) is far more harmful to a blockchain system than a node simply going down.  
-
-It is my (Jacob's) recommendation that you do not use an automated failover system on your Witness.  If it goes down, and misses blocks, it's really not the end of the world.  Yes, your performance is judged by the team and community on missing blocks or not, but we're all quite rational.  At times, machines go down.  My (Jacob's) personal opinion is that **occasional** downtime is preferable to the risk of double signing created by failover systems.   
-
-That said, your Witness is ultimately your responsiibility,  your Witness configuration is your decision to make.  
 
 
 ## Social Expectations
