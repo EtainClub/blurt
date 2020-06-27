@@ -53,6 +53,43 @@ Accurate as of **June 15, 2020**:
 
 Blurt nodes run well on many Linux distributions, but we recommend Debian 10. 
 
+Make sure that you disable password logins on your potential witness machine and that you login to it ONLY using an SSH keypair.  If you rent a machine with password logins enabled by default, no problem.  Do like:
+
+```bash
+ssh-copy-id root@youripaddresshere
+```
+Enter your SSH password, and `ssh-copy-id` will copy your SSH public key to the server so that you no longer need to use a password to login.  
+
+Test this like:
+
+```bash
+ssh root@youripaddresshere
+```
+
+If it doesn't ask you for a password, you've been successful in setting up proper passwordless SSH that uses a signature by your SSH private key to authenticate you instead of a password.  If it asks for a password, you've failed.  
+
+After you've SSH'd into your server (without it asking for a password) on your server, you should disable password-based logins like this:
+
+```bash
+nano /etc/ssh/sshd_config
+```
+
+Find this line:
+```
+#PasswordAuthentication no
+```
+
+The line should read:
+
+```
+PasswordAuthentication no
+```
+
+Then run
+```
+service ssh restart
+```
+
 We've reduced setting up a full node to a single-line installer:
 
 ```bash
