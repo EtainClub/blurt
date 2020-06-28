@@ -30,9 +30,6 @@ product.  We do both.
 If you spin up a project with these terms, we will actively support you
 in your SoicalGraph implementation.  
 
-These numbers are somewhat negotialble, and we do full-service product development
-when that's desired.  
-
 The goal of this licensing condition is to create a mutually beneficial relationship
 between the Blurt Foundation and its downstream users.  At 5%, the Blurt
 Foundation is incentivized to ensure your chain and community's success
@@ -40,7 +37,8 @@ and continue to develop the SocialGraph blockchain framework with your features
 and priorities in mind.  
 
 If you have another incentive model in mind, or just want to talk, you can
-reach us at info@blurt.foundation.  
+reach us at info@blurt.foundation.  Every community is different, and we
+want to design models with you that enable your community to prosper.  
 
 3) Do not steal from users.  Steem's HF23 was theft, and stealing is bad.
 
