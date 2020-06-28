@@ -12,6 +12,14 @@ useradd -m -d /blurt blurt
 # INSTALL UNZIP AND WGET
 apt install -y unzip wget libbz2-dev libsnappy-dev libncurses5-dev libreadline-dev
 
+# FILESYSTEM LIMITS AS ADVISED HERE: https://developers.steem.io/tutorials-recipes/exchange_node
+echo "*      hard    nofile     94000" >> /etc/security/limits.conf
+echo "*      soft    nofile     94000" >> /etc/security/limits.conf
+echo "*      hard    nproc      64000" >> /etc/security/limits.conf
+echo "*      soft    nproc      64000" >> /etc/security/limits.conf
+echo "fs.file-max = 2097152" >> /etc/sysctl.conf
+sysctl -p
+
 # DOWNLOAD BUILD ARTIFACTS
 # POST-LAUNCH TODO: THIS SHOULD GET SOME KIND OF "LATEST" VERSION.  
 wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
