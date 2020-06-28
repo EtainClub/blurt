@@ -13,7 +13,6 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 
 * No Downvotes
 * No SBD
-* Real REST [API](https://github.com/blurt/cachepi)
 * A **regent account** with a controlling stake or special weighted vote has been added to Blurt. 
   * The regent account votes on consensus Blurt Producers and DAO proposals.
   * The regent account is programmed to decay over a two-year period. 
@@ -39,9 +38,9 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 ## Decentralization And Security
 Blurt(1) the blockchain whose code lives here in this repository is the first step towards realizing [Social Money For Enemies](https://steemit.com/steem/@jacobgadikian/3jk4ut-social-money-for-enemies).
 The exclusion at Hive and Zeroing (basically on-chain theft executed by some witnesses) at Steemit made for a very interesting testing ground to learn about systems that can effectively secure both money and speech.
-Our team feels that POS chains have a certain scalability limit, and that the solution past that point is to go multi-chain and allow content to be accessed from a unified mobile app.  
+POS chains have a certain scalability limit, and  the solution past that point is to go multi-chain and allow content to be accessed from a unified mobile app.  
 
-* Blurt will likely move to another consensus protocol at some point during those two years, and the leading candidate for the new consensus is the Cosmos-SDK. 
+* Blurt will likely move to another consensus protocol at some point during those two years, and the leading candidate for the new consensus is Tendermint via the Cosmos-SDK. Some other possiblities are being explored, as well. 
 
 ## Economy
 
@@ -65,7 +64,7 @@ The snapshot-verification code can be found in the `snapshot` branch.
 
 Do this exactly, and it'll work.  Do otherwise and you may have a bad time.
 
-Spin up an Ubuntu 16.04 Virtual Machine with 16GB of RAM.  Then, run:
+Spin up a Debian 10 Virtual Machine with 16GB of RAM.  Then, run:
 
 ```
 apt-get update

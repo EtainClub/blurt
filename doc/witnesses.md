@@ -79,14 +79,15 @@ Find this line:
 #PasswordAuthentication no
 ```
 
-The line should read:
-
+You should change it to:
 ```
 PasswordAuthentication no
 ```
 
+Press `ctrl + o` to save the file, and `ctrl + x` to exit the nano editor.   
+
 Then run
-```
+```bash
 service ssh restart
 ```
 
