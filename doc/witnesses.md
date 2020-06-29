@@ -129,8 +129,8 @@ Ctrl+D
 In the code below, replace BRAIN_KEY_WIF_PRIV_KEY with the previously generated Brain wif_priv_key and replace "jacobgadikian" with your own Blurt account name: 
 
 ```
-echo "private-key = BRAIN_KEY_WIF_PRIV_KEY" >> /blurtd/config.ini
-echo 'witness = "jacobgadikian"' >> /blurtd/config.ini
+echo "private-key = BRAIN_KEY_WIF_PRIV_KEY" >> /blurt/config.ini
+echo 'witness = "jacobgadikian"' >> /blurt/config.ini
 systemctl restart blurtd
 systemctl status blurtd
 ```
