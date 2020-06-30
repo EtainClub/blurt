@@ -42,7 +42,12 @@ chmod +x /usr/bin/blurtd
 chmod +x /usr/bin/cli_wallet
 
 # IMPORT 1.3 MILLION STEEM ACCOUNTS AND CONFIGURATION TEMPLATE
-wget -O /blurt/snapshot.json https://test.blurt.world/_download/snapshot.json
+# testnet snaphsot.json is QmU2zT7W2GbifQxqpU9ALMNFUT2QwsBt4L7SaHpm6QTm4Q
+ipfs get -o /blurt/snapshot.json QmU2zT7W2GbifQxqpU9ALMNFUT2QwsBt4L7SaHpm6QTm4Q
+# wget -O /blurt/snapshot.json https://test.blurt.world/_download/snapshot.json
+
+# witness_config.ini is QmX5n6nVhbEKUMvgJre74wNdP7Jcq4GJRdw7G9BZF3zxnU
+ipfs get -o /blurt/config.ini QmX5n6nVhbEKUMvgJre74wNdP7Jcq4GJRdw7G9BZF3zxnU
 wget -O /blurt/config.ini https://gitlab.com/blurt/blurt/-/raw/dev/doc/witness_config.ini
 
 # INSTALL BLURTD.SERVICE 
