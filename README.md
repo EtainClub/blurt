@@ -23,13 +23,13 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 * **Imported to Blurt From Steem**:
   * Balances - less Steemit stake described in this issue https://gitlab.com/blurt/blurt/-/issues/10
   * SBD balances will be converted to BLURT at the time of snapshot importation 
-  * Pending Claimed Accounts (To be confirmed)
 * **Not Imported to Blurt From Steem**:
   * Content
   * Followers
   * Profile Pic
   * Name
   * Location
+  * Pending Claimed Accounts
 
 ## Launch Plans
 
