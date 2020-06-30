@@ -25,8 +25,8 @@ sysctl -p
 # POST-LAUNCH TODO: THIS SHOULD GET SOME KIND OF "LATEST" VERSION.  
 # POST-LAUNCH TODO: CI SYSTEM SHOULD RELEASE BLURTD AND CLI_WALLET TO IPFS
 # QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH
-# ipfs get -o QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH
-wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
+ipfs get -o download QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH
+# wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
 
 # UNZIP THE BUILD ARTIFACTS, BLURTD AND CLI_WALLET
 unzip download
@@ -46,7 +46,9 @@ wget -O /blurt/snapshot.json https://test.blurt.world/_download/snapshot.json
 wget -O /blurt/config.ini https://gitlab.com/blurt/blurt/-/raw/dev/doc/witness_config.ini
 
 # INSTALL BLURTD.SERVICE 
-wget -O /etc/systemd/system/blurtd.service https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.service
+# QmVeeCuWM6tdWxML7yEFfpaqZN9f4TL1WMd7wGgkp35Npz
+# wget -O /etc/systemd/system/blurtd.service https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.service
+ipfs get -o /etc/systemd/system/blurtd.service QmVeeCuWM6tdWxML7yEFfpaqZN9f4TL1WMd7wGgkp35Npz
 
 # ENABLE BLURTD SYSTEMD SERVICE
 systemctl enable blurtd
