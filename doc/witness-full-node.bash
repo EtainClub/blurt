@@ -29,6 +29,9 @@ sudo bash install.sh
 cd ..
 rm -rf go-ipfs
 
+#INITALIZAE IPFS (NOTE: DO WE HAVE TO DO THIS AS THE IPFS USER ALSO?)
+ipfs init
+
 # INSTALL IPFS SYSTEMD SERVICE
 ipfs get -o /etc/systemd/system/ipfs-hardened.service QmNQPATMBjfuLTmkScWAsogcPLPtPcR2goadb6tRPgEsaW
 
