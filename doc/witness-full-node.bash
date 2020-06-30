@@ -21,10 +21,25 @@ echo "*      soft    nproc      64000" >> /etc/security/limits.conf
 echo "fs.file-max = 2097152" >> /etc/sysctl.conf
 sysctl -p
 
+# INSTALL IPFS
+wget https://dist.ipfs.io/go-ipfs/v0.6.0/go-ipfs_v0.6.0_linux-amd64.tar.gz
+tar -xvzf go-ipfs_v0.6.0_linux-amd64.tar.gz
+cd go-ipfs
+sudo bash install.sh
+cd ..
+rm -rf go-ipfs
+
+# INSTALL IPFS SYSTEMD SERVICE
+ipfs get -o /etc/systemd/system/ipfs-hardened.service QmNQPATMBjfuLTmkScWAsogcPLPtPcR2goadb6tRPgEsaW
+
+# ENABLE IPFS SYSTEMD SERVICE
+systemctl enable ipfs-hardened.service
+systemctl start ipfs-hardened.serrvice
+
 # DOWNLOAD BUILD ARTIFACTS
 # POST-LAUNCH TODO: THIS SHOULD GET SOME KIND OF "LATEST" VERSION.  
 # POST-LAUNCH TODO: CI SYSTEM SHOULD RELEASE BLURTD AND CLI_WALLET TO IPFS
-# QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH
+# QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH is the build artifacts
 ipfs get -o download QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH
 # wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
 
