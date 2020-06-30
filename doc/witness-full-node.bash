@@ -8,6 +8,7 @@ apt upgrade -y
 
 # CREATE BLURT USER
 useradd -m -d /blurt blurt
+useradd -m -d /ipfs ipfs
 
 # INSTALL UNZIP AND WGET
 apt install -y unzip wget libbz2-dev libsnappy-dev libncurses5-dev libreadline-dev
@@ -22,6 +23,9 @@ sysctl -p
 
 # DOWNLOAD BUILD ARTIFACTS
 # POST-LAUNCH TODO: THIS SHOULD GET SOME KIND OF "LATEST" VERSION.  
+# POST-LAUNCH TODO: CI SYSTEM SHOULD RELEASE BLURTD AND CLI_WALLET TO IPFS
+# QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH
+# ipfs get -o QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH
 wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
 
 # UNZIP THE BUILD ARTIFACTS, BLURTD AND CLI_WALLET
