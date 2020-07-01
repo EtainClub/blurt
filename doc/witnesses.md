@@ -51,9 +51,11 @@ Accurate as of **June 15, 2020**:
 ## Witness Setup Procedure
 **Valid for Testnet 1, June 16, 2020:**
 
-Blurt nodes run well on many Linux distributions, but we recommend Debian 10. 
+If you plan to use our automated setup, your witness node should run Debian 10.  If you're doing it manually, feel free to use any type of machine that you'd like.  
 
-Make sure that you disable password logins on your potential witness machine and that you login to it ONLY using an SSH keypair.  If you rent a machine with password logins enabled by default, no problem.  Do like:
+### Configure Passwordless SSH Logins: IMPORTANT!
+
+Make sure that you disable password logins on your witness machine and that you login to it ONLY using an SSH keypair.  If you rent a machine with password logins enabled by default, no problem.  Do like:
 
 ```bash
 ssh-copy-id root@youripaddresshere
@@ -91,13 +93,23 @@ Then run
 service ssh restart
 ```
 
-We've reduced setting up a full node to a single-line installer:
+### Set up a Blurt Full Node
+
+We've reduced setting up a full node to a single-line installer.  Run the following command as root on your fresh Debian 10 physical or virtual machine.  
 
 ```bash
 bash <(curl -s https://gitlab.com/blurt/blurt/-/raw/dev/doc/witness-full-node.bash)
 ```
 
-There, now you're running a very nice Blurt Full Node, but you are not yet running a Witness.  In order to run a witness, you'll need to import your Steem active key using the `cli_wallet`.  
+Now you've just got to wait a bit for your machine to import 1.3 million steem accounts and sync the Blurt Blockchain.  To monitor this process, do like:
+
+```bash
+journalctl -u blurtd -f
+```
+
+When you see individual blocks being produced, it's done and you're ready to proceed
+
+The script sets up a Blurt Full Node, but setting up a Witness will always be a manual process.  In order to run a witness, you'll need to import your Steem active key using the `cli_wallet` so that you can sign a `witness_update` transaction that announces your Witness candidacy to the blockchain.  
 
 So now you'll need to run `cli_wallet`. (type cli_wallet and hit enter)
 
@@ -118,7 +130,7 @@ import_key 5KABCDEFGHIJKLMNOPQRSTUVXYZ
 ```
 Note: the key should start with a 5
 
-**Add private key to config.ini**
+**Add private brain key to config.ini to sign blocks as a Witness**
 
 First exit the cli_wallet:
 
@@ -239,9 +251,19 @@ Ctrl+D
 
 ## Common Blurtd Commands
 
-Check block production status:
-```
+Check block production status by printing one minute of history to your terminal:
+```bash
 journalctl -u blurtd --no-pager --since "1 minute ago"
+```
+
+Monitor the blockchain continuously:
+```bash
+journalctl -u blurtd -f
+```
+
+Monitor your node continuously, all processes:
+```bash
+journalctl -f
 ```
 
 
