@@ -13,7 +13,7 @@ As many of you are aware, the hardware spec needed for running a Steem/Hive witn
 
 [privex.io](https://privex.io) currently offers a highly optomized Hive witness setup that they call Node In A Box(TM).
 
-We have had some discussions about a Blurt-Flavored "Node In A Box(TM)", so in the long-term as the chain grows, their services may limit your costs.  
+We have had some discussions about a Blurt-Flavored "Node In A Box(TM)", so in the long-term as the chain grows, their services may limit your costs and risks.  
 
 Additionally, a non-docker bash script AND a docker-based script will be developed and included in this repository.  
 
@@ -60,6 +60,7 @@ Make sure that you disable password logins on your witness machine and that you 
 ```bash
 ssh-copy-id root@youripaddresshere
 ```
+
 Enter your SSH password, and `ssh-copy-id` will copy your SSH public key to the server so that you no longer need to use a password to login.  
 
 Test this like:
@@ -92,6 +93,8 @@ Then run
 ```bash
 service ssh restart
 ```
+
+**DO NOT OPERATE A BLURT WITNESS WITH PASSWORD AUTHENTICATION ENABLED.**
 
 ### Set up a Blurt Full Node
 
