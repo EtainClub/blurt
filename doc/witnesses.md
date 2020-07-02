@@ -13,7 +13,7 @@ As many of you are aware, the hardware spec needed for running a Steem/Hive witn
 
 [privex.io](https://privex.io) currently offers a highly optomized Hive witness setup that they call Node In A Box(TM).
 
-We have had some discussions about a Blurt-Flavored "Node In A Box(TM)", so in the long-term as the chain grows, their services may limit your costs.  
+We have had some discussions about a Blurt-Flavored "Node In A Box(TM)", so in the long-term as the chain grows, their services may limit your costs and risks.  
 
 Additionally, a non-docker bash script AND a docker-based script will be developed and included in this repository.  
 
@@ -51,13 +51,16 @@ Accurate as of **June 15, 2020**:
 ## Witness Setup Procedure
 **Valid for Testnet 1, June 16, 2020:**
 
-Blurt nodes run well on many Linux distributions, but we recommend Debian 10. 
+If you plan to use our automated setup, your witness node should run Debian 10.  If you're doing it manually, feel free to use any type of machine that you'd like.  
 
-Make sure that you disable password logins on your potential witness machine and that you login to it ONLY using an SSH keypair.  If you rent a machine with password logins enabled by default, no problem.  Do like:
+### Configure Passwordless SSH Logins: IMPORTANT!
+
+Make sure that you disable password logins on your witness machine and that you login to it ONLY using an SSH keypair.  If you rent a machine with password logins enabled by default, no problem.  Do like:
 
 ```bash
 ssh-copy-id root@youripaddresshere
 ```
+
 Enter your SSH password, and `ssh-copy-id` will copy your SSH public key to the server so that you no longer need to use a password to login.  
 
 Test this like:
@@ -91,13 +94,25 @@ Then run
 service ssh restart
 ```
 
-We've reduced setting up a full node to a single-line installer:
+**DO NOT OPERATE A BLURT WITNESS WITH PASSWORD AUTHENTICATION ENABLED.**
+
+### Set up a Blurt Full Node
+
+We've reduced setting up a full node to a single-line installer.  Run the following command as root on your fresh Debian 10 physical or virtual machine.  
 
 ```bash
 bash <(curl -s https://gitlab.com/blurt/blurt/-/raw/dev/doc/witness-full-node.bash)
 ```
 
-There, now you're running a very nice Blurt Full Node, but you are not yet running a Witness.  In order to run a witness, you'll need to import your Steem active key using the `cli_wallet`.  
+Now you've just got to wait a bit for your machine to import 1.3 million steem accounts and sync the Blurt Blockchain.  To monitor this process, do like:
+
+```bash
+journalctl -u blurtd -f
+```
+
+When you see individual blocks being produced, it's done and you're ready to proceed
+
+The script sets up a Blurt Full Node, but setting up a Witness will always be a manual process.  In order to run a witness, you'll need to import your Steem active key using the `cli_wallet` so that you can sign a `witness_update` transaction that announces your Witness candidacy to the blockchain.  
 
 So now you'll need to run `cli_wallet`. (type cli_wallet and hit enter)
 
@@ -118,7 +133,7 @@ import_key 5KABCDEFGHIJKLMNOPQRSTUVXYZ
 ```
 Note: the key should start with a 5
 
-**Add private key to config.ini**
+**Add private brain key to config.ini to sign blocks as a Witness**
 
 First exit the cli_wallet:
 
@@ -220,6 +235,23 @@ Success looks like:
 }
 ```
 
+## IPFS
+Currently the stand up script starts a temporary ipfs daemon, which you may not want on your witness node.  
+
+**EVERYONE Should**
+Use `top` to find ipfs, and press k to kill the temporary daemon.
+
+If you're a witness, you're done now. 
+
+**Full Nodes and Seed Nodes Should**
+systemctl start ipfs-hardened
+
+
+## Finished
+Thank you so much for running blurt infrastructure.  Blurt loves you!
+
+
+
 ## Common Cli Wallet Commands
 
 Open Cli Wallet:
@@ -239,9 +271,19 @@ Ctrl+D
 
 ## Common Blurtd Commands
 
-Check block production status:
-```
+Check block production status by printing one minute of history to your terminal:
+```bash
 journalctl -u blurtd --no-pager --since "1 minute ago"
+```
+
+Monitor the blockchain continuously:
+```bash
+journalctl -u blurtd -f
+```
+
+Monitor your node continuously, all processes:
+```bash
+journalctl -f
 ```
 
 
@@ -250,6 +292,14 @@ journalctl -u blurtd --no-pager --since "1 minute ago"
 Please get to know one another.  Know how to contact one another in case of an emergency. You literally operate the Blurt community.  Have multiple secure ways to talk to one another in case something goes wrong. 
 
 [Tox](https://tox.chat) has no central servers whatsoever, is reliable, and uses public key cryptography for every aspect of its operations.  Generally, I (Jacob) trust Tox more than alternatives like Telegram, Signal, WhatsApp, Slack and other "secure" chat setups.  I (Jacob) be making a Tox Blurt Witness group, but I strongly encourage you to have your own solutions for getting ahold of other Witnesses should the need arise.  
+
+Jacob's Tox ID is:
+
+```
+C3AAA8746D06C08595D3E7247D0764093A6D25B14894502F07DBBD0248C4CB391C9E6BA8E4D1
+```
+
+See how it's not a phone number and not a handle but instead just cryptography?
 
 ## Security Disclosures
 
