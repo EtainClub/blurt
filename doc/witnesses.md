@@ -235,6 +235,23 @@ Success looks like:
 }
 ```
 
+## IPFS
+Currently the stand up script starts a temporary ipfs daemon, which you may not want on your witness node.  
+
+**EVERYONE Should**
+Use `top` to find ipfs, and press k to kill the temporary daemon.
+
+If you're a witness, you're done now. 
+
+**Full Nodes and Seed Nodes Should**
+systemctl start ipfs-hardened
+
+
+## Finished
+Thank you so much for running blurt infrastructure.  Blurt loves you!
+
+
+
 ## Common Cli Wallet Commands
 
 Open Cli Wallet:
@@ -275,6 +292,14 @@ journalctl -f
 Please get to know one another.  Know how to contact one another in case of an emergency. You literally operate the Blurt community.  Have multiple secure ways to talk to one another in case something goes wrong. 
 
 [Tox](https://tox.chat) has no central servers whatsoever, is reliable, and uses public key cryptography for every aspect of its operations.  Generally, I (Jacob) trust Tox more than alternatives like Telegram, Signal, WhatsApp, Slack and other "secure" chat setups.  I (Jacob) be making a Tox Blurt Witness group, but I strongly encourage you to have your own solutions for getting ahold of other Witnesses should the need arise.  
+
+Jacob's Tox ID is:
+
+```
+C3AAA8746D06C08595D3E7247D0764093A6D25B14894502F07DBBD0248C4CB391C9E6BA8E4D1
+```
+
+See how it's not a phone number and not a handle but instead just cryptography?
 
 ## Security Disclosures
 
