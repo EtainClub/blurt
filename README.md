@@ -30,6 +30,7 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
   * Name
   * Location
   * Pending Claimed Accounts
+  * Account Authorizations
 
 ## Launch Plans
 
