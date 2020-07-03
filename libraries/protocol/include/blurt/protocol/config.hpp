@@ -38,11 +38,11 @@
 
 #define BLURT_BLOCKCHAIN_VERSION              ( version(0, 0, 0) )
 
-#define BLURT_INIT_PUBLIC_KEY_STR             "BLT875YGJ2rXwEhUr4hRXduZguwJKEJufsS4oYT6ehHWiDhev7hah"
-#define BLURT_CHAIN_ID                        (fc::sha256::hash("blurt-testbed")) // afa547e2e0adef898219d7f74abf36e6e957460a70120db21a03fed76cc0e8b6
+#define BLURT_INIT_PUBLIC_KEY_STR             "BLT5QRsKZp7TFNQdTj7VbpGHWxNL3Eq4zmfER4vJPBpK5VMbrprn8"
+#define BLURT_CHAIN_ID                        (fc::sha256::hash("blurt")) /// cd8d90f29ae273abec3eaa7731e25934c63eb654d55080caff2ebb7f5df6381f
 #define BLURT_ADDRESS_PREFIX                  "BLT"
 
-#define BLURT_GENESIS_TIME                    (fc::time_point_sec(1591025652))
+#define BLURT_GENESIS_TIME                    (fc::time_point_sec(1593820800)) /// 2020-07-04T00:00:00.000Z
 #define BLURT_CASHOUT_WINDOW_SECONDS          (60*60*24*7)  /// 7 days
 #define BLURT_MAX_CASHOUT_WINDOW_SECONDS      (60*60*24*14) /// 2 weeks
 #define BLURT_UPVOTE_LOCKOUT_SECONDS          (60*60*12)    /// 12 hours
