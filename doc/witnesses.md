@@ -250,8 +250,6 @@ systemctl start ipfs-hardened
 ## Finished
 Thank you so much for running blurt infrastructure.  Blurt loves you!
 
-
-
 ## Common Cli Wallet Commands
 
 Open Cli Wallet:
