@@ -31,18 +31,22 @@ rm -rf go-ipfs
 
 #INITALIZAE IPFS (NOTE: DO WE HAVE TO DO THIS AS THE IPFS USER ALSO?)
 ipfs init
-nohup ipfs daemon &
-sleep 10
 
 # INSTALL IPFS SYSTEMD SERVICE
-ipfs get -o /etc/systemd/system/ipfs-hardened.service QmNQPATMBjfuLTmkScWAsogcPLPtPcR2goadb6tRPgEsaW
+# Sample IPFS URL FROM CLOUDFLARE: https://cloudflare-ipfs.com/ipfs/QmXnnyufdzAWL5CqZ2RnSNgPbvCc1ALT73s6epPrRnZ1Xy
+wget -O /etc/systemd/system/ipfs-hardened.service https://cloudflare-ipfs.com/ipfs/QmNQPATMBjfuLTmkScWAsogcPLPtPcR2goadb6tRPgEsaW
+# TODO: Make this a check
+ipfs add /etc/systemd/system/ipfs-hardened.service
 
 
 # DOWNLOAD BUILD ARTIFACTS
 # POST-LAUNCH TODO: THIS SHOULD GET SOME KIND OF "LATEST" VERSION.  
 # POST-LAUNCH TODO: CI SYSTEM SHOULD RELEASE BLURTD AND CLI_WALLET TO IPFS
-# QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH is the build artifacts
-ipfs get -o download QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH
+# QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH is the testnet build artifacts
+# Qma5b2UJiiKEjDS73T2CKHv8QwZexBPgomFfsFU3hWQ3fJ is the mainnet build artifacts
+wget -O download https://cloudflare-ipfs.com/ipfs/Qma5b2UJiiKEjDS73T2CKHv8QwZexBPgomFfsFU3hWQ3fJ
+# TODO: Make this a check
+ipfs add download
 # wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
 
 # UNZIP THE BUILD ARTIFACTS, BLURTD AND CLI_WALLET
@@ -60,8 +64,10 @@ chmod +x /usr/bin/cli_wallet
 
 # IMPORT 1.3 MILLION STEEM ACCOUNTS AND CONFIGURATION TEMPLATE
 # testnet snaphsot.json is QmU2zT7W2GbifQxqpU9ALMNFUT2QwsBt4L7SaHpm6QTm4Q
-ipfs get -o /blurt/snapshot.json QmU2zT7W2GbifQxqpU9ALMNFUT2QwsBt4L7SaHpm6QTm4Q
-ipfs pin add QmU2zT7W2GbifQxqpU9ALMNFUT2QwsBt4L7SaHpm6QTm4Q
+# mainnet snapshot.json is QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
+wget -O /blurt/snapshot.json  https://cloudflare-ipfs.com/ipfs/QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
+
+# ipfs pin add QmU2zT7W2GbifQxqpU9ALMNFUT2QwsBt4L7SaHpm6QTm4Q
 # wget -O /blurt/snapshot.json https://test.blurt.world/_download/snapshot.json
 
 # witness_config.ini is QmX5n6nVhbEKUMvgJre74wNdP7Jcq4GJRdw7G9BZF3zxnU
