@@ -9,9 +9,14 @@ apt upgrade -y
 # CREATE BLURT USER
 #useradd -m -d /blurt blurt
 #useradd -m -d /ipfs ipfs
+mkdir /blurt 
+mkdir /ipfs
 adduser --gecos "" --disabled-password --home /blurt blurt
 adduser --gecos "" --disabled-password --home /ipfs ipfs
-
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:${PATH}"
+export PATH="${HOME}/.local/bin:${PATH}"
+chown blurt /blurt
+chown ipfs /ipfs
 # INSTALL UNZIP AND WGET
 apt install -y unzip wget libbz2-dev libsnappy-dev libncurses5-dev libreadline-dev
 
