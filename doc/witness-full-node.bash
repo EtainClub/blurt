@@ -72,8 +72,8 @@ ipfs add /blurt/snapshot.json
 # wget -O /blurt/snapshot.json https://test.blurt.world/_download/snapshot.json
 
 # testnet witness_config.ini is QmX5n6nVhbEKUMvgJre74wNdP7Jcq4GJRdw7G9BZF3zxnU
-# mainnet witness_config.ini is QmZhZr8RhvYP2YJiy1RfYpHvybYoXLmeCFNpzx2vRNpeXz
-wget -O /blurt/config.ini https://cloudflare-ipfs.com/ipfs/QmZhZr8RhvYP2YJiy1RfYpHvybYoXLmeCFNpzx2vRNpeXz
+# mainnet witness_config.ini is QmeDJjv1hrjfnLJD2RU7BBrdMJmqgJbjJrMosc8nHfVBEh
+wget -O /blurt/config.ini https://cloudflare-ipfs.com/ipfs/QmeDJjv1hrjfnLJD2RU7BBrdMJmqgJbjJrMosc8nHfVBEh
 ipfs add /blurt/config.ini
 
 # wget -O /blurt/config.ini https://gitlab.com/blurt/blurt/-/raw/dev/doc/witness_config.ini
