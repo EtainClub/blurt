@@ -49,7 +49,7 @@ Accurate as of **June 15, 2020**:
 | **Storage** | 80+GB |
 
 ## Witness Setup Procedure
-**Valid for Testnet 1, June 16, 2020:**
+**Valid for Mainnet, July 4, 2020:**
 
 If you plan to use our automated setup, your witness node should run Debian 10.  If you're doing it manually, feel free to use any type of machine that you'd like.  
 
@@ -239,16 +239,10 @@ Success looks like:
 Currently the stand up script starts a temporary ipfs daemon, which you may not want on your witness node.  
 
 **EVERYONE Should**
-Use `top` to find ipfs, and press k to kill the temporary daemon.
-
 If you're a witness, you're done now. 
 
 **Full Nodes and Seed Nodes Should**
 systemctl start ipfs-hardened
-
-
-## Finished
-Thank you so much for running blurt infrastructure.  Blurt loves you!
 
 ## Common Cli Wallet Commands
 
@@ -305,8 +299,8 @@ If you encounter a security issue with your witness or other Blurt infrastructur
 
 * Jacob Gadikian (faddat or jacobgadikian depending on platform)
 * Tuan Pham Anh (Baabeetaa)
-* David Vennik (Loki / l0k1 / )
-* Ricardo Ferreira (thecryptodrive)
+* David Vennik (Loki / l0k1 )
+* Ricardo Ferreira (thecryptodrive / megadrive)
 
 We take security very seriously and it is also no problem to publicly disclose security issues.  You will not pay a [social penalty](https://steemit.com/steem/@dantheman/steem-and-bitshares-cryptographic-security-update) for making [security disclousures](https://steemit.com/life/@inertia/q437x6) to the Blurt community.  
 
@@ -355,3 +349,6 @@ A witness published URL, usually to a post about their witness and role in the B
 ### new_signing_key
 
 Sets the signing key for the witness, which is used to sign blocks.
+
+## Finished
+Thank you so much for running blurt infrastructure.  Blurt loves you!
