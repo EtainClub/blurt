@@ -66,19 +66,25 @@ chmod +x /usr/bin/cli_wallet
 # testnet snaphsot.json is QmU2zT7W2GbifQxqpU9ALMNFUT2QwsBt4L7SaHpm6QTm4Q
 # mainnet snapshot.json is QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
 wget -O /blurt/snapshot.json  https://cloudflare-ipfs.com/ipfs/QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
+ipfs add QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
+ipfs pin add QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
 
 # ipfs pin add QmU2zT7W2GbifQxqpU9ALMNFUT2QwsBt4L7SaHpm6QTm4Q
 # wget -O /blurt/snapshot.json https://test.blurt.world/_download/snapshot.json
 
-# witness_config.ini is QmX5n6nVhbEKUMvgJre74wNdP7Jcq4GJRdw7G9BZF3zxnU
-ipfs get -o /blurt/config.ini QmX5n6nVhbEKUMvgJre74wNdP7Jcq4GJRdw7G9BZF3zxnU
-ipfs pin add QmX5n6nVhbEKUMvgJre74wNdP7Jcq4GJRdw7G9BZF3zxnU
+# testnet witness_config.ini is QmX5n6nVhbEKUMvgJre74wNdP7Jcq4GJRdw7G9BZF3zxnU
+# mainnet witness_config.ini is QmZhZr8RhvYP2YJiy1RfYpHvybYoXLmeCFNpzx2vRNpeXz
+wget -O /blurt/config.ini https://cloudflare-ipfs.com/ipfs/QmZhZr8RhvYP2YJiy1RfYpHvybYoXLmeCFNpzx2vRNpeXz
+ipfs add QmZhZr8RhvYP2YJiy1RfYpHvybYoXLmeCFNpzx2vRNpeXz
+ipfs pin add QmZhZr8RhvYP2YJiy1RfYpHvybYoXLmeCFNpzx2vRNpeXz
+
 # wget -O /blurt/config.ini https://gitlab.com/blurt/blurt/-/raw/dev/doc/witness_config.ini
 
 # INSTALL BLURTD.SERVICE 
 # QmVeeCuWM6tdWxML7yEFfpaqZN9f4TL1WMd7wGgkp35Npz
 # wget -O /etc/systemd/system/blurtd.service https://gitlab.com/blurt/blurt/-/raw/dev/doc/blurtd.service
-ipfs get -o /etc/systemd/system/blurtd.service QmVeeCuWM6tdWxML7yEFfpaqZN9f4TL1WMd7wGgkp35Npz
+wget -O /etc/systemd/system/blurtd.service https://cloudflare-ipfs.com/ipfs/QmVeeCuWM6tdWxML7yEFfpaqZN9f4TL1WMd7wGgkp35Npz
+ipfs add /etc/systemd/system/blurtd.service
 ipfs pin add QmVeeCuWM6tdWxML7yEFfpaqZN9f4TL1WMd7wGgkp35Npz
 
 # ENABLE BLURTD SYSTEMD SERVICE
