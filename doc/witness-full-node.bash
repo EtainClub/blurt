@@ -95,3 +95,9 @@ systemctl enable ipfs-hardened.service
 
 # CANNOT CURRENTLY START THIS SERVICE, IT WILL FAIL BECAUSE OF IPFS DAEMON
 # systemctl start ipfs-hardened.serrvice
+
+# LOVE USERS
+echo -e "\e[1;31;42m Thank you for running Blurt infrastructure. \e[0m"
+echo -e "\e[1;31;42m BLURT LOVES YOU! \e[0m"
+
+
