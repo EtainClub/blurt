@@ -7,8 +7,10 @@ apt update
 apt upgrade -y
 
 # CREATE BLURT USER
-useradd -m -d /blurt blurt
-useradd -m -d /ipfs ipfs
+#useradd -m -d /blurt blurt
+#useradd -m -d /ipfs ipfs
+adduser --gecos "" --disabled-password --home /blurt blurt
+adduser --gecos "" --disabled-password --home /ipfs ipfs
 
 # INSTALL UNZIP AND WGET
 apt install -y unzip wget libbz2-dev libsnappy-dev libncurses5-dev libreadline-dev
