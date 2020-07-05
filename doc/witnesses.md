@@ -79,7 +79,7 @@ nano /etc/ssh/sshd_config
 
 Find this line:
 ```
-#PasswordAuthentication no
+#PasswordAuthentication yes
 ```
 
 You should change it to:
@@ -109,12 +109,13 @@ Now you've just got to wait a bit for your machine to import 1.3 million steem a
 ```bash
 journalctl -u blurtd -f
 ```
-
 When you see individual blocks being produced, it's done and you're ready to proceed
+
+Exit the scrolling monitoring logs with `Ctrl+C`
 
 The script sets up a Blurt Full Node, but setting up a Witness will always be a manual process.  In order to run a witness, you'll need to import your Steem active key using the `cli_wallet` so that you can sign a `witness_update` transaction that announces your Witness candidacy to the blockchain.  
 
-So now you'll need to run `cli_wallet`. (type cli_wallet and hit enter)
+So now you'll need to run **cli_wallet**. (type `cli_wallet` and hit enter)
 
 The first thing you should do is set a password, like:
 
@@ -149,6 +150,7 @@ echo 'witness = "jacobgadikian"' >> /blurt/config.ini
 systemctl restart blurtd
 systemctl status blurtd
 ```
+Paste all four of the lines above in one hit into the command line and press enter once.
 
 **Declare that you're a Witness** 
 
@@ -158,10 +160,10 @@ Use the command `cli_wallet` to go back into the wallet and then unlock it with:
 unlock yourpasswordhere
 ```
 
-Use the below code, but first replace the Blurt account name with your own; replace the blog URL with your own blog (Blurt, Hive, Medium, Steem etc) and the Brain public key with yours which you generated previously: 
+Use the below code, but first replace the "jacobgadikian" Blurt account name with your own; also replace the blog URL with your own blog url (Blurt, Hive, Medium, Steem etc) and the Brain public key with yours, which you generated previously: 
 
 ```
-update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BRAIN_KEY_PUBLIC_KEY_GOES_HERE" {"account_creation_fee":"3.000 BLURT","maximum_block_size":65536} true
+update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BRAIN_KEY_PUB_KEY_GOES_HERE" {"account_creation_fee":"3.000 BLURT","maximum_block_size":65536} true
 ```
 
 Success looks like this:
@@ -195,22 +197,20 @@ Success looks like this:
 }
 ```
 
-It's also a very good idea for you to vote for yourself from the CLI wallet, so that you will begin to make blocks:
+It's also a very good idea for you to vote for yourself from the **cli_wallet**, so that you will begin to make blocks:
 
-Note: gopher23 is an account name.  You'll want to replace `gopher23` with your own account name in the voting step.  The first name is the account that you're voting from, and the second is the account that you're voting for.  
+Note: You'll want to replace `jacobgadikian` with your own Blurt account name in the next voting step.  The first name is the account that you're voting from and the second name with placeholder 'gopher23' is the account that you're voting for.  
 
-**vote for yoursself**
+**vote for yourself**
 ```
-vote_for_witness gopher23 gopher23 true true
-```
-
-**vote for someone else**
-```
-vote_for_witness gopher23 megadrive true true
+vote_for_witness jacobgadikian jacobgadikian true true
 ```
 
-
-Success looks like:
+**vote for someone else (gopher23 in this case)**
+```
+vote_for_witness jacobgadikian gopher23 true true
+```
+Success for voting for **gopher23** witness looks like:
 
 ```json
 {
@@ -219,7 +219,7 @@ Success looks like:
   "expiration": "2020-06-16T12:23:03",
   "operations": [[
       "account_witness_vote",{
-        "account": "gopher23",
+        "account": "jacobgadikian",
         "witness": "gopher23",
         "approve": true
       }
@@ -235,8 +235,6 @@ Success looks like:
 }
 ```
 
-## IPFS
-Currently the stand up script starts a temporary ipfs daemon, which you may not want on your witness node.  
 
 **EVERYONE Should**
 If you're a witness, you're done now. 
@@ -247,17 +245,17 @@ systemctl start ipfs-hardened
 ## Common Cli Wallet Commands
 
 Open Cli Wallet:
-```
+```bash
 cli_wallet
 ```
 
 Unlock Wallet:
-```
+```bash
 unlock yourpassword
 ```
 
 Exit Cli Wallet:
-```
+```bash
 Ctrl+D 
 ```
 
@@ -277,7 +275,21 @@ Monitor your node continuously, all processes:
 ```bash
 journalctl -f
 ```
+Stop blurtd
 
+```bash
+systemctl stop blurtd
+```
+Restart blurtd
+
+```bash
+systemctl start blurtd
+```
+Edit config.ini
+
+```bash
+nano /blurt/config.ini
+```
 
 ## Social Expectations
 
