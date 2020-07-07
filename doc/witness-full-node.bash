@@ -6,6 +6,11 @@
 apt update
 apt upgrade -y
 
+# install and set up time sync as it is important for a strongly synchronous distributed system
+apt install -y ntp
+systemctl enable ntp
+systemctl start ntp
+
 # CREATE BLURT USER
 #useradd -m -d /blurt blurt
 #useradd -m -d /ipfs ipfs
