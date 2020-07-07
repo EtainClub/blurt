@@ -275,18 +275,23 @@ Monitor your node continuously, all processes:
 ```bash
 journalctl -f
 ```
-Stop blurtd
 
+Stop blurtd
 ```bash
 systemctl stop blurtd
 ```
-Restart blurtd
 
+Start blurtd
 ```bash
 systemctl start blurtd
 ```
-Edit config.ini
 
+Restart blurtd
+```bash
+systemctl restart blurtd
+```
+
+Edit config.ini
 ```bash
 nano /blurt/config.ini
 ```
