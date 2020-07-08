@@ -163,7 +163,7 @@ unlock yourpasswordhere
 Use the below code, but first replace the "jacobgadikian" Blurt account name with your own; also replace the blog URL with your own blog url (Blurt, Hive, Medium, Steem etc) and the Brain public key with yours, which you generated previously: 
 
 ```
-update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BRAIN_KEY_PUB_KEY_GOES_HERE" {"account_creation_fee":"3.000 BLURT","maximum_block_size":65536} true
+update_witness "jacobgadikian" "https://whaleshares.io/@faddat" "BRAIN_KEY_PUB_KEY_GOES_HERE" {"account_creation_fee":"10.000 BLURT","maximum_block_size":65536} true
 ```
 
 Success looks like this:
