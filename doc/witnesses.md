@@ -314,7 +314,9 @@ Then `ctrl+d` to exit the wallet.
 **upgrade your binary**
 ```
 systemctl stop blurtd
-wget -O /usr/bin/blurtd https://gateway.pinata.cloud/ipfs/QmWxX9kMeNAEnUfYuSr8e62sDt9WJBCpy9Wio7e2o4xs2w
+wget -O blurt.zip https://gitlab.com/blurt/blurt/-/jobs/630888073/artifacts/download?file_type=archive
+unzip blurt.zip
+mv build/programs/blurtd/blurtd_witness /usr/bin/blurtd
 chmod +x /usr/bin/blurtd
 ```
 
