@@ -73,7 +73,21 @@ void update_median_witness_props( database& db )
    });
    uint32_t median_account_subsidy_decay = active[active.size()/2]->props.account_subsidy_decay;
 
-   // sort them by pool level
+   /// sort them by operation_flat_fee
+   std::sort( active.begin(), active.end(), [&]( const witness_object* a, const witness_object* b )
+   {
+      return a->props.operation_flat_fee.amount < b->props.operation_flat_fee.amount;
+   } );
+   asset median_operation_flat_fee = active[active.size()/2]->props.operation_flat_fee;
+
+   /// sort them by bandwidth_kbytes_fee
+   std::sort( active.begin(), active.end(), [&]( const witness_object* a, const witness_object* b )
+   {
+      return a->props.bandwidth_kbytes_fee.amount < b->props.bandwidth_kbytes_fee.amount;
+   } );
+   asset median_bandwidth_kbytes_fee = active[active.size()/2]->props.bandwidth_kbytes_fee;
+
+   /// sort them by pool level
    std::sort( active.begin(), active.end(), [&]( const witness_object* a, const witness_object* b )
    {
       return a->available_witness_account_subsidies < b->available_witness_account_subsidies;
@@ -107,6 +121,8 @@ void update_median_witness_props( database& db )
       _wso.median_props.maximum_block_size         = median_maximum_block_size;
       _wso.median_props.account_subsidy_budget     = median_account_subsidy_budget;
       _wso.median_props.account_subsidy_decay      = median_account_subsidy_decay;
+      _wso.median_props.operation_flat_fee         = median_operation_flat_fee;
+      _wso.median_props.bandwidth_kbytes_fee       = median_bandwidth_kbytes_fee;
 
       rd_setup_dynamics_params( account_subsidy_user_params, account_subsidy_system_params, _wso.account_subsidy_rd );
       rd_setup_dynamics_params( account_subsidy_per_witness_user_params, account_subsidy_system_params, _wso.account_subsidy_witness_rd );

@@ -10,6 +10,7 @@ void transaction_status_api_plugin::set_program_options( boost::program_options:
 
 void transaction_status_api_plugin::plugin_initialize( const boost::program_options::variables_map& options )
 {
+   ilog( "Initializing transaction_status_api_plugin" );
    api = std::make_unique< transaction_status_api >();
 }
 

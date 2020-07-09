@@ -460,6 +460,8 @@ namespace blurt { namespace chain {
          void _apply_transaction( const signed_transaction& trx );
          void apply_operation( const operation& op );
 
+         void process_tx_fee( const signed_transaction& trx );
+
          ///Steps involved in applying a new block
          ///@{
 

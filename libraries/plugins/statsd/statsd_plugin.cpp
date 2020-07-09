@@ -154,6 +154,7 @@ void statsd_plugin::set_program_options( options_description& cli, options_descr
 
 void statsd_plugin::plugin_initialize( const boost::program_options::variables_map& options )
 {
+   ilog( "Initializing statsd_plugin" );
    if( options.count( "statsd-endpoint" ) )
    {
       auto statsd_endpoint = options.at( "statsd-endpoint" ).as< string >();

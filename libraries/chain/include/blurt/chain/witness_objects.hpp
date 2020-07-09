@@ -52,6 +52,16 @@ namespace blurt { namespace chain {
        * expiring.
        */
       uint32_t account_subsidy_decay = BLURT_DEFAULT_ACCOUNT_SUBSIDY_DECAY;
+
+      /**
+       * fixed fee for each operation in the tx, default 0.05 BLURT per operation
+       */
+      asset operation_flat_fee = asset( 50, BLURT_SYMBOL );
+
+      /**
+       * bandwidth fee per KBytes (not bytes), default 0.01 BLURT per KBytes
+       */
+      asset bandwidth_kbytes_fee = asset( 10, BLURT_SYMBOL );
    };
 
    /**
@@ -272,6 +282,8 @@ FC_REFLECT( blurt::chain::chain_properties,
              (maximum_block_size)
              (account_subsidy_budget)
              (account_subsidy_decay)
+             (operation_flat_fee)
+             (bandwidth_kbytes_fee)
           )
 
 FC_REFLECT( blurt::chain::witness_object,
