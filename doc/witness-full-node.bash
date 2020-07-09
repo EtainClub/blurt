@@ -56,7 +56,7 @@ ipfs add /etc/systemd/system/ipfs-hardened.service
 # POST-LAUNCH TODO: CI SYSTEM SHOULD RELEASE BLURTD AND CLI_WALLET TO IPFS
 # QmT6B3h88jYkEfsJCxwQQzrW1VVoido26mwJDHuiLHrciH is the testnet build artifacts
 # Qma5b2UJiiKEjDS73T2CKHv8QwZexBPgomFfsFU3hWQ3fJ is the mainnet build artifacts
-wget -O download https://cloudflare-ipfs.com/ipfs/Qma5b2UJiiKEjDS73T2CKHv8QwZexBPgomFfsFU3hWQ3fJ
+wget -O download https://gitlab.com/blurt/blurt/-/jobs/630888073/artifacts/download?file_type=archive
 # TODO: Make this a check
 ipfs add download
 # wget https://gitlab.com/blurt/blurt/-/jobs/596005137/artifacts/download
