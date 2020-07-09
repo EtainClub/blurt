@@ -309,15 +309,31 @@ update_witness "someguy123" "yoururl" "BLT1111111111111111111111111111111114T1An
 Then `ctrl+d` to exit the wallet. 
 
 **upgrade your binary**
-
 ```
 systemctl stop blurtd
 wget -O /blurt/blurtd https://gateway.pinata.cloud/ipfs/QmWxX9kMeNAEnUfYuSr8e62sDt9WJBCpy9Wio7e2o4xs2w
 chmod +x /blurt/blurtd
+```
+
+**Edit the systemd unit**
+
+```
+nano /etc/systemd/system/blurtd.service
+```
+
+Change it so that exec start looks like this:
+
+```
+ExecStart=/usr/bin/blurtd --replay --data-dir /blurt
+```
+
+
+**Start blurtd**
+```
 systemctl start blurtd
 ```
 
-Wait for chain to sync
+**Wait for chain to sync**
 ```
 journalctl -u blurtd -f
 ```
@@ -329,6 +345,8 @@ Enter the `cli_wallet`
 ```
 update_witness "jacobgadikian" "https://blurt.world/@jacobgadikian" "BLT8mBSoVWNcXqsk2PHTfJCxRz9ebJgz8e1WgAnuqQBpTjs9UXqGh" {"account_creation_fee":"10.000 BLURT","maximum_block_size":65536} true
 ```
+
+
 
 
 ## Social Expectations
