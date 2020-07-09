@@ -318,12 +318,9 @@ systemctl start blurtd
 ```
 
 Wait for chain to sync
-
 ```
-systemctl -u blurtd -f
+journalctl -u blurtd -f
 ```
-
-
 
 **enable your witness**
 
