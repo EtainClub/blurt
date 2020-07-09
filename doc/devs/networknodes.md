@@ -8,9 +8,10 @@ geometry: margin=2cm
 These are some of the currently known network nodes available in the Blurt ecosystem, please commit any changes to this document should you know of any nodes not listed or any of the currently listed ones ceasing to function. 
 
 
-| Node Url         | Operator  |  
-|------------------|-----------|
-| api.blurt.tools  | @blurtdev |
-| blurtd.privex.io | privex.io |    
-| rpc.blurt.world  | Core Team | 
-| api.blurt.blog   | Core Team |
+| Node Url              | Operator  |  
+|-----------------------|-----------|
+| api.blurt.tools       | @blurtdev |
+| blurtd.privex.io      | privex.io |  
+| blurt-rpc.steem.buzz/ | @ericet   | 
+| rpc.blurt.world       | Core Team | 
+| api.blurt.blog        | Core Team |
