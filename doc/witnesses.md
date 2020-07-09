@@ -315,7 +315,7 @@ Then `ctrl+d` to exit the wallet.
 ```
 systemctl stop blurtd
 wget -O /usr/bin/blurtd https://gateway.pinata.cloud/ipfs/QmWxX9kMeNAEnUfYuSr8e62sDt9WJBCpy9Wio7e2o4xs2w
-chmod +x /blurt/blurtd
+chmod +x /usr/bin/blurtd
 ```
 
 **Edit the systemd unit**
