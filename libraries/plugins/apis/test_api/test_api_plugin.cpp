@@ -9,6 +9,7 @@ test_api_plugin::~test_api_plugin() {}
 
 void test_api_plugin::plugin_initialize( const variables_map& options )
 {
+   ilog( "Initializing test_api_plugin" );
    JSON_RPC_REGISTER_API( name() );
 }
 

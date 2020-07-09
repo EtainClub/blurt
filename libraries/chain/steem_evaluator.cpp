@@ -117,8 +117,8 @@ struct witness_properties_change_flags
    uint32_t account_subsidy_decay_changed  : 1;
    uint32_t key_changed                    : 1;
    uint32_t url_changed                    : 1;
-   uint32_t reserve_1                      : 1;
-   uint32_t reserve_2                      : 1;
+   uint32_t operation_flat_fee_changed     : 1;
+   uint32_t bandwidth_kbytes_fee_changed   : 1;
 };
 
 void witness_set_properties_evaluator::do_apply( const witness_set_properties_operation& o )
@@ -186,6 +186,24 @@ void witness_set_properties_evaluator::do_apply( const witness_set_properties_op
       fc::raw::unpack_from_vector< std::string >( itr->second, url );
    }
 
+   itr = o.props.find( "operation_flat_fee" );
+   flags.operation_flat_fee_changed = itr != o.props.end();
+   if( flags.operation_flat_fee_changed )
+   {
+      fc::raw::unpack_from_vector( itr->second, props.operation_flat_fee );
+
+      FC_ASSERT( props.operation_flat_fee.amount <= 100000, "operation_flat_fee too high!" );
+   }
+
+   itr = o.props.find( "bandwidth_kbytes_fee" );
+   flags.bandwidth_kbytes_fee_changed = itr != o.props.end();
+   if( flags.bandwidth_kbytes_fee_changed )
+   {
+      fc::raw::unpack_from_vector( itr->second, props.bandwidth_kbytes_fee );
+
+      FC_ASSERT( props.bandwidth_kbytes_fee.amount <= 100000, "bandwidth_kbytes_fee too high!" );
+   }
+
    _db.modify( witness, [&]( witness_object& w )
    {
       if( flags.account_creation_changed )
@@ -216,6 +234,14 @@ void witness_set_properties_evaluator::do_apply( const witness_set_properties_op
       if( flags.url_changed )
       {
          from_string( w.url, url );
+      }
+
+      if( flags.operation_flat_fee_changed ) {
+         w.props.operation_flat_fee = props.operation_flat_fee;
+      }
+
+      if( flags.bandwidth_kbytes_fee_changed ) {
+         w.props.bandwidth_kbytes_fee = props.bandwidth_kbytes_fee;
       }
    });
 }

@@ -11,6 +11,7 @@ void account_by_key_api_plugin::set_program_options( options_description& cli, o
 
 void account_by_key_api_plugin::plugin_initialize( const variables_map& options )
 {
+   ilog( "Initializing account_by_key_api_plugin" );
    api = std::make_shared< account_by_key_api >();
 }
 

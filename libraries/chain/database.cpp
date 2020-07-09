@@ -2858,6 +2858,7 @@ void database::_apply_block( const signed_block& next_block )
 
    notify_changed_objects();
 
+
    // This moves newly irreversible blocks from the fork db to the block log
    // and commits irreversible state to the database. This should always be the
    // last call of applying a block because it is the only thing that is not
@@ -2992,6 +2993,12 @@ void database::_apply_transaction(const signed_transaction& trx)
       });
    }
 
+
+   // processing simple fee system here!
+   process_tx_fee( trx );
+
+
+
    notify_pre_apply_transaction( note );
 
    //Finally process the operations
@@ -3007,6 +3014,43 @@ void database::_apply_transaction(const signed_transaction& trx)
    notify_post_apply_transaction( note );
 
 } FC_CAPTURE_AND_RETHROW( (trx) ) }
+
+/**
+ * simple fee system:
+ * fee = flat_fee + bandwidth_fee
+ *
+ * flat_fee: fixed fee for each operation in the tx, eg., 0.05 BLURT
+ * bandwidth_fee: eg., 0.01 BLURT / Kbytes
+ *
+ * fee goes to BLURT_TREASURY_ACCOUNT
+ */
+void database::process_tx_fee( const signed_transaction& trx ) {
+   try {
+      if (!has_hardfork(BLURT_HARDFORK_0_1)) return;
+
+      // figuring out the fee
+      auto operation_flat_fee = get_witness_schedule_object().median_props.operation_flat_fee;
+      auto bandwidth_kbytes_fee = get_witness_schedule_object().median_props.bandwidth_kbytes_fee;
+      int64_t flat_fee_amount = operation_flat_fee.amount.value * trx.operations.size();
+      auto flat_fee = asset(std::max(flat_fee_amount, int64_t(1)), BLURT_SYMBOL);
+
+      auto trx_size = fc::raw::pack_size(trx);
+      int64_t bw_fee_amount = (trx_size * bandwidth_kbytes_fee.amount.value)/1024;
+      auto bw_fee = asset(std::max(bw_fee_amount, int64_t(1)), BLURT_SYMBOL);
+      auto fee = flat_fee + bw_fee;
+
+      flat_set< account_name_type > required;
+      vector<authority> other;
+      trx.get_required_authorities( required, required, required, other );
+      for( const auto& auth : required ) {
+         const auto& acnt = get_account( auth );
+         FC_ASSERT( acnt.balance >= fee, "Account does not have sufficient funds for transaction fee.", ("balance", acnt.balance)("fee", fee) );
+
+         adjust_balance( acnt, -fee );
+         adjust_balance( get_account( BLURT_TREASURY_ACCOUNT ), fee );
+      }
+   } FC_CAPTURE_AND_RETHROW( (trx) )
+}
 
 void database::apply_operation(const operation& op)
 {
@@ -3578,6 +3622,10 @@ void database::init_hardforks()
    _hardfork_versions.times[ 0 ] = fc::time_point_sec( BLURT_GENESIS_TIME );
    _hardfork_versions.versions[ 0 ] = hardfork_version( 0, 0 );
 
+   FC_ASSERT( BLURT_HARDFORK_0_1 == 1, "Invalid hardfork configuration" );
+   _hardfork_versions.times[ BLURT_HARDFORK_0_1 ] = fc::time_point_sec( BLURT_HARDFORK_0_1_TIME );
+   _hardfork_versions.versions[ BLURT_HARDFORK_0_1 ] = BLURT_HARDFORK_0_1_VERSION;
+
    const auto& hardforks = get_hardfork_property_object();
    FC_ASSERT( hardforks.last_hardfork <= BLURT_NUM_HARDFORKS, "Chain knows of more hardforks than configuration", ("hardforks.last_hardfork",hardforks.last_hardfork)("BLURT_NUM_HARDFORKS",BLURT_NUM_HARDFORKS) );
    FC_ASSERT( _hardfork_versions.versions[ hardforks.last_hardfork ] <= BLURT_BLOCKCHAIN_VERSION, "Blockchain version is older than last applied hardfork" );
@@ -3644,6 +3692,15 @@ void database::apply_hardfork( uint32_t hardfork )
 
    switch( hardfork )
    {
+      case BLURT_HARDFORK_0_1:
+         {
+            modify( get< reward_fund_object, by_name >( BLURT_POST_REWARD_FUND_NAME ), [&]( reward_fund_object& rfo ) {
+#ifndef  IS_TEST_NET
+               rfo.recent_claims = BLURT_HARDFORK_0_1_RECENT_CLAIMS;
+#endif
+            });
+         }
+         break;
       default:
          break;
    }

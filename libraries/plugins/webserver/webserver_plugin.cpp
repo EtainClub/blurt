@@ -428,6 +428,8 @@ void webserver_plugin::set_program_options( options_description&, options_descri
 
 void webserver_plugin::plugin_initialize( const variables_map& options )
 {
+   ilog( "Initializing webserver_plugin" );
+
    auto thread_pool_size = options.at("webserver-thread-pool-size").as<thread_pool_size_t>();
    FC_ASSERT(thread_pool_size > 0, "webserver-thread-pool-size must be greater than 0");
    ilog("configured with ${tps} thread pool size", ("tps", thread_pool_size));

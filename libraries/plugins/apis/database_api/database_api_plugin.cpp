@@ -12,6 +12,7 @@ void database_api_plugin::set_program_options(
 
 void database_api_plugin::plugin_initialize( const variables_map& options )
 {
+   ilog( "Initializing database_api_plugin" );
    api = std::make_shared< database_api >();
 }
 

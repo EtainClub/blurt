@@ -217,6 +217,8 @@ void account_history_plugin::set_program_options(
 
 void account_history_plugin::plugin_initialize( const boost::program_options::variables_map& options )
 {
+   ilog( "Initializing account_history_plugin" );
+
    my = std::make_unique< detail::account_history_plugin_impl >();
 
    my->_pre_apply_operation_conn = my->_db.add_pre_apply_operation_handler(

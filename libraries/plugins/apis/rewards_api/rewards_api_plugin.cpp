@@ -10,6 +10,7 @@ void rewards_api_plugin::set_program_options( boost::program_options::options_de
 
 void rewards_api_plugin::plugin_initialize( const boost::program_options::variables_map& options )
 {
+   ilog( "Initializing rewards_api_plugin" );
    api = std::make_unique< rewards_api >();
 }
 

@@ -1455,6 +1455,8 @@ void account_history_rocksdb_plugin::set_program_options(
 
 void account_history_rocksdb_plugin::plugin_initialize(const boost::program_options::variables_map& options)
 {
+   ilog( "Initializing account_history_rocksdb_plugin" );
+
    if(options.count("account-history-rocksdb-stop-import-at-block"))
       _blockLimit = options.at("account-history-rocksdb-stop-import-at-block").as<uint32_t>();
 

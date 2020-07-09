@@ -53,6 +53,7 @@ void debug_node_plugin::set_program_options(
 
 void debug_node_plugin::plugin_initialize( const variables_map& options )
 {
+   ilog( "Initializing debug_node_plugin" );
    my = std::make_shared< detail::debug_node_plugin_impl >();
 
    if( options.count( "debug-node-edit-script" ) > 0 )

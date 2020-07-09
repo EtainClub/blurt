@@ -265,6 +265,22 @@ namespace blurt { namespace protocol {
          FC_ASSERT( account_subsidy_decay >= BLURT_RD_MIN_DECAY, "Decay must be at least ${n}", ("n", BLURT_RD_MIN_DECAY) );
          FC_ASSERT( account_subsidy_decay <= BLURT_RD_MAX_DECAY, "Decay must be at most ${n}", ("n", BLURT_RD_MAX_DECAY) );
       }
+
+      itr = props.find( "operation_flat_fee" );
+      if( itr != props.end() ) {
+         asset operation_flat_fee;
+         fc::raw::unpack_from_vector( itr->second, operation_flat_fee );
+         FC_ASSERT( operation_flat_fee.symbol == BLURT_SYMBOL, "operation_flat_fee must be in BLURT" );
+         FC_ASSERT( operation_flat_fee.amount > 0, "operation_flat_fee > 0" );
+      }
+
+      itr = props.find( "bandwidth_kbytes_fee" );
+      if( itr != props.end() ) {
+         asset bandwidth_kbytes_fee;
+         fc::raw::unpack_from_vector( itr->second, bandwidth_kbytes_fee );
+         FC_ASSERT( bandwidth_kbytes_fee.symbol == BLURT_SYMBOL, "bandwidth_kbytes_fee must be in BLURT" );
+         FC_ASSERT( bandwidth_kbytes_fee.amount > 0, "bandwidth_kbytes_fee > 0" );
+      }
    }
 
    void account_witness_vote_operation::validate() const
