@@ -296,6 +296,22 @@ Edit config.ini
 nano /blurt/config.ini
 ```
 
+## Updating for HF1
+
+Enter the `cli_wallet`
+
+
+**Disable your witness**
+```
+update_witness "someguy123" "yoururl" "BLT1111111111111111111111111111111114T1Anm" {"account_creation_fee":"10.000 BLURT","maximum_block_size":65536} true
+```
+
+**
+
+
+
+
+
 ## Social Expectations
 
 Please get to know one another.  Know how to contact one another in case of an emergency. You literally operate the Blurt community.  Have multiple secure ways to talk to one another in case something goes wrong. 
