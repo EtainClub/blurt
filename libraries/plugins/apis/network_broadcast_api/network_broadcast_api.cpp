@@ -30,6 +30,13 @@ namespace detail
    DEFINE_API_IMPL( network_broadcast_api_impl, broadcast_transaction )
    {
       FC_ASSERT( !check_max_block_age( args.max_block_age ) );
+
+      //////////////////////////
+      // spam filter
+      ilog("broadcast_transaction");
+      _chain.db().spam_filter_check_tx(args.trx);
+      // end spam filter
+
       _chain.accept_transaction( args.trx );
       _p2p.broadcast_transaction( args.trx );
 
