@@ -2344,6 +2344,7 @@ void database::init_genesis( const open_args& args )
          });
       }
 
+
       create< dynamic_global_property_object >( [&]( dynamic_global_property_object& p )
       {
          p.current_witness = BLURT_INIT_MINER_NAME;
@@ -2488,6 +2489,29 @@ void database::init_genesis( const open_args& args )
          });
 
          ilog( "importing snapshot.json... OK!" );
+
+
+         { // create account_metadata_object for all accounts
+         #ifndef IS_LOW_MEM
+            ilog( "creating account_metadata_object for all accounts..." );
+
+            counter = 0;
+            const auto& acc_idx = get_index< chain::account_index >().indices().get< chain::by_name >();
+            auto itr = acc_idx.begin();
+            while( itr != acc_idx.end() ) {
+               create< account_metadata_object >( [&]( account_metadata_object& meta ) {
+                  meta.account = itr->id;
+                  from_string( meta.json_metadata, "" );
+                  from_string( meta.posting_json_metadata, "" );
+               });
+               ++itr;
+
+               if (counter % 100000 == 0) ilog( "creating account_metadata_object ${i}...", ("i", counter) );
+               counter ++;
+            }
+         #endif
+         }
+
       }
 #endif
 
