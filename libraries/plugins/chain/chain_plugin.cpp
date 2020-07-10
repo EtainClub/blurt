@@ -17,6 +17,7 @@
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/lockfree/queue.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <thread>
 #include <memory>
@@ -334,6 +335,7 @@ void chain_plugin::set_program_options(options_description& cli, options_descrip
 #ifdef ENABLE_MIRA
          ("memory-replay-indices", bpo::value<vector<string>>()->multitoken()->composing(), "Specify which indices should be in memory during replay")
 #endif
+         ("spam-accounts", bpo::value<vector<string>>()->composing(), "Defines a list of accounts which will be explicitly ignored in account history storage and post content. Eg., spam-accounts = account1 account2")
          ;
    cli.add_options()
          ("sps-remove-threshold", bpo::value<uint16_t>()->default_value( 200 ), "Maximum numbers of proposals/votes which can be removed in the same cycle")
@@ -367,6 +369,21 @@ void chain_plugin::plugin_initialize(const variables_map& options) {
          my->shared_memory_dir = app().data_dir() / sfd;
       else
          my->shared_memory_dir = sfd;
+   }
+
+   if (options.count("spam-accounts")) {
+      set<account_name_type> spam_accounts;
+      for (auto &arg : options.at("spam-accounts").as<vector<string> >()) {
+         vector<string> accs;
+         boost::split(accs, arg, boost::is_any_of(" \t,"));
+         for (const string &acc : accs) {
+            if (acc.size()) {
+               spam_accounts.insert(account_name_type(acc));
+            }
+         }
+      }
+      my->db.add_spam_accounts(spam_accounts);
+      ilog("spam-accounts: ${spam_accounts}", ("spam_accounts", spam_accounts));
    }
 
    my->shared_memory_size = fc::parse_size( options.at( "shared-file-size" ).as< string >() );

@@ -236,6 +236,13 @@ namespace blurt { namespace chain {
          const flat_map<uint32_t,block_id_type> get_checkpoints()const { return _checkpoints; }
          bool                                   before_last_checkpoint()const;
 
+
+         void add_spam_accounts( const set<account_name_type>& spam_accounts );
+         const set<account_name_type> get_spam_accounts()const { return _spam_accounts; }
+         void spam_filter_check_tx( const signed_transaction& trx);
+
+
+
          bool push_block( const signed_block& b, uint32_t skip = skip_nothing );
          void push_transaction( const signed_transaction& trx, uint32_t skip = skip_nothing );
          void _maybe_warn_multiple_production( uint32_t height )const;
@@ -569,6 +576,7 @@ namespace blurt { namespace chain {
 
          flat_map< custom_id_type, std::shared_ptr< custom_operation_interpreter > >   _custom_operation_interpreters;
          std::string                   _json_schema;
+         set<account_name_type>        _spam_accounts;
 
          util::advanced_benchmark_dumper  _benchmark_dumper;
          index_delegate_map            _index_delegate_map;

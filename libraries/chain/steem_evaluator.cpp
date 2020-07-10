@@ -481,6 +481,20 @@ void comment_evaluator::do_apply( const comment_operation& o )
 { try {
    FC_ASSERT( o.title.size() + o.body.size() + o.json_metadata.size(), "Cannot update comment because nothing appears to be changing." );
 
+   //////////////////////////
+   // spam filter
+#ifndef IS_LOW_MEM
+   bool filtered = false;
+   {
+      const auto& filtered_list = _db.get_spam_accounts();
+      if (filtered_list.find(o.author) != filtered_list.end()) {
+         filtered = true;
+//         ilog("spam comment filter: ${a}", ("a", o.author));
+      }
+   }
+#endif
+   // end spam filter
+
    const auto& by_permlink_idx = _db.get_index< comment_index >().indices().get< by_permlink >();
    auto itr = by_permlink_idx.find( boost::make_tuple( o.author, o.permlink ) );
 
@@ -565,19 +579,21 @@ void comment_evaluator::do_apply( const comment_operation& o )
 
       id = new_comment.id;
 
-   #ifndef IS_LOW_MEM
-      _db.create< comment_content_object >( [&]( comment_content_object& con )
-      {
-         con.comment = id;
 
-         from_string( con.title, o.title );
-         if( o.body.size() < 1024*1024*128 )
-         {
-            from_string( con.body, o.body );
-         }
-         from_string( con.json_metadata, o.json_metadata );
-      });
-   #endif
+#ifndef IS_LOW_MEM
+      if (!filtered) {
+         _db.create< comment_content_object >( [&]( comment_content_object& con ) {
+            con.comment = id;
+
+            from_string( con.title, o.title );
+            if( o.body.size() < 1024*1024*128 )
+            {
+               from_string( con.body, o.body );
+            }
+            from_string( con.json_metadata, o.json_metadata );
+         });
+      }
+#endif
 
 
 /// this loop can be skiped for validate-only nodes as it is merely gathering stats for indicies
@@ -626,34 +642,36 @@ void comment_evaluator::do_apply( const comment_operation& o )
       {
          a.last_post_edit = now;
       });
-   #ifndef IS_LOW_MEM
-      _db.modify( _db.get< comment_content_object, by_comment >( comment.id ), [&]( comment_content_object& con )
-      {
-         if( o.title.size() )         from_string( con.title, o.title );
-         if( o.json_metadata.size() )
-            from_string( con.json_metadata, o.json_metadata );
+#ifndef IS_LOW_MEM
+      if (!filtered) {
+         _db.modify( _db.get< comment_content_object, by_comment >( comment.id ), [&]( comment_content_object& con )
+         {
+            if( o.title.size() )         from_string( con.title, o.title );
+            if( o.json_metadata.size() )
+               from_string( con.json_metadata, o.json_metadata );
 
-         if( o.body.size() ) {
-            try {
-            diff_match_patch<std::wstring> dmp;
-            auto patch = dmp.patch_fromText( utf8_to_wstring(o.body) );
-            if( patch.size() ) {
-               auto result = dmp.patch_apply( patch, utf8_to_wstring( to_string( con.body ) ) );
-               auto patched_body = wstring_to_utf8(result.first);
-               if( !fc::is_utf8( patched_body ) ) {
-                  idump(("invalid utf8")(patched_body));
-                  from_string( con.body, fc::prune_invalid_utf8(patched_body) );
-               } else { from_string( con.body, patched_body ); }
+            if( o.body.size() ) {
+               try {
+               diff_match_patch<std::wstring> dmp;
+               auto patch = dmp.patch_fromText( utf8_to_wstring(o.body) );
+               if( patch.size() ) {
+                  auto result = dmp.patch_apply( patch, utf8_to_wstring( to_string( con.body ) ) );
+                  auto patched_body = wstring_to_utf8(result.first);
+                  if( !fc::is_utf8( patched_body ) ) {
+                     idump(("invalid utf8")(patched_body));
+                     from_string( con.body, fc::prune_invalid_utf8(patched_body) );
+                  } else { from_string( con.body, patched_body ); }
+               }
+               else { // replace
+                  from_string( con.body, o.body );
+               }
+               } catch ( ... ) {
+                  from_string( con.body, o.body );
+               }
             }
-            else { // replace
-               from_string( con.body, o.body );
-            }
-            } catch ( ... ) {
-               from_string( con.body, o.body );
-            }
-         }
-      });
-   #endif
+         });
+      }
+#endif
 
 
 

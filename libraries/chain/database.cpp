@@ -673,6 +673,32 @@ bool database::before_last_checkpoint()const
    return (_checkpoints.size() > 0) && (_checkpoints.rbegin()->first >= head_block_num());
 }
 
+void database::add_spam_accounts( const set<account_name_type>& spam_accounts ) {
+  _spam_accounts.insert(spam_accounts.begin(), spam_accounts.end());
+}
+
+void database::spam_filter_check_tx(const signed_transaction &trx) {
+//   ilog("spam_filter_check_tx");
+//   //////////////////////////
+//   // spam filter
+//
+//   const auto &filtered_list = get_spam_accounts();
+//
+//   flat_set<account_name_type> required;
+//   vector<authority> other;
+//   trx.get_required_authorities(required, required, required, other);
+//
+//   for (const auto &auth : required) {
+//      const auto &acnt = get_account(auth);
+//
+//      ilog("spam broadcast filter: ${a} ${b}", ("a", auth)("b", acnt.name));
+//      if (filtered_list.find(auth) != filtered_list.end()) {
+//         FC_ASSERT(false, "spam!");
+//      }
+//   }
+}
+
+
 /**
  * Push block "may fail" in which case every partial change is unwound.  After
  * push block is successful the block is appended to the chain database on disk.

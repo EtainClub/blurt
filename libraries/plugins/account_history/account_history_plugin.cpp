@@ -149,6 +149,19 @@ void account_history_plugin_impl::on_pre_apply_operation( const operation_notifi
 {
    flat_set<account_name_type> impacted;
 
+
+   /////////////////////////
+   // filter here
+   if (note.op.which() == operation::tag<comment_operation>::value) {
+      auto com = note.op.get<comment_operation>();
+      const set<account_name_type> &spam_accounts = _db.get_spam_accounts();
+      if (spam_accounts.find(com.author) != spam_accounts.end()) {
+         //        ilog("spam history filter: ${a}", ("a", com.author));
+         return;
+      }
+   }
+   // end filter
+
    const operation_object* new_obj = nullptr;
    app::operation_get_impacted_accounts( note.op, impacted );
 

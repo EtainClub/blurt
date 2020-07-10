@@ -1607,6 +1607,17 @@ namespace detail
       FC_ASSERT( _p2p != nullptr, "p2p_plugin not enabled." );
 
       signed_transaction trx = args[0].as< legacy_signed_transaction >();
+
+
+
+      //////////////////////////
+      // spam filter
+      ilog("broadcast_transaction");
+      _db.spam_filter_check_tx(trx);
+      // end spam filter
+
+
+
       auto txid = trx.id();
       boost::promise< broadcast_transaction_synchronous_return > p;
 
