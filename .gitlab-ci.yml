@@ -29,7 +29,7 @@ build_default:
   - cd build
 # Debug Build Config: (Note: DCMAKE_BUILD_TYPE=Debug)
   - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=OFF -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Debug ..
-  - make -j$(nproc) blurtd cli_wallet
+  - make -j$(nproc) blurtd 
   - mv programs/blurtd/blurtd programs/blurtd/blurtd_debug
 # Fix recovery of artifacts :/
   - pwd
@@ -62,7 +62,7 @@ build_fullnode:
   - cd build
 # Full Node Build Configuration -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF
   - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=OFF -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Release ..
-  - make -j$(nproc) blurtd cli_wallet
+  - make -j$(nproc) blurtd
 #  - mv programs/blurtd/blurtd programs/blurtd/blurtd_fullnode
   artifacts:
     paths:
