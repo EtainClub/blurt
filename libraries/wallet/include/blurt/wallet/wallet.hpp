@@ -17,6 +17,7 @@ using namespace std;
 
 using namespace blurt::utilities;
 using namespace blurt::protocol;
+using blurt::plugins::condenser_api::legacy_asset;
 
 typedef uint16_t transaction_handle_type;
 
@@ -70,6 +71,19 @@ enum authority_type
    owner,
    active,
    posting
+};
+
+
+struct witness_properties {
+   witness_properties() {}
+
+   public_key_type   key; // signing_key
+   legacy_asset      account_creation_fee;
+   uint32_t          maximum_block_size = BLURT_MIN_BLOCK_SIZE_LIMIT * 2;
+   int32_t           account_subsidy_budget = BLURT_DEFAULT_ACCOUNT_SUBSIDY_BUDGET;
+   uint32_t          account_subsidy_decay = BLURT_DEFAULT_ACCOUNT_SUBSIDY_DECAY;
+   legacy_asset      operation_flat_fee = legacy_asset::from_asset( asset( 50, BLURT_SYMBOL ) );
+   legacy_asset      bandwidth_kbytes_fee = legacy_asset::from_asset( asset( 10, BLURT_SYMBOL ) );
 };
 
 namespace detail {
@@ -525,6 +539,15 @@ class wallet_api
          string url,
          public_key_type block_signing_key,
          const condenser_api::api_chain_properties& props,
+         bool broadcast = false);
+
+
+      /**
+       * witness_set_properties operation
+       */
+      condenser_api::legacy_signed_transaction update_witness_properties(
+         string witness_name,
+         const witness_properties& props,
          bool broadcast = false);
 
       /** Set the voting proxy for an account.
@@ -1058,6 +1081,7 @@ FC_API( blurt::wallet::wallet_api,
         (update_account_memo_key)
         (delegate_vesting_shares)
         (update_witness)
+        (update_witness_properties)
         (set_voting_proxy)
         (vote_for_witness)
         (follow)
@@ -1102,3 +1126,7 @@ FC_API( blurt::wallet::wallet_api,
       )
 
 FC_REFLECT( blurt::wallet::memo_data, (from)(to)(nonce)(check)(encrypted) )
+FC_REFLECT( blurt::wallet::witness_properties, (key)
+            (account_creation_fee)(maximum_block_size)(account_subsidy_budget)(account_subsidy_decay)
+            (operation_flat_fee)(bandwidth_kbytes_fee)
+          )

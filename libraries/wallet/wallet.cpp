@@ -1587,6 +1587,46 @@ condenser_api::legacy_signed_transaction wallet_api::update_witness(
    return my->sign_transaction( tx, broadcast );
 }
 
+
+condenser_api::legacy_signed_transaction wallet_api::update_witness_properties(
+   string witness_name,
+   const witness_properties& props,
+   bool broadcast  )
+{
+   FC_ASSERT( !is_locked() );
+
+   witness_set_properties_operation op;
+
+   op.owner = witness_name;
+
+   flat_map< string, vector< char > > map_packed_props;
+   map_packed_props.reserve(7);
+
+   std::pair<string, vector< char >> key("key", fc::raw::pack_to_vector( props.key ));
+   std::pair<string, vector< char >> account_creation_fee("account_creation_fee", fc::raw::pack_to_vector( props.account_creation_fee ));
+   std::pair<string, vector< char >> maximum_block_size("maximum_block_size", fc::raw::pack_to_vector( props.maximum_block_size ));
+   std::pair<string, vector< char >> account_subsidy_budget("account_subsidy_budget", fc::raw::pack_to_vector( props.account_subsidy_budget ));
+   std::pair<string, vector< char >> account_subsidy_decay("account_subsidy_decay", fc::raw::pack_to_vector( props.account_subsidy_decay ));
+   std::pair<string, vector< char >> operation_flat_fee("operation_flat_fee", fc::raw::pack_to_vector( props.operation_flat_fee ));
+   std::pair<string, vector< char >> bandwidth_kbytes_fee("bandwidth_kbytes_fee", fc::raw::pack_to_vector( props.bandwidth_kbytes_fee ));
+
+   map_packed_props[key.first] = key.second;
+   map_packed_props[account_creation_fee.first] = account_creation_fee.second;
+   map_packed_props[maximum_block_size.first] = maximum_block_size.second;
+   map_packed_props[account_subsidy_budget.first] = account_subsidy_budget.second;
+   map_packed_props[account_subsidy_decay.first] = account_subsidy_decay.second;
+   map_packed_props[operation_flat_fee.first] = operation_flat_fee.second;
+   map_packed_props[bandwidth_kbytes_fee.first] = bandwidth_kbytes_fee.second;
+
+   op.props = map_packed_props;
+
+   signed_transaction tx;
+   tx.operations.push_back(op);
+   tx.validate();
+
+   return my->sign_transaction( tx, broadcast );
+}
+
 condenser_api::legacy_signed_transaction wallet_api::vote_for_witness(
    string voting_account,
    string witness_to_vote_for,

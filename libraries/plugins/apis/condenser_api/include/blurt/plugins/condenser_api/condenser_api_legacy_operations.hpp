@@ -84,7 +84,9 @@ namespace blurt { namespace plugins { namespace condenser_api {
          account_creation_fee( legacy_asset::from_asset( c.account_creation_fee ) ),
          maximum_block_size( c.maximum_block_size ),
          account_subsidy_budget( c.account_subsidy_budget ),
-         account_subsidy_decay( c.account_subsidy_decay )
+         account_subsidy_decay( c.account_subsidy_decay ),
+         operation_flat_fee( legacy_asset::from_asset( c.operation_flat_fee ) ),
+         bandwidth_kbytes_fee( legacy_asset::from_asset( c.bandwidth_kbytes_fee ) )
       {}
 
       operator legacy_chain_properties() const
@@ -99,6 +101,8 @@ namespace blurt { namespace plugins { namespace condenser_api {
       uint32_t       maximum_block_size = BLURT_MIN_BLOCK_SIZE_LIMIT * 2;
       int32_t        account_subsidy_budget = BLURT_DEFAULT_ACCOUNT_SUBSIDY_BUDGET;
       uint32_t       account_subsidy_decay = BLURT_DEFAULT_ACCOUNT_SUBSIDY_DECAY;
+      legacy_asset   operation_flat_fee = legacy_asset::from_asset( asset( 50, BLURT_SYMBOL ) );
+      legacy_asset   bandwidth_kbytes_fee = legacy_asset::from_asset( asset( 10, BLURT_SYMBOL ) );
    };
 
    struct legacy_account_create_operation
@@ -1190,6 +1194,7 @@ void old_sv_from_variant( const fc::variant& v, T& sv )
 
 FC_REFLECT( blurt::plugins::condenser_api::api_chain_properties,
             (account_creation_fee)(maximum_block_size)(account_subsidy_budget)(account_subsidy_decay)
+            (operation_flat_fee)(bandwidth_kbytes_fee)
           )
 
 FC_REFLECT( blurt::plugins::condenser_api::legacy_price, (base)(quote) )
