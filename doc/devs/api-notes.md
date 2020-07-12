@@ -118,3 +118,13 @@ Username/password access is only available through websockets, since login is in
     < (ok)
 
 The `cli_wallet` also has the capability to login to provide access to restricted APIs.
+
+
+API Calls
+-----------------------
+
+Get witness parameter (ie. network fees, account creation fees etc)
+
+```
+curl -s --data '{"jsonrpc":"2.0", "method":"condenser_api.get_chain_properties" "params":[], "id":1}' http://localhost:8091/ {"jsonrpc":"2.0","result":{"account_creation_fee":"10.000 BLURT","maximum_block_size":65536,"account_subsidy_budget":797,"account_subsidy_decay":347321,"operation_flat_fee":"0.050 BLURT","bandwidth_kbytes_fee":"0.010 BLURT"},"id":1
+```
