@@ -92,6 +92,6 @@ pdfs:
         
 trigger-rosetta:
     stage: triggers
-    triggers: blurt/rosetta
+    trigger: blurt/rosetta
 
 
