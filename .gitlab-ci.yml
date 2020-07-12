@@ -85,6 +85,7 @@ pdfs:
     # Only run on the master branch
     - dev
     - master
-   only:
-     changes:
-       - doc/witnesses.md
+  only:
+    changes:
+        - doc/witnesses.md
+
