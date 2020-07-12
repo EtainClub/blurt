@@ -90,10 +90,8 @@ pdfs:
     changes:
         - doc/witnesses.md
         
-rosetta:
+trigger-rosetta:
     stage: triggers
     triggers: blurt/rosetta
-    except:
-      changes:
-        - doc/*
+
 
