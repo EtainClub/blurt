@@ -2,6 +2,7 @@ image: registry.gitlab.com/blurt/build-docker:latest
 
 stages: 
  - build
+ - triggers
  - pdfs
 
 # Installs dependencies just once!
@@ -88,4 +89,11 @@ pdfs:
   only:
     changes:
         - doc/witnesses.md
+        
+rosetta:
+    stage: triggers
+    triggers: blurt/rosetta
+    except:
+      changes:
+        - doc/*
 
