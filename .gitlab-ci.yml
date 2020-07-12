@@ -1,4 +1,4 @@
-image: debian:10
+image: registry.gitlab.com/blurt/build-docker:latest
 
 stages: 
  - build
@@ -6,10 +6,6 @@ stages:
 
 # Installs dependencies just once!
 before_script: 
-# Update apt
-  - apt-get update -qq
-# Install Blurt Build Dependencies
-  - apt-get install -y -qq autoconf automake cmake g++ git libbz2-dev libsnappy-dev libssl-dev libtool make pkg-config python3 python3-jinja2 doxygen libboost-chrono-dev libboost-context-dev libboost-coroutine-dev libboost-date-time-dev libboost-filesystem-dev libboost-iostreams-dev libboost-locale-dev libboost-program-options-dev libboost-serialization-dev libboost-signals-dev libboost-system-dev libboost-test-dev libboost-thread-dev libncurses5-dev libreadline-dev perl ccache
 # Pull in submodules
   - git submodule update --init --recursive
 # ccache for acceleration
@@ -30,12 +26,12 @@ build_default:
 # Debug Build Config: (Note: DCMAKE_BUILD_TYPE=Debug)
   - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=OFF -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Debug ..
   - make -j$(nproc) blurtd 
-  - mv programs/blurtd/blurtd programs/blurtd/blurtd_debug
 # Fix recovery of artifacts :/
   - pwd
   artifacts:
     paths:
-    - /builds/blurt/blurt/build/programs/blurtd/blurtd_debug
+    - /builds/blurt/blurt/build/programs/blurtd/blurtd
+    - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
 
 
 build_witness:
@@ -46,13 +42,12 @@ build_witness:
 # Witness Build Config: -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON
   - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
   - make -j$(nproc) blurtd cli_wallet
-  - mv programs/blurtd/blurtd programs/blurtd/blurtd_witness
 # fix recovery of artifacts :(
   - pwd
 # cli wallet is only used for witness, so we capture it from the witness build
   artifacts:
     paths:
-    - /builds/blurt/blurt/build/programs/blurtd/blurtd_witness
+    - /builds/blurt/blurt/build/programs/blurtd/blurtd
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
 
 build_fullnode:
@@ -67,6 +62,7 @@ build_fullnode:
   artifacts:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd
+    - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
 
 pdfs:
   stage: build
@@ -89,3 +85,6 @@ pdfs:
     # Only run on the master branch
     - dev
     - master
+   only:
+     changes:
+       - doc/witnesses.md
