@@ -581,23 +581,21 @@ void comment_evaluator::do_apply( const comment_operation& o )
 
 
 #ifndef IS_LOW_MEM
-      if (!filtered) {
-         _db.create< comment_content_object >( [&]( comment_content_object& con ) {
-            con.comment = id;
-
-            from_string( con.title, o.title );
-            if( o.body.size() < 1024*1024*128 )
-            {
+      _db.create< comment_content_object >( [&]( comment_content_object& con ) {
+         con.comment = id;
+         from_string( con.title, o.title );
+         if (!filtered) {
+            if( o.body.size() < 1024*1024*128 ) {
                from_string( con.body, o.body );
             }
             from_string( con.json_metadata, o.json_metadata );
-         });
-      }
+         }
+      });
 #endif
 
 
 /// this loop can be skiped for validate-only nodes as it is merely gathering stats for indicies
-      auto now = _db.head_block_time();
+//      auto now = _db.head_block_time();
       while( parent ) {
          _db.modify( *parent, [&]( comment_object& p ){
             p.children++;

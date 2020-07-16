@@ -264,68 +264,68 @@ void tags_plugin_impl::update_tags( const comment_object& c, bool parse_tags )co
 {
    try {
 
-   auto hot = calculate_hot( c.net_rshares, c.created );
-   auto trending = calculate_trending( c.net_rshares, c.created );
+      auto hot = calculate_hot( c.net_rshares, c.created );
+      auto trending = calculate_trending( c.net_rshares, c.created );
 
-   const auto& comment_idx = _db.get_index< tag_index >().indices().get< by_comment >();
+      const auto& comment_idx = _db.get_index< tag_index >().indices().get< by_comment >();
 
 #ifndef IS_LOW_MEM
-   if( parse_tags )
-   {
-      auto meta = filter_tags( c, _db.get< comment_content_object, chain::by_comment >( c.id ) );
-      auto citr = comment_idx.lower_bound( c.id );
-
-      map< string, const tag_object* > existing_tags;
-      vector< const tag_object* > remove_queue;
-
-      while( citr != comment_idx.end() && citr->comment == c.id )
+      if( parse_tags )
       {
-         const tag_object* tag = &*citr;
-         ++citr;
+         auto meta = filter_tags( c, _db.get< comment_content_object, chain::by_comment >( c.id ) );
+         auto citr = comment_idx.lower_bound( c.id );
 
-         if( meta.tags.find( tag->tag ) == meta.tags.end()  )
+         map< string, const tag_object* > existing_tags;
+         vector< const tag_object* > remove_queue;
+
+         while( citr != comment_idx.end() && citr->comment == c.id )
          {
-            remove_queue.push_back(tag);
+            const tag_object* tag = &*citr;
+            ++citr;
+
+            if( meta.tags.find( tag->tag ) == meta.tags.end()  )
+            {
+               remove_queue.push_back(tag);
+            }
+            else
+            {
+               existing_tags[tag->tag] = tag;
+            }
          }
-         else
+
+         for( const auto& tag : meta.tags )
          {
-            existing_tags[tag->tag] = tag;
+            auto existing = existing_tags.find(tag);
+
+            if( existing == existing_tags.end() )
+            {
+               create_tag( tag, c, hot, trending );
+            }
+            else
+            {
+               update_tag( *existing->second, c, hot, trending );
+            }
          }
+
+         for( const auto& item : remove_queue )
+            remove_tag(*item);
       }
-
-      for( const auto& tag : meta.tags )
-      {
-         auto existing = existing_tags.find(tag);
-
-         if( existing == existing_tags.end() )
-         {
-            create_tag( tag, c, hot, trending );
-         }
-         else
-         {
-            update_tag( *existing->second, c, hot, trending );
-         }
-      }
-
-      for( const auto& item : remove_queue )
-         remove_tag(*item);
-   }
-   else
+      else
 #endif
-   {
-      auto citr = comment_idx.lower_bound( c.id );
-
-      while( citr != comment_idx.end() && citr->comment == c.id )
       {
-         update_tag( *citr, c, hot, trending );
-         ++citr;
-      }
-   }
+         auto citr = comment_idx.lower_bound( c.id );
 
-   if( c.parent_author.size() )
-   {
-      update_tags( _db.get_comment( c.parent_author, c.parent_permlink ) );
-   }
+         while( citr != comment_idx.end() && citr->comment == c.id )
+         {
+            update_tag( *citr, c, hot, trending );
+            ++citr;
+         }
+      }
+
+      if( c.parent_author.size() )
+      {
+         update_tags( _db.get_comment( c.parent_author, c.parent_permlink ) );
+      }
    } FC_CAPTURE_LOG_AND_RETHROW( (c) )
 }
 
@@ -378,6 +378,16 @@ struct operation_visitor
    {
       if( _my._started )
       {
+
+         //////////////////////////
+         // spam filter
+         const auto &filtered_list = _my._db.get_spam_accounts();
+         if (filtered_list.find(op.author) != filtered_list.end()) {
+            // ilog("spam follow filter: ${a}", ("a", op.author));
+            return;
+         }
+         // end spam filter
+
          _my.update_tags( _my._db.get_comment( op.author, op.permlink ), op.json_metadata.size() );
       }
    }

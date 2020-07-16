@@ -151,7 +151,7 @@ void account_history_plugin_impl::on_pre_apply_operation( const operation_notifi
 
 
    /////////////////////////
-   // filter here
+   // spam filter
    if (note.op.which() == operation::tag<comment_operation>::value) {
       auto com = note.op.get<comment_operation>();
       const set<account_name_type> &spam_accounts = _db.get_spam_accounts();
