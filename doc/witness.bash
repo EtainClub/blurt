@@ -13,7 +13,7 @@ systemctl start ntp
 
 # CREATE BLURT USER
 mkdir /blurt 
-adduser --gecos "" --disabled-password --home /blurt blur
+adduser --gecos "" --disabled-password --home /blurt blurt
 chown blurt /blurt
 
 
