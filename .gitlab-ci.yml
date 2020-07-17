@@ -5,7 +5,6 @@ stages:
  - triggers
  - pdfs
 
-# Installs dependencies just once!
 before_script: 
 # Pull in submodules
   - git submodule update --init --recursive
@@ -14,7 +13,7 @@ before_script:
   - export CCACHE_BASEDIR=${PWD}
   - export CCACHE_DIR=${PWD}/ccache
 
-# caches ccache for future use (how is this going to work out with the parallelism I wonder?)
+# caches ccache for future use 
 cache:
   paths:
   - ccache/
@@ -43,8 +42,6 @@ witness:
 # Witness Build Config: -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON
   - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
   - make -j$(nproc) blurtd cli_wallet
-# fix recovery of artifacts :(
-  - pwd
 # cli wallet is only used for witness, so we capture it from the witness build
   artifacts:
     paths:
@@ -58,11 +55,10 @@ fullnode:
   - cd build
 # Full Node Build Configuration -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF
   - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=OFF -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Release ..
-  - make -j$(nproc) blurtd
-#  - mv programs/blurtd/blurtd programs/blurtd/blurtd_fullnode
+  - make -j$(nproc) blurtd cli_wallet
   artifacts:
     paths:
-    - /builds/blurt/blurt/build/programs/blurtd
+    - /builds/blurt/blurt/build/programs/blurtd/blurtd
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
 
 pdfs:
