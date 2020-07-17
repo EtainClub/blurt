@@ -34,7 +34,7 @@ wget -O download https://gitlab.com/blurt/blurt/-/jobs/artifacts/dev/download?jo
 unzip download
 
 # PUT BLURTD AND CLI_WALLET ON YOUR $PATH
-mv build/programs/blurtd/blurtd_witness /usr/bin/blurtd
+mv build/programs/blurtd/blurtd /usr/bin/blurtd
 mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet
 rm -rf build
 rm download
