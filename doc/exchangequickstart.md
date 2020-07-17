@@ -2,8 +2,22 @@
 
 System Requirements: 
 
-A dedicated server or virtual machine with a minimum of 16GB of RAM, and at least 80GB of fast **local** SSD storage.
+A dedicated server or virtual machine with a minimum of 16GB of RAM, and at least 160GB of SSD storage.
 
+
+### Set up a Blurt Full Node
+
+We've reduced setting up a full node to a single-line installer.  Run the following command as root on your fresh Debian 10 physical or virtual machine.  
+
+```bash
+bash <(curl -s https://gitlab.com/blurt/blurt/-/raw/dev/doc/exchange.bash)
+```
+
+Now you've just got to wait a bit for your machine to import 1.3 million steem accounts and sync the Blurt Blockchain.  To monitor this process, do like:
+
+```bash
+journalctl -u blurtd -f
+```
 
 
 ### Account history and limitations
@@ -15,6 +29,9 @@ To track specific accounts add this to /blurt/config.ini:
 ```
 account-history-track-account-range = ["nameofaccount", "nameofaccount"]
 ```
+
+
+
 
 ### Running the cli_wallet
 
