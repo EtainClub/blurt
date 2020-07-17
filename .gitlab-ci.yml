@@ -32,6 +32,10 @@ debug:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
+  except:
+    changes:
+      paths:
+        - doc/
 
 
 witness:
@@ -47,6 +51,10 @@ witness:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
+  except:
+    changes:
+      paths:
+        - doc/
 
 fullnode:
   stage: build 
@@ -60,6 +68,10 @@ fullnode:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
+  except:
+    changes:
+      paths:
+        - doc/
 
 pdfs:
   stage: build
