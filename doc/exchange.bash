@@ -53,7 +53,7 @@ wget -O /blurt/snapshot.json  https://cloudflare-ipfs.com/ipfs/QmPrwVpwe4Ya46CN9
 
 # testnet witness_config.ini is QmX5n6nVhbEKUMvgJre74wNdP7Jcq4GJRdw7G9BZF3zxnU
 # mainnet witness_config.ini is QmeDJjv1hrjfnLJD2RU7BBrdMJmqgJbjJrMosc8nHfVBEh
-wget -O /blurt/config.ini https://cloudflare-ipfs.com/ipfs/QmeDJjv1hrjfnLJD2RU7BBrdMJmqgJbjJrMosc8nHfVBEh
+wget -O /blurt/config.ini https://gitlab.com/blurt/blurt/-/raw/witness-exchange-nodes/doc/blurtd.service
 
 
 # INSTALL BLURTD.SERVICE 
