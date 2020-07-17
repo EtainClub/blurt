@@ -27,7 +27,7 @@ sysctl -p
 
 
 # DOWNLOAD BUILD ARTIFACTS OF LATEST WITNESS JOB
-wget -O download https://gitlab.com/blurt/blurt/-/jobs/artifacts/dev/download?job=witness
+wget -O download https://gitlab.com/blurt/blurt/-/jobs/644121113/artifacts/download
 
 
 # UNZIP THE BUILD ARTIFACTS, BLURTD AND CLI_WALLET
