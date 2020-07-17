@@ -2,13 +2,19 @@
 
 System Requirements: 
 
-A dedicated server or virtual machine with a minimum of 16GB of RAM, and at least 80GB of fast **local** SSD storage. BLURT will be one of the most active blockchains in the world and handles an incredibly large amount of transactions per second, as such, it requires fast storage to run efficiently.
+A dedicated server or virtual machine with a minimum of 16GB of RAM, and at least 80GB of fast **local** SSD storage.
 
 
 
 ### Account history and limitations
 
 If you need to track all account history instead of just a single account, this would add quite a bit of overhead and lead to a much longer reindex. If you absolutely need this, we recommend instead using the `account_history_rocksdb` plugin instead, however, there is one caveat: the rocksdb plugin does not allow the ability to query by transaction ID. For either `account_history` or `account_history_rocksdb` you would also add the `account_history_api` plugin in order to be able to query data. To use these, you would add them to a custom config file.
+
+
+To track specific accounts add this to /blurt/config.ini:
+```
+account-history-track-account-range = ["nameofaccount", "nameofaccount"]
+```
 
 ### Running the cli_wallet
 
