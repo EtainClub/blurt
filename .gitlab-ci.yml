@@ -19,7 +19,7 @@ cache:
   paths:
   - ccache/
 
-build_default:
+debug:
   stage: build 
   script:
   - mkdir build
@@ -35,7 +35,7 @@ build_default:
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
 
 
-build_witness:
+witness:
   stage: build 
   script:
   - mkdir build
@@ -51,7 +51,7 @@ build_witness:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
 
-build_fullnode:
+fullnode:
   stage: build 
   script:
   - mkdir build
