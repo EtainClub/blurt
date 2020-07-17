@@ -25,10 +25,6 @@ echo "*      soft    nproc      64000" >> /etc/security/limits.conf
 echo "fs.file-max = 2097152" >> /etc/sysctl.conf
 sysctl -p
 
-# INSTALL IPFS SYSTEMD SERVICE
-# Sample IPFS URL FROM CLOUDFLARE: https://cloudflare-ipfs.com/ipfs/QmXnnyufdzAWL5CqZ2RnSNgPbvCc1ALT73s6epPrRnZ1Xy
-wget -O /etc/systemd/system/ipfs-hardened.service https://cloudflare-ipfs.com/ipfs/QmNQPATMBjfuLTmkScWAsogcPLPtPcR2goadb6tRPgEsaW
-
 
 # DOWNLOAD BUILD ARTIFACTS OF LATEST WITNESS JOB
 wget -O download https://gitlab.com/blurt/blurt/-/jobs/artifacts/dev/download?job=witness
