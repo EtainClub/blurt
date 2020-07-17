@@ -66,7 +66,7 @@ fullnode:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
-   except:
+  except:
     changes:
         - doc/*
 
