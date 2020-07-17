@@ -5,7 +5,7 @@ apt update
 apt upgrade -y
 
 # Install Dependencies
-apt install -y ntp unzip wget libbz2-dev libsnappy-dev libncurses5-dev libreadline-dev
+apt install -y ntp unzip wget libbz2-dev libsnappy-dev libncurses5-dev libreadline-dev libncurses6-dev
 
 # Enable NTP
 systemctl enable ntp
