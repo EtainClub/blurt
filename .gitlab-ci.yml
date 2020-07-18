@@ -37,7 +37,7 @@ debug:
         - doc/*
 
 
-witness:
+low_memory:
   stage: build 
   script:
   - mkdir build
@@ -54,7 +54,7 @@ witness:
     changes:
         - doc/*
 
-fullnode:
+rpc:
   stage: build 
   script:
   - mkdir build
