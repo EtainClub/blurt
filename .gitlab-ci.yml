@@ -98,15 +98,15 @@ pdfs:
 trigger-rosetta:
     stage: triggers
     trigger: blurt/rosetta
-    except:
-      changes:
-        - doc/*
+ #   except:
+ #     changes:
+ #       - doc/*
 
 trigger-docker:
     stage: triggers
     trigger: blurt/docker
-    except:
-      changes:
-        - doc/*
+#    except:
+#      changes:
+#        - doc/*
 
 
