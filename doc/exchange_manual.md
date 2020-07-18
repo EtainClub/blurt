@@ -64,7 +64,7 @@ docker logs -f blurtd_exchange
 
 To stop node, run:
 ```
-docker stop ----time=30 blurtd_exchange
+docker stop -t 30 blurtd_exchange
 ```
 
 To resynch the chain from start, delete the `blockchain` folder then start the node again.
