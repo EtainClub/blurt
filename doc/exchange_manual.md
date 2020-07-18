@@ -7,7 +7,13 @@ A dedicated server or virtual machine with a minimum of 16GB of RAM, and at leas
 
 
 #### 1. Install Docker
-Assume that docker is install on your system. If not follow the guide on docker doc to install.
+You can install Docker on most Linux distributions like this:
+
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+```
+
 
 #### 2. Download 
 In this step, you will download:
@@ -16,10 +22,11 @@ In this step, you will download:
 - `blurtd` (pre-built binary)
 - `config.ini` (sample config)
 
-You can change the `BLURT_DIR` to anywhere you'd like to store your Blurt blockchain data. The RAMDisk is just a suggestion-- you can choose any path in your filesystem.  
+You can change the `BLURT_DIR` variable to anywhere you'd like to store your Blurt blockchain data. 
 
-```
-export BLURT_DIR=/Volumes/RAMDisk/blurtd
+```bash
+export BLURT_DIR=/blurtd
+mkdir $BLURT_DIR
 export BLURT_ARTIFACTS=https://gitlab.com/blurt/blurt/-/jobs/644229270/artifacts/download
 
 cd $BLURT_DIR
@@ -32,7 +39,7 @@ chmod +x blurtd
 
 #### 3. Configuration
 
-To track specific accounts instead of all accounts, add this to config.ini:
+To track specific accounts instead of all accounts, add this to `$BLURT_DIR/config.ini`:
 
 Eg., tracking `birdinc` account only
 
@@ -44,7 +51,7 @@ account-history-track-account-range = ["birdinc", "birdinc"]
 
 To run an interactive bash shell in the container, use option `-it` instead of `-d`
 
-```
+```bash
 docker run --name blurtd_exchange --rm -d \
     -v $BLURT_DIR:/blurtd \
     -p 2001:2001 -p 8090:8090 -p 8091:8091 \
@@ -60,12 +67,14 @@ docker run --name blurtd_exchange --rm -d \
 ```
 
 To monitor or view logs from the container, run:
-```
+
+```bash
 docker logs -f blurtd_exchange
 ```
 
 To stop your node, run:
-```
+
+```bash
 docker stop -t 30 blurtd_exchange
 ```
 
