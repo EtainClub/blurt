@@ -32,9 +32,9 @@ debug:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
-  except:
-    changes:
-        - doc/*
+#  except:
+#    changes:
+#        - doc/*
 
 
 low_memory:
@@ -50,9 +50,9 @@ low_memory:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
-  except:
-    changes:
-        - doc/*
+#  except:
+#    changes:
+#        - doc/*
 
 rpc:
   stage: build 
@@ -66,9 +66,9 @@ rpc:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
     - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
-  except:
-    changes:
-        - doc/*
+#  except:
+#    changes:
+#        - doc/*
 
 pdfs:
   stage: build
