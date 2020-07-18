@@ -25,7 +25,7 @@ debug:
   - cd build
 # Debug Build Config: (Note: DCMAKE_BUILD_TYPE=Debug)
   - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=OFF -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Debug ..
-  - make -j$(nproc) blurtd 
+  - make -j$(nproc) blurtd cli_wallet
 # Fix recovery of artifacts :/
   - pwd
   artifacts:
