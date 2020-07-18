@@ -30,7 +30,11 @@ mkdir $BLURT_DIR
 export BLURT_ARTIFACTS=https://gitlab.com/blurt/blurt/-/jobs/644229270/artifacts/download
 
 cd $BLURT_DIR
-mkdir -p tmp && wget -O $BLURT_DIR/tmp/download $BLURT_ARTIFACTS && unzip $BLURT_DIR/tmp/download -d $BLURT_DIR/tmp/ && mv $BLURT_DIR/tmp/build/programs/blurtd/blurtd ./ && rm -rf tmp
+mkdir -p tmp 
+wget -O $BLURT_DIR/tmp/download $BLURT_ARTIFACTS 
+unzip $BLURT_DIR/tmp/download -d $BLURT_DIR/tmp/ 
+mv $BLURT_DIR/tmp/build/programs/blurtd/blurtd $BLURT_DIR
+rm -rf tmp
 
 wget -O $BLURT_DIR/snapshot.json https://cloudflare-ipfs.com/ipfs/QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
 wget -O $BLURT_DIR/config.ini https://gitlab.com/blurt/blurt/-/raw/dev/doc/exchange_config.ini
