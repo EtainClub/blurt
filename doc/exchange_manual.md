@@ -25,6 +25,7 @@ In this step, you will download:
 You can change the `BLURT_DIR` variable to anywhere you'd like to store your Blurt blockchain data. 
 
 ```bash
+apt install -y unzip
 export BLURT_DIR=/blurtd
 mkdir $BLURT_DIR
 export BLURT_ARTIFACTS=https://gitlab.com/blurt/blurt/-/jobs/644229270/artifacts/download
