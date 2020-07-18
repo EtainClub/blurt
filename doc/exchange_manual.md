@@ -1,6 +1,6 @@
 # Running an exchange node manually
 
-This document guides you how to run an exchange node manually with clean Ubuntu 18.04 docker image.
+This document is a step by step guide to running a Blurt exchange node manually on a clean Ubuntu 18.04 docker image.
 
 System Requirements: 
 A dedicated server or virtual machine with a minimum of 16GB of RAM, and at least 160GB of SSD storage.
@@ -10,12 +10,13 @@ A dedicated server or virtual machine with a minimum of 16GB of RAM, and at leas
 Assume that docker is install on your system. If not follow the guide on docker doc to install.
 
 #### 2. Download 
-This step to download:
+In this step, you will download:
+
 - `snapshot.json` (genesis file)
 - `blurtd` (pre-built binary)
 - `config.ini` (sample config)
 
-You could change the `BLURT_DIR` to the location to store the data
+You can change the `BLURT_DIR` to anywhere you'd like to store your Blurt blockchain data. The RAMDisk is just a suggestion-- you can choose any path in your filesystem.  
 
 ```
 export BLURT_DIR=/Volumes/RAMDisk/blurtd
@@ -29,7 +30,7 @@ wget -O $BLURT_DIR/config.ini https://gitlab.com/blurt/blurt/-/raw/dev/doc/excha
 chmod +x blurtd
 ```
 
-#### 3. Config node
+#### 3. Configuration
 
 To track specific accounts instead of all accounts, add this to config.ini:
 
@@ -41,7 +42,7 @@ account-history-track-account-range = ["birdinc", "birdinc"]
 
 #### 3. Run node
 
-To run in interactive bash shell in the container, use option `-it` instead of `-d`
+To run an interactive bash shell in the container, use option `-it` instead of `-d`
 
 ```
 docker run --name blurtd_exchange --rm -d \
@@ -58,12 +59,12 @@ docker run --name blurtd_exchange --rm -d \
     cd /blurtd && ./blurtd -d ."
 ```
 
-To monitor or view log from the container, run:
+To monitor or view logs from the container, run:
 ```
 docker logs -f blurtd_exchange
 ```
 
-To stop node, run:
+To stop your node, run:
 ```
 docker stop -t 30 blurtd_exchange
 ```
