@@ -48,6 +48,7 @@ docker run --name blurtd_exchange --rm -d \
     -v $BLURT_DIR:/blurtd \
     -p 2001:2001 -p 8090:8090 -p 8091:8091 \
     --ulimit nofile=94000:94000 --ulimit nproc=64000:64000 \
+    --stop-timeout 30 \
     ubuntu:18.04 \
     /bin/bash -c "
     apt-get update -qq && 
