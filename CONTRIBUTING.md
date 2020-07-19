@@ -1,6 +1,6 @@
-# Please Read
+# Contributing to Blurt
+There are many ways to contribute to Blurt.  
 
-Please read these instructions before submitting issues to the Blurt GitLab repository. The issue tracker is for bugs and specific implementation discussion **only**. It should not be used for other purposes, as described below.
 
 ## Bug Reports
 
