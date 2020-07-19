@@ -75,5 +75,5 @@ The snapshot-verification code can be found in the `snapshot` branch.
 | Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   |
 |---|---|---|---|---|---|
 | ionomy  | 42731.888 BLURT  | in progress  |  yes | no |  0 |
-| cointiger  | no  | N/A  | no  | yes  | 5BTC + BLURT for giveaway  |
+| cointiger  | no  | N/A  | no  | yes  | 5 BTC + BLURT for giveaway  |
 |   |   |   |   |   |   |
