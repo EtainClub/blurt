@@ -7,7 +7,7 @@
 [![Hive](https://img.shields.io/badge/-hive-red)](https://hive.blog/@blurt)
 
 Blurt is a public social blockchain with a diverse and vibrant community that strictly upholds [property rights](https://twitter.com/cz_binance/status/1236373815447506945?s=20).
-Blurt contains balances imported from Steem Block 43,526,969.  
+Blurt contains balances imported from Block 4352**6969**.  
 
 ## Features
 
