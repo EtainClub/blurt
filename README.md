@@ -21,11 +21,13 @@ Blurt contains balances imported from Steem Block 43,526,969.
     * circulating supply
     * inflation
     * reward pool
+    
 * **Imported to Blurt From Steem**:
   * STEEM Balances
   * SBD balances were converted to BLURT at the chain-reported price of $.26/STEEM from Block 43,526,969
   * Usernames
   * Public Keys
+  
 * **Not Imported to Blurt From Steem**:
   * Content
   * Followers
@@ -37,6 +39,7 @@ Blurt contains balances imported from Steem Block 43,526,969.
 
 ## Economy
 
+* We adhere to [Austrian Economics](https://mises.org/profile/murray-n-rothbard)
 * Our Currency is called BLURT
 * Staked BLURT is called BLURT POWER.
 * Blurt uses Graphene Delegated Proof-of-Stake Consensus (DPOS), and is looking into alternatives like Cosmos-SDK / Tenderrmint.
