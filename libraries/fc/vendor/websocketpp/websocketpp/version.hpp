@@ -33,7 +33,7 @@ namespace websocketpp {
 
 /*
  other places where version information is kept
- - Readme.md
+ - README.md
  - changelog.md
  - Doxyfile
  - CMakeLists.txt
