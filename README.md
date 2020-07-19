@@ -80,10 +80,32 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 
 [Witnesses](doc/witnesses/README.md)
 
-## Exchanges
+## Centralized Exchanges
 
 | Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   |
 |---|---|---|---|---|---|
-| ionomy  | 42731.888 BLURT  | in progress  |  yes | no |  0 |
-| cointiger  | no  | N/A  | no  | yes  | 5 BTC + BLURT for giveaway  |
+| Ionomy  | 42731.888 BLURT  | in progress  |  yes | no |  0 |
+| Cointiger  | no  | N/A  | no  | yes  | 5 BTC + BLURT for giveaway  |
+| Upbit  |   |   |   |   |   |
+| Gopax  |   |   |   |   |   |
+| Bittrex  |   |   |   |   |   |
+| Binance  |   |   |   |   |   |
+| Huobi  |   |   |   |   |   |
+| Gopax  |   |   |   |   |   |
+| Poloinex  |   |   |   |   |   |
+|   |   |   |   |   |   |
+|   |   |   |   |   |   |
+|   |   |   |   |   |   |
+
+## Decentralized Exchanges
+
+| Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   |
+|---|---|---|---|---|---|
+| Binance DEX  |   |   |   |  |   |
+| Uniswap  |   |   |   |  |   |
+| Hive Engine  |   |   |   |   |   |
+| Steem Engine  |   |   |   |   |   |
+| Incognito DEX  |   |   |   |   |   |
+|   |   |   |   |   |   |
+|   |   |   |   |   |   |
 |   |   |   |   |   |   |
