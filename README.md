@@ -67,7 +67,9 @@ The snapshot-verification code can be found in the `snapshot` branch.
 ## Documentation
 
 [Developers](doc/devs/README.md)
+
 [Exchanges](doc/exchanges/README.md)
+
 [Witnesses](doc/witnesses/README.md)
 
 ## Exchanges
