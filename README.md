@@ -58,7 +58,7 @@ Shortly after launch, two bugs were discovered:
 **~~Resource Credits~~**
 
 The resource credit bug allowed for unrestricted writes to the Blurt blockchain, and this was exploited by the account `@social` to post hundreds of thousands prepared 64kb comments whose sole contents was a GIF of a penis or jpg of two men deeply enjoying one another's company. 
-After consulting with the community, HF1, which introduced [controlled by witnesses](https://blurt.world/blurt/@jacobgadikian/witnesses-control-fees-on-blurt) was released. 
+After consulting with the community, HF1, which introduced [fees controlled by witnesses](https://blurt.world/blurt/@jacobgadikian/witnesses-control-fees-on-blurt) was released. 
 Witnesses have currently stabilized fees at 0.001 BLURT per operation and 0.1 BLURT per kilobyte.    We consider the Resource credit bug to be fully mitigated, and will remove resource credits from Blurt in [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/2). 
 
 **Rewards**
@@ -106,6 +106,6 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 | Hive Engine  |   |   |   |   |   |
 | Steem Engine  |   |   |   |   |   |
 | Incognito DEX  |   |   |   |   |   |
-|   |   |   |   |   |   |
+|  |   |   |   |   |   |
 |   |   |   |   |   |   |
 |   |   |   |   |   |   |
