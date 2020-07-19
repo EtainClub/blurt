@@ -25,6 +25,9 @@ debug:
   - cd build
   - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=OFF -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Debug ..
   - make -j$(nproc) blurtd cli_wallet
+  tags:
+    except:
+      - kubernetes
   artifacts:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
@@ -37,6 +40,9 @@ low_memory:
   - cd build
   - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
   - make -j$(nproc) blurtd cli_wallet
+  tags:
+    except:
+      - kubernetes
   artifacts:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
@@ -49,6 +55,9 @@ rpc:
   - cd build
   - cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=OFF -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Release ..
   - make -j$(nproc) blurtd cli_wallet
+  tags:
+    except:
+      - kubernetes
   artifacts:
     paths:
     - /builds/blurt/blurt/build/programs/blurtd/blurtd
