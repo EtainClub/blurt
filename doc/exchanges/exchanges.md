@@ -10,7 +10,7 @@ A dedicated server or virtual machine with a minimum of 16GB of RAM, and at leas
 We've reduced setting up a full node to a single-line installer.  Run the following command as root on your fresh Debian 10 physical or virtual machine.  
 
 ```bash
-bash <(curl -s https://gitlab.com/blurt/blurt/-/raw/dev/doc/exchange.bash)
+bash <(curl -s https://gitlab.com/blurt/blurt/-/raw/dev/doc/exchanges/exchange.bash)
 ```
 
 Now you've just got to wait a bit for your machine to import 1.3 million steem accounts and sync the Blurt Blockchain.  To monitor this process, do like:

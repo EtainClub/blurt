@@ -24,4 +24,4 @@ Please do a keyword search to see if there is already an existing issue before o
 
 Anybody in the community is welcome and encouraged to submit merge requests with any desired changes to the platform!
 
-Requests to make changes that include working, tested pull requests jump to the top of the queue. There is not a guarantee that all functionality submitted as a PR will be accepted and merged, however. Please read through our [Git Guidelines](doc/git-guidelines.md) prior to submitting a PR.
+Requests to make changes that include working, tested pull requests jump to the top of the queue. There is not a guarantee that all functionality submitted as a PR will be accepted and merged, however. Please read through our [Git Guidelines](doc/devs/git-guidelines.md) prior to submitting a PR.

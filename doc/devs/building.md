@@ -41,7 +41,7 @@ Clears old votes from memory that are no longer required for consensus.
 
 ### BUILD_BLURT_TESTNET=[OFF/ON]
 
-Builds steem for use in a private testnet. Also required for building unit tests.
+Builds blurt for use in a private testnet. Also required for building unit tests.
 
 ### SKIP_BY_TX_ID=[OFF/ON]
 
@@ -51,12 +51,7 @@ huge gain if you do not need this functionality.
 
 ## Building under Docker
 
-We ship a Dockerfile.  This builds both common node type binaries.
-
-    git clone https://github.com/steemit/steem
-    cd steem
-    docker build -t steemit/steem .
-
+We ship a [Dockerfile](https://gitlab.com/blurt/docker).  This builds both common node type binaries.
 
 ## Building on macOS X
 
@@ -139,8 +134,7 @@ This will only build `blurtd`.
 
 ## Building on Other Platforms
 
-- Windows build instructions do not yet exist.
-
+- Windows build instructions do not yet exist, and likely never will.
 - The developers normally compile with gcc and clang. These compilers should
   be well-supported.
 - Community members occasionally attempt to compile the code with mingw,
