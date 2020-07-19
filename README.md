@@ -15,15 +15,17 @@ Blurt contains balances imported from Steem Block 43,526,969.
 * [No Stablecoin](https://blurt.world/blurt/@jacobgadikian/blurt-has-no-dollar-stablecoin-why)
 * Transaction fees [controlled by witnesses](https://blurt.world/blurt/@jacobgadikian/witnesses-control-fees-on-blurt)
 * A **regent account** with a controlling stake or special weighted vote has been added to Blurt. 
-  * The regent account votes on consensus Blurt Producers and DAO proposals.
-  * The regent account is programmed to decay over a two-year period with 24 equal monthly reductions to zero, starting at a power equal to all blurt supply. 
+  * The regent account can vote on Witneses and DAO Proposals.
+  * The regent account decays over a two-year period with 24 equal monthly reductions to zero, starting at a power equal to all blurt supply. 
   * **The regent account does not impact**:
     * circulating supply
-    * new inflation A.K.A. organic supply
-    * the rewards pool
+    * inflation
+    * reward pool
 * **Imported to Blurt From Steem**:
-  * Balances - less Steemit stake described in this issue https://gitlab.com/blurt/blurt/-/issues/10
+  * STEEM Balances
   * SBD balances were converted to BLURT at the chain-reported price of $.26/STEEM from Block 43,526,969
+  * Usernames
+  * Public Keys
 * **Not Imported to Blurt From Steem**:
   * Content
   * Followers
@@ -35,9 +37,8 @@ Blurt contains balances imported from Steem Block 43,526,969.
 
 ## Economy
 
-* Ticker symbol BLURT
-* Staked BLURT is called BLURT POWER
-* There is no stablecoin on the Blurt Blockchain. SBD balances are converted to their BLURT equivalent when the snapshot is taken.
+* Our Currency is called BLURT
+* Staked BLURT is called BLURT POWER.
 * Blurt uses Graphene Delegated Proof-of-Stake Consensus (DPOS), and is looking into alternatives like Cosmos-SDK / Tenderrmint.
 * 10% APR inflation narrowing to 1% APR over 20 years
     * 65% of inflation to Authors/Curators.
@@ -47,8 +48,9 @@ Blurt contains balances imported from Steem Block 43,526,969.
 
 
 ## Status
+Blurt enjoyed a smooth launch with large participation from witnesses on July 4, 2020.  
 
-Blurt launched on July 4, 2020 with bugs affecting:
+Shortly after launch, two bugs were discovered: 
 
 **Resource Credits**
 The resource credit bug allowed for unrestricted writes to the Blurt blockchain, and this was exploited by the account `@social` to post hundreds of thousands prepared 64kb comments whose sole contents was a GIF of a penis or jpg of two men deeply enjoying one another's company. 
@@ -58,7 +60,7 @@ Witnesses have currently stabilized fees at 0.001 BLURT per operation and 0.1 BL
 **Rewards**
 The convergent linear reward curve currently used by BLURT is malfunctioning.  Rewards will be fixed in [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/2), which will be released ~August 1, 2020. 
 
-**Development**
+## Software Development
 Work is ongoing in the `dev` branch.  
 The snapshot-verification code can be found in the `snapshot` branch.  
 
