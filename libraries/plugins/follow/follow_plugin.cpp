@@ -66,8 +66,6 @@ struct pre_operation_visitor
 
          const auto& cv_idx = db.get_index< comment_vote_index >().indices().get< by_comment_voter >();
          auto cv = cv_idx.find( boost::make_tuple( c.id, db.get_account( op.voter ).id ) );
-
-         }
       }
       catch( const fc::exception& e ) {}
    }
