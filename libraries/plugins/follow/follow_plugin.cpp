@@ -67,34 +67,6 @@ struct pre_operation_visitor
          const auto& cv_idx = db.get_index< comment_vote_index >().indices().get< by_comment_voter >();
          auto cv = cv_idx.find( boost::make_tuple( c.id, db.get_account( op.voter ).id ) );
 
-         if( cv != cv_idx.end() )
-         {
-            auto rep_delta = ( cv->rshares >> 6 );
-
-            const auto& rep_idx = db.get_index< reputation_index >().indices().get< by_account >();
-            auto voter_rep = rep_idx.find( op.voter );
-            auto author_rep = rep_idx.find( op.author );
-
-            if( author_rep != rep_idx.end() )
-            {
-               // Rule #1: Must have non-negative reputation to effect another user's reputation
-               if( voter_rep != rep_idx.end() && voter_rep->reputation < 0 ) return;
-
-               // Rule #2: If you are down voting another user, you must have more reputation than them to impact their reputation
-               if( cv->rshares < 0 && !( voter_rep != rep_idx.end() && voter_rep->reputation > author_rep->reputation - rep_delta ) ) return;
-
-               if( rep_delta == author_rep->reputation )
-               {
-                  db.remove( *author_rep );
-               }
-               else
-               {
-                  db.modify( *author_rep, [&]( reputation_object& r )
-                  {
-                     r.reputation -= ( cv->rshares >> 6 ); // Shift away precision from vests. It is noise
-                  });
-               }
-            }
          }
       }
       catch( const fc::exception& e ) {}
