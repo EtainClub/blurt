@@ -80,12 +80,11 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 
 [Witnesses](doc/witnesses/README.md)
 
-## Centralized Exchanges
+## Centralized Exchanges That Listed Steem at Block 43,526,969
 
 | Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   |
 |---|---|---|---|---|---|
 | Ionomy      | 42731.888 BLURT  | In Progress  |  YES | NO |  Free Listing |
-| Cointiger   | NO  | N/A  | NO  | YES  | 5 BTC + BLURT for giveaway  |
 | Upbit       |   |   |   |   |   |
 | Gopax       |   |   |   |   |   |
 | Bittrex     |   |   |   |   |   |
@@ -98,6 +97,12 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 | Sistemkoin  |   |   |   |   |   |
 | Kraken      |   |   |   |   |   |
 | Okex        |   |   |   |   |   |
+
+## Centralized Exchanges that didn't list steem at block 43,526,969
+| Exchange   |  Listed?  | Fee Requested?  | Fee Amount   |
+|---|---|---|---|
+| Cointiger   | NO  | YES  | 5 BTC + BLURT for giveaway  |
+| Coinbase    | 
 
 
 ## Decentralized Exchanges
