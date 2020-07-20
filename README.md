@@ -80,7 +80,9 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 
 [Witnesses](doc/witnesses/README.md)
 
-## Centralized Exchanges That Listed Steem at Block 43,526,969
+## Exchange Tracker
+
+### Centralized Exchanges That Listed Steem at Block 43,526,969 and are in posession of airdrop funds
 
 | Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   |
 |---|---|---|---|---|---|
@@ -98,14 +100,15 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 | Kraken      |   |   |   |   |   |
 | Okex        |   |   |   |   |   |
 
-## Centralized Exchanges that didn't list steem at block 43,526,969
+The Blurt community is deeply grateful to Ionomy for their intention to honor the Blurt airdrop on holders of steem from block 43,526,969.
+
+### Centralized Exchanges that didn't list Steem at block 43,526,969 and are not in posession of airdrop funds
 | Exchange   |  Listed?  | Fee Requested?  | Fee Amount   |
 |---|---|---|---|
 | Cointiger   | NO  | YES  | 5 BTC + BLURT for giveaway  |
-| Coinbase    | 
+| Coinbase    | NO | NO | N/A |
 
-
-## Decentralized Exchanges
+### Decentralized Exchanges
 
 | Exchange   | Listed?  | Fee  | Fee Amount   | Responsible Party |
 |---|---|---|---|---|
@@ -115,3 +118,4 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 | Steem Engine  | NO  | YES  | 100 STEEM for BLURT ticker  | N/A | 
 | Incognito DEX  | NO  | N/A  | tiny  | N/A |
 
+The Blurt community is deeply grateful to @daking for maintaining the @blurtlink serrvice that connects Blurt to Hive Engine.
