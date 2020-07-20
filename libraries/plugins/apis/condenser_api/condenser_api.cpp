@@ -8,7 +8,6 @@
 #include <blurt/plugins/network_broadcast_api/network_broadcast_api_plugin.hpp>
 #include <blurt/plugins/tags_api/tags_api_plugin.hpp>
 #include <blurt/plugins/follow_api/follow_api_plugin.hpp>
-#include <blurt/plugins/reputation_api/reputation_api_plugin.hpp>
 
 #include <blurt/utilities/git_revision.hpp>
 

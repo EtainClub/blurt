@@ -359,11 +359,6 @@ vector< follow::comment_blog_entry > remote_node_api::get_blog( account_name_typ
    FC_ASSERT( false );
 }
 
-vector< follow::account_reputation > remote_node_api::get_account_reputations( account_name_type, uint32_t )
-{
-   FC_ASSERT( false );
-}
-
 vector< account_name_type > remote_node_api::get_reblogged_by( account_name_type, string )
 {
    FC_ASSERT( false );

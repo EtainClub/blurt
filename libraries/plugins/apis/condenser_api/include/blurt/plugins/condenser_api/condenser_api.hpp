@@ -8,7 +8,6 @@
 #include <blurt/plugins/network_broadcast_api/network_broadcast_api.hpp>
 #include <blurt/plugins/tags_api/tags_api.hpp>
 #include <blurt/plugins/follow_api/follow_api.hpp>
-#include <blurt/plugins/reputation_api/reputation_api.hpp>
 #include <blurt/plugins/condenser_api/condenser_api_legacy_objects.hpp>
 
 #include <fc/optional.hpp>
@@ -188,7 +187,6 @@ struct extended_account : public api_account_object
       api_account_object( a ) {}
 
    legacy_asset                                             vesting_balance;  /// convert vesting_shares to vesting blurt
-   share_type                                               reputation = 0;
    map< uint64_t, api_operation_object >   transfer_history; /// transfer to/from vesting
    map< uint64_t, api_operation_object >   market_history;   /// limit order / cancel / fill
    map< uint64_t, api_operation_object >   post_history;
@@ -608,7 +606,6 @@ struct discussion : public api_comment_object
       total_pending_payout_value( legacy_asset::from_asset( d.total_pending_payout_value ) ),
       active_votes( d.active_votes ),
       replies( d.replies ),
-      author_reputation( d.author_reputation ),
       promoted( legacy_asset::from_asset( d.promoted ) ),
       body_length( d.body_length ),
       reblogged_by( d.reblogged_by ),
@@ -622,7 +619,6 @@ struct discussion : public api_comment_object
    legacy_asset                  total_pending_payout_value; ///< BLURT_SYMBOL including replies
    vector< tags::vote_state >    active_votes;
    vector< string >              replies; ///< author/slug mapping
-   share_type                    author_reputation = 0;
    legacy_asset                  promoted;
    uint32_t                      body_length = 0;
    vector< account_name_type >   reblogged_by;
@@ -845,7 +841,6 @@ DEFINE_API_ARGS( get_feed_entries,                       vector< variant >,   ve
 DEFINE_API_ARGS( get_feed,                               vector< variant >,   vector< comment_feed_entry > )
 DEFINE_API_ARGS( get_blog_entries,                       vector< variant >,   vector< follow::blog_entry > )
 DEFINE_API_ARGS( get_blog,                               vector< variant >,   vector< comment_blog_entry > )
-DEFINE_API_ARGS( get_account_reputations,                vector< variant >,   vector< reputation::account_reputation > )
 DEFINE_API_ARGS( get_reblogged_by,                       vector< variant >,   vector< account_name_type > )
 DEFINE_API_ARGS( get_blog_authors,                       vector< variant >,   vector< follow::reblog_count > )
 DEFINE_API_ARGS( list_proposals,                         vector< variant >,   vector< api_proposal_object > )
@@ -931,7 +926,6 @@ public:
       (get_feed)
       (get_blog_entries)
       (get_blog)
-      (get_account_reputations)
       (get_reblogged_by)
       (get_blog_authors)
       (list_proposals)
@@ -979,7 +973,7 @@ FC_REFLECT( blurt::plugins::condenser_api::api_account_object,
           )
 
 FC_REFLECT_DERIVED( blurt::plugins::condenser_api::extended_account, (blurt::plugins::condenser_api::api_account_object),
-            (vesting_balance)(reputation)(transfer_history)(market_history)(post_history)(vote_history)(other_history)(witness_votes)(tags_usage)(guest_bloggers)(comments)(feed)(blog)(recent_replies)(recommended) )
+            (vesting_balance)(transfer_history)(market_history)(post_history)(vote_history)(other_history)(witness_votes)(tags_usage)(guest_bloggers)(comments)(feed)(blog)(recent_replies)(recommended) )
 
 FC_REFLECT( blurt::plugins::condenser_api::api_comment_object,
              (id)(author)(permlink)
@@ -1076,7 +1070,7 @@ FC_REFLECT( blurt::plugins::condenser_api::api_proposal_object,
 
 FC_REFLECT_DERIVED( blurt::plugins::condenser_api::discussion, (blurt::plugins::condenser_api::api_comment_object),
              (url)(root_title)(pending_payout_value)(total_pending_payout_value)
-             (active_votes)(replies)(author_reputation)(promoted)
+             (active_votes)(replies)(promoted)
              (body_length)(reblogged_by)(first_reblogged_by)(first_reblogged_on)
           )
 
