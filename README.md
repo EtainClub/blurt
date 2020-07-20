@@ -96,6 +96,9 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 | Bitflyer    |   |   |   |   |   |
 | Daybit      |   |   |   |   |   |
 | Sistemkoin  |   |   |   |   |   |
+| Kraken      |   |   |   |   |   |
+| Okex        |   |   |   |   |   |
+
 
 ## Decentralized Exchanges
 
