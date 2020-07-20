@@ -91,7 +91,7 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 | Bittrex     |   |   |   |   |   |
 | Binance     |   |   |   |   |   |
 | Huobi       |   |   |   |   |   |
-| Probit      |   |   |   |   |   |
+| Probit      | YES  | HELD  | NO  | YES  | 1 BTC + 1 BTC of BLURT  |
 | Poloinex    |   |   |   |   |   |
 | Bitflyer    |   |   |   |   |   |
 | Daybit      |   |   |   |   |   |
