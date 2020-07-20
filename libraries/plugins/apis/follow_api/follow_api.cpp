@@ -28,7 +28,6 @@ class follow_api_impl
          (get_feed)
          (get_blog_entries)
          (get_blog)
-         (get_account_reputations)
          (get_reblogged_by)
          (get_blog_authors)
       )
@@ -231,33 +230,6 @@ DEFINE_API_IMPL( follow_api_impl, get_blog )
    return result;
 }
 
-DEFINE_API_IMPL( follow_api_impl, get_account_reputations )
-{
-   FC_ASSERT( args.limit <= 1000, "Cannot retrieve more than 1000 account reputations at a time." );
-
-   const auto& acc_idx = _db.get_index< chain::account_index >().indices().get< chain::by_name >();
-   const auto& rep_idx = _db.get_index< follow::reputation_index >().indices().get< follow::by_account >();
-
-   auto acc_itr = acc_idx.lower_bound( args.account_lower_bound );
-
-   get_account_reputations_return result;
-   result.reputations.reserve( args.limit );
-
-   while( acc_itr != acc_idx.end() && result.reputations.size() < args.limit )
-   {
-      auto itr = rep_idx.find( acc_itr->name );
-      account_reputation rep;
-
-      rep.account = acc_itr->name;
-      rep.reputation = itr != rep_idx.end() ? itr->reputation : 0;
-
-      result.reputations.push_back( rep );
-      ++acc_itr;
-   }
-
-   return result;
-}
-
 DEFINE_API_IMPL( follow_api_impl, get_reblogged_by )
 {
    get_reblogged_by_return result;
@@ -309,7 +281,6 @@ DEFINE_READ_APIS( follow_api,
    (get_feed)
    (get_blog_entries)
    (get_blog)
-   (get_account_reputations)
    (get_reblogged_by)
    (get_blog_authors)
 )

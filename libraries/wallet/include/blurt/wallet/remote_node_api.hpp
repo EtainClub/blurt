@@ -92,7 +92,6 @@ struct remote_node_api
    vector< follow::comment_feed_entry > get_feed( account_name_type, uint32_t, uint32_t );
    vector< follow::blog_entry > get_blog_entries( account_name_type, uint32_t, uint32_t );
    vector< follow::comment_blog_entry > get_blog( account_name_type, uint32_t, uint32_t );
-   vector< follow::account_reputation > get_account_reputations( account_name_type, uint32_t );
    vector< account_name_type > get_reblogged_by( account_name_type, string );
    vector< follow::reblog_count > get_blog_authors( account_name_type );
    vector< condenser_api::api_proposal_object > list_proposals( fc::variant, uint32_t, database_api::sort_order_type, database_api::order_direction_type, database_api::proposal_status );
@@ -174,7 +173,6 @@ FC_API( blurt::wallet::remote_node_api,
         (get_feed)
         (get_blog_entries)
         (get_blog)
-        (get_account_reputations)
         (get_reblogged_by)
         (get_blog_authors)
         (list_proposals)

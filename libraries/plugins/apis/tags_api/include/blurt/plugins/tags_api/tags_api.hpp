@@ -45,7 +45,6 @@ struct vote_state
    uint64_t       weight = 0;
    int64_t        rshares = 0;
    int16_t        percent = 0;
-   share_type     reputation = 0;
    time_point_sec time;
 };
 
@@ -62,7 +61,6 @@ struct discussion : public database_api::api_comment_object
    asset                         total_pending_payout_value; ///< BLURT_SYMBOL including replies
    vector< vote_state >          active_votes;
    vector< string >              replies; ///< author/slug mapping
-   share_type                    author_reputation = 0;
    asset                         promoted = asset(0, BLURT_SYMBOL);
    uint32_t                      body_length = 0;
    vector< account_name_type >   reblogged_by;
@@ -242,10 +240,10 @@ FC_REFLECT( blurt::plugins::tags::api_tag_object,
             (name)(total_payouts)(net_votes)(top_posts)(comments)(trending) )
 
 FC_REFLECT( blurt::plugins::tags::vote_state,
-            (voter)(weight)(rshares)(percent)(reputation)(time) )
+            (voter)(weight)(rshares)(percent)(time) )
 
 FC_REFLECT_DERIVED( blurt::plugins::tags::discussion, (blurt::plugins::database_api::api_comment_object),
-            (url)(root_title)(pending_payout_value)(total_pending_payout_value)(active_votes)(replies)(author_reputation)(promoted)(body_length)(reblogged_by)(first_reblogged_by)(first_reblogged_on) )
+            (url)(root_title)(pending_payout_value)(total_pending_payout_value)(active_votes)(replies)(promoted)(body_length)(reblogged_by)(first_reblogged_by)(first_reblogged_on) )
 
 FC_REFLECT( blurt::plugins::tags::get_trending_tags_args,
             (start_tag)(limit) )
