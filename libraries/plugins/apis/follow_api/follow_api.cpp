@@ -281,7 +281,6 @@ DEFINE_READ_APIS( follow_api,
    (get_feed)
    (get_blog_entries)
    (get_blog)
-   (get_account_reputations)
    (get_reblogged_by)
    (get_blog_authors)
 )

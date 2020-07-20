@@ -2,8 +2,6 @@
 #include <blurt/plugins/json_rpc/utility.hpp>
 #include <blurt/plugins/follow/follow_objects.hpp>
 #include <blurt/plugins/database_api/database_api_objects.hpp>
-#include <blurt/plugins/reputation_api/reputation_api.hpp>
-
 #include <blurt/protocol/types.hpp>
 
 #include <fc/optional.hpp>
@@ -13,7 +11,6 @@
 namespace blurt { namespace plugins { namespace follow {
 
 using blurt::protocol::account_name_type;
-using blurt::plugins::reputation::account_reputation;
 
 namespace detail
 {
@@ -132,10 +129,6 @@ struct get_blog_return
    vector< comment_blog_entry > blog;
 };
 
-typedef reputation::get_account_reputations_args get_account_reputations_args;
-
-typedef reputation::get_account_reputations_return get_account_reputations_return;
-
 struct get_reblogged_by_args
 {
    account_name_type author;
@@ -171,7 +164,6 @@ class follow_api
          (get_feed)
          (get_blog_entries)
          (get_blog)
-         (get_account_reputations)
 
          /**
           * Gets list of accounts that have reblogged a particular post

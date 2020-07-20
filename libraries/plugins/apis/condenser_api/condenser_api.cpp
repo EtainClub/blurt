@@ -115,7 +115,6 @@ namespace detail
             (get_feed)
             (get_blog_entries)
             (get_blog)
-            (get_account_reputations)
             (get_reblogged_by)
             (get_blog_authors)
             (list_proposals)
@@ -141,7 +140,6 @@ namespace detail
          p2p::p2p_plugin*                                                  _p2p = nullptr;
          std::shared_ptr< tags::tags_api >                                 _tags_api;
          std::shared_ptr< follow::follow_api >                             _follow_api;
-         std::shared_ptr< reputation::reputation_api >                     _reputation_api;
          map< transaction_id_type, confirmation_callback >                 _callbacks;
          map< time_point_sec, vector< transaction_id_type > >              _callback_expirations;
          boost::signals2::connection                                       _on_post_apply_block_conn;
@@ -222,12 +220,8 @@ namespace detail
             if( _follow_api )
             {
                _state.accounts[acnt].guest_bloggers = _follow_api->get_blog_authors( { acnt } ).blog_authors;
-               _state.accounts[acnt].reputation     = _follow_api->get_account_reputations( { acnt, 1 } ).reputations[0].reputation;
             }
-            else if( _reputation_api )
-            {
-               _state.accounts[acnt].reputation    = _reputation_api->get_account_reputations( { acnt, 1 } ).reputations[0].reputation;
-            }
+
 
             auto& eacnt = _state.accounts[acnt];
             if( part[1] == "transfers" )
@@ -292,15 +286,6 @@ namespace detail
                   {
                      string reply_ref = reply.author + "/" + reply.permlink;
                      _state.content[ reply_ref ] = reply;
-
-                     if( _follow_api )
-                     {
-                        _state.accounts[ reply_ref ].reputation = _follow_api->get_account_reputations( { reply.author, 1 } ).reputations[0].reputation;
-                     }
-                     else if( _reputation_api )
-                     {
-                        _state.accounts[ reply_ref ].reputation = _reputation_api->get_account_reputations( { reply.author, 1 } ).reputations[0].reputation;
-                     }
 
                      eacnt.recent_replies->push_back( reply_ref );
                   }
@@ -666,14 +651,6 @@ namespace detail
             _state.accounts.erase("");
             _state.accounts[a] = extended_account( database_api::api_account_object( _db.get_account( a ), _db ) );
 
-            if( _follow_api )
-            {
-               _state.accounts[a].reputation = _follow_api->get_account_reputations( { a, 1 } ).reputations[0].reputation;
-            }
-            else if( _reputation_api )
-            {
-               _state.accounts[a].reputation = _reputation_api->get_account_reputations( { a, 1 } ).reputations[0].reputation;
-            }
          }
 
          for( auto& d : _state.content )
@@ -828,14 +805,6 @@ namespace detail
          {
             results.emplace_back( extended_account( database_api::api_account_object( *itr, _db ) ) );
 
-            if( _follow_api )
-            {
-               results.back().reputation = _follow_api->get_account_reputations( { itr->name, 1 } ).reputations[0].reputation;
-            }
-            else if( _reputation_api )
-            {
-               results.back().reputation = _reputation_api->get_account_reputations( { itr->name, 1 } ).reputations[0].reputation;
-            }
 
             auto vitr = vidx.lower_bound( boost::make_tuple( itr->name, account_name_type() ) );
             while( vitr != vidx.end() && vitr->account == itr->name ) {
@@ -1200,16 +1169,6 @@ namespace detail
          vstate.rshares = itr->rshares;
          vstate.percent = itr->vote_percent;
          vstate.time = itr->last_update;
-
-         if( _follow_api )
-         {
-            auto reps = _follow_api->get_account_reputations( follow::get_account_reputations_args( { vo.name, 1 } ) ).reputations;
-            if( reps.size() )
-            {
-               vstate.reputation = reps[0].reputation;
-            }
-         }
-
          votes.push_back( vstate );
          ++itr;
       }
@@ -1742,21 +1701,6 @@ namespace detail
       return result;
    }
 
-   DEFINE_API_IMPL( condenser_api_impl, get_account_reputations )
-   {
-      FC_ASSERT( args.size() == 1 || args.size() == 2, "Expected 1-2 arguments, was ${n}", ("n", args.size()) );
-      FC_ASSERT( _follow_api || _reputation_api, "Neither follow_api_plugin nor reputation_api_plugin are enabled. One of these must be running." );
-
-      if( _follow_api )
-      {
-         return _follow_api->get_account_reputations( { args[0].as< account_name_type >(), args.size() == 2 ? args[1].as< uint32_t >() : 1000 } ).reputations;
-      }
-      else
-      {
-         return _reputation_api->get_account_reputations( { args[0].as< account_name_type >(), args.size() == 2 ? args[1].as< uint32_t >() : 1000 } ).reputations;
-      }
-   }
-
    DEFINE_API_IMPL( condenser_api_impl, get_reblogged_by )
    {
       CHECK_ARG_SIZE( 2 )
@@ -1891,15 +1835,6 @@ namespace detail
          r2 /= total_r2;
 
          d.pending_payout_value = legacy_asset::from_asset( asset( static_cast<uint64_t>(r2), pot.symbol ) );
-
-         if( _follow_api )
-         {
-            d.author_reputation = _follow_api->get_account_reputations( follow::get_account_reputations_args( { d.author, 1} ) ).reputations[0].reputation;
-         }
-         else if( _reputation_api )
-         {
-            d.author_reputation = _reputation_api->get_account_reputations( reputation::get_account_reputations_args( { d.author, 1} ) ).reputations[0].reputation;
-         }
       }
 
       if( d.parent_author != BLURT_ROOT_POST_PARENT )
@@ -2050,12 +1985,6 @@ void condenser_api::api_startup()
    {
       my->_follow_api = follow->api;
    }
-
-   auto reputation = appbase::app().find_plugin< reputation::reputation_api_plugin >();
-   if( reputation != nullptr )
-   {
-      my->_reputation_api = reputation->api;
-   }
 }
 
 DEFINE_LOCKLESS_APIS( condenser_api,
@@ -2132,7 +2061,6 @@ DEFINE_READ_APIS( condenser_api,
    (get_feed)
    (get_blog_entries)
    (get_blog)
-   (get_account_reputations)
    (get_reblogged_by)
    (get_blog_authors)
    (list_proposals)
