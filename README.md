@@ -10,7 +10,6 @@ Blurt is a public social blockchain with a diverse and vibrant community that st
 Blurt contains balances imported from Block 4352**6969**.  
 
 ## Features
-
 * No Downvotes
 * [No Stablecoin](https://blurt.world/blurt/@jacobgadikian/blurt-has-no-dollar-stablecoin-why)
 * Transaction fees [controlled by witnesses](https://blurt.world/blurt/@jacobgadikian/witnesses-control-fees-on-blurt)
@@ -22,13 +21,13 @@ Blurt contains balances imported from Block 4352**6969**.
     * inflation
     * reward pool
     
-* **Imported to Blurt From Steem**:
+#### Imported to Blurt From Steem
   * STEEM Balances
   * SBD balances were converted to BLURT at the chain-reported price of $.26/STEEM from Block 43,526,969
   * Usernames
   * Public Keys
   
-* **Not Imported to Blurt From Steem**:
+#### Not Imported to Blurt From Steem
   * Content
   * Followers
   * Profile Pic
