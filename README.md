@@ -117,5 +117,9 @@ The Blurt community is deeply grateful to Ionomy for their intention to honor th
 | Hive Engine  | YES  | YES  | 100 HIVE for BLURT ticker  | @daking | 
 | Steem Engine  | NO  | YES  | 100 STEEM for BLURT ticker  | N/A | 
 | Incognito DEX  | NO  | N/A  | tiny  | N/A |
+| Poloni DEX | NO | ? | ? | N/A |
+| NewDEX | NO | ? | ? | N/A |
+| IDEX | NO | ? | ? | N/A |
+| Kyber | NO | ? | ? | N/A |
 
 The Blurt community is deeply grateful to @daking for maintaining the @blurtlink serrvice that connects Blurt to Hive Engine.
