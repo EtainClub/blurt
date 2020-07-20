@@ -37,7 +37,6 @@ Blurt contains balances imported from Block 4352**6969**.
   * Account Authorizations
 
 ## Economy
-
 * We adhere to [Austrian Economics](https://mises.org/profile/murray-n-rothbard)
 * Our Currency is called BLURT
 * Staked BLURT is called BLURT POWER.
