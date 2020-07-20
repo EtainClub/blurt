@@ -84,18 +84,18 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 
 | Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   |
 |---|---|---|---|---|---|
-| Ionomy  | 42731.888 BLURT  | in progress  |  yes | no |  0 |
-| Cointiger  | no  | N/A  | no  | yes  | 5 BTC + BLURT for giveaway  |
-| Upbit  |   |   |   |   |   |
-| Gopax  |   |   |   |   |   |
-| Bittrex  |   |   |   |   |   |
-| Binance  |   |   |   |   |   |
-| Huobi  |   |   |   |   |   |
-| Gopax  |   |   |   |   |   |
-| Poloinex  |   |   |   |   |   |
-|   |   |   |   |   |   |
-|   |   |   |   |   |   |
-|   |   |   |   |   |   |
+| Ionomy      | 42731.888 BLURT  | In Progress  |  YES | NO |  Free Listing |
+| Cointiger   | NO  | N/A  | NO  | YES  | 5 BTC + BLURT for giveaway  |
+| Upbit       |   |   |   |   |   |
+| Gopax       |   |   |   |   |   |
+| Bittrex     |   |   |   |   |   |
+| Binance     |   |   |   |   |   |
+| Huobi       |   |   |   |   |   |
+| Probit      |   |   |   |   |   |
+| Poloinex    |   |   |   |   |   |
+| Bitflyer    |   |   |   |   |   |
+| Daybit      |   |   |   |   |   |
+| Sistemkoin  |   |   |   |   |   |
 
 ## Decentralized Exchanges
 
@@ -103,7 +103,7 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 |---|---|---|---|---|---|
 | Binance DEX  |   |   |   |  |   |
 | Uniswap  |   |   |   |  |   |
-| Hive Engine  |   |   |   |   |   |
+| Hive Engine  | N/A  | N/A  | YES  | NO  | Community Dev Sponsored  |
 | Steem Engine  |   |   |   |   |   |
 | Incognito DEX  |   |   |   |   |   |
 |  |   |   |   |   |   |
