@@ -520,14 +520,6 @@ DEFINE_API_IMPL( tags_api_impl, get_active_votes )
       vstate.rshares = itr->rshares;
       vstate.percent = itr->vote_percent;
       vstate.time = itr->last_update;
-
-      if( _follow_api )
-      {
-         auto reps = _follow_api->get_account_reputations( follow::get_account_reputations_args( { vo.name, 1 } ) ).reputations;
-         if( reps.size() )
-            vstate.reputation = reps[0].reputation;
-      }
-
       result.votes.push_back( vstate );
       ++itr;
    }
@@ -556,11 +548,6 @@ void tags_api_impl::set_pending_payout( discussion& d )
       r2 /= total_r2;
 
       d.pending_payout_value = asset( static_cast<uint64_t>(r2), pot.symbol );
-
-      if( _follow_api )
-      {
-         d.author_reputation = _follow_api->get_account_reputations( follow::get_account_reputations_args( { d.author, 1} ) ).reputations[0].reputation;
-      }
    }
 
    if( d.parent_author != BLURT_ROOT_POST_PARENT )

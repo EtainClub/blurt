@@ -279,10 +279,6 @@ tests = [
       "method": "condenser_api.get_blog",
       "params": ["temp", -1, 10]
    },
-   {
-      "method": "condenser_api.get_account_reputations",
-      "params": ["", 10]
-   },
 # Might be broken
 #   {
 #      "method": "condenser_api.get_reblogged_by",
@@ -348,10 +344,6 @@ tests = [
       "method": "follow_api.get_blog",
       "params": {"account":"temp", "start":-1, "limit":10}
    },
-   {
-      "method": "follow_api.get_account_reputations",
-      "params": {"lower_bound":"", "limit":10}
-   },
 # Might be broken
 #   {
 #      "method": "condenser_api.get_reblogged_by",
@@ -373,11 +365,6 @@ tests = [
       "method": "rc_api.find_rc_accounts",
       "params": {"accounts":["test"]}
    },
-# Not currently enabled
-#   {
-#      "method": "reputation_api.get_account_reputations",
-#      "params": {"lower_bound":"", "limit":10}
-#   },
    {
       "method": "tags_api.get_trending_tags",
       "params": {"start_tag":"", "limit":20}
