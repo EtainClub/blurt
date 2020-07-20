@@ -80,18 +80,19 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 
 [Witnesses](doc/witnesses/README.md)
 
-## Centralized Exchanges
+## Exchange Tracker
+
+### Centralized Exchanges That Listed Steem at Block 43,526,969 and are in posession of airdrop funds
 
 | Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   |
 |---|---|---|---|---|---|
 | Ionomy      | 42731.888 BLURT  | In Progress  |  YES | NO |  Free Listing |
-| Cointiger   | NO  | N/A  | NO  | YES  | 5 BTC + BLURT for giveaway  |
 | Upbit       |   |   |   |   |   |
 | Gopax       |   |   |   |   |   |
 | Bittrex     |   |   |   |   |   |
 | Binance     |   |   |   |   |   |
 | Huobi       |   |   |   |   |   |
-| Probit      |   |   |   |   |   |
+| Probit      | YES  | HELD  | NO  | YES  | 1 BTC + 1 BTC of BLURT  |
 | Poloinex    |   |   |   |   |   |
 | Bitflyer    |   |   |   |   |   |
 | Daybit      |   |   |   |   |   |
@@ -99,16 +100,26 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 | Kraken      |   |   |   |   |   |
 | Okex        |   |   |   |   |   |
 
+The Blurt community is deeply grateful to Ionomy for their intention to honor the Blurt airdrop on holders of steem from block 43,526,969.
 
-## Decentralized Exchanges
+### Centralized Exchanges that didn't list Steem at block 43,526,969 and are not in posession of airdrop funds
+| Exchange   |  Listed?  | Fee Requested?  | Fee Amount   |
+|---|---|---|---|
+| Cointiger   | NO  | YES  | 5 BTC + BLURT for giveaway  |
+| Coinbase    | NO | NO | N/A |
 
-| Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   |
-|---|---|---|---|---|---|
-| Binance DEX  |   |   |   |  |   |
-| Uniswap  |   |   |   |  |   |
-| Hive Engine  | N/A  | N/A  | YES  | NO  | Community Dev Sponsored  |
-| Steem Engine  |   |   |   |   |   |
-| Incognito DEX  |   |   |   |   |   |
-|  |   |   |   |   |   |
-|   |   |   |   |   |   |
-|   |   |   |   |   |   |
+### Decentralized Exchanges
+
+| Exchange   | Listed?  | Fee  | Fee Amount   | Responsible Party |
+|---|---|---|---|---|
+| Binance DEX  | NO  | List tx fee  | 1000 BNB   |  N/A   |
+| Uniswap     |  NO | NO  | ERC20 Token Creation + Contract Creation   | N/A |
+| Hive Engine  | YES  | YES  | 100 HIVE for BLURT ticker  | @daking | 
+| Steem Engine  | NO  | YES  | 100 STEEM for BLURT ticker  | N/A | 
+| Incognito DEX  | NO  | N/A  | tiny  | N/A |
+| Poloni DEX | NO | ? | ? | N/A |
+| NewDEX | NO | ? | ? | N/A |
+| IDEX | NO | ? | ? | N/A |
+| Kyber | NO | ? | ? | N/A |
+
+The Blurt community is deeply grateful to @daking for maintaining the @blurtlink serrvice that connects Blurt to Hive Engine.
