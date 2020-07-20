@@ -63,9 +63,6 @@ struct pre_operation_visitor
          const auto& c = db.get_comment( op.author, op.permlink );
 
          if( db.calculate_discussion_payout_time( c ) == fc::time_point_sec::maximum() ) return;
-
-         const auto& cv_idx = db.get_index< comment_vote_index >().indices().get< by_comment_voter >();
-         auto cv = cv_idx.find( boost::make_tuple( c.id, db.get_account( op.voter ).id ) );
       }
       catch( const fc::exception& e ) {}
    }
