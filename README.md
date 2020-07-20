@@ -100,7 +100,7 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 | Kraken      |   |   |   |   |   |
 | Okex        |   |   |   |   |   |
 
-The Blurt community is deeply grateful to Ionomy for their intention to honor the Blurt airdrop on holders of steem from block 43,526,969.
+The Blurt community is deeply grateful to Ionomy for their intention to honor the Blurt airdrop on holders of STEEM from block 43,526,969.
 
 ### Centralized Exchanges that didn't list Steem at block 43,526,969 and are not in posession of airdrop funds
 | Exchange   |  Listed?  | Fee Requested?  | Fee Amount   |
