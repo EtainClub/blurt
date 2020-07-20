@@ -102,13 +102,11 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 
 ## Decentralized Exchanges
 
-| Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   |
-|---|---|---|---|---|---|
-| Binance DEX  |   |   |   |  |   |
-| Uniswap  |   |   |   |  |   |
-| Hive Engine  | N/A  | N/A  | YES  | NO  | Community Dev Sponsored  |
-| Steem Engine  |   |   |   |   |   |
-| Incognito DEX  |   |   |   |   |   |
-|  |   |   |   |   |   |
-|   |   |   |   |   |   |
-|   |   |   |   |   |   |
+| Exchange   | Listed?  | Fee  | Fee Amount   | Responsible Party |
+|---|---|---|---|---|
+| Binance DEX  | NO  | List tx fee  | 1000 BNB   |  N/A   |
+| Uniswap     |  NO | NO  | ERC20 Token Creation + Contract Creation   | N/A |
+| Hive Engine  | YES  | YES  | 100 HIVE for BLURT ticker  | @daking | 
+| Steem Engine  | NO  | YES  | 100 STEEM for BLURT ticker  | N/A | 
+| Incognito DEX  | NO  | N/A  | tiny  | N/A |
+
