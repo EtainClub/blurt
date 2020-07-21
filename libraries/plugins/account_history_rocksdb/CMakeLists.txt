@@ -11,7 +11,7 @@ target_link_libraries( account_history_rocksdb_plugin
 
 target_include_directories( account_history_rocksdb_plugin
    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
-          "${CMAKE_CURRENT_SOURCE_DIR}/../../vendor/rocksdb/include"
+          "${CONAN_INCLUDE_DIRS_ROCKSDB}/rocksdb/include"
    )
 
 install( TARGETS
