@@ -136,18 +136,27 @@ else()
    endif()
 endif( NOT CLANG_TIDY_EXE )
 
-IF( WIN32 )
-  SET(BOOST_ROOT $ENV{BOOST_ROOT})
-  set(Boost_USE_MULTITHREADED ON)
-  set(BOOST_ALL_DYN_LINK OFF) # force dynamic linking for all libraries
-ENDIF(WIN32)
 
-FIND_PACKAGE(Boost 1.58 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+else()
+    message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first. Will try without conan...")
 
-if( NOT( Boost_VERSION LESS 106900 ) )
-   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
+    IF( WIN32 )
+        SET(BOOST_ROOT $ENV{BOOST_ROOT})
+        set(Boost_USE_MULTITHREADED ON)
+        set(BOOST_ALL_DYN_LINK OFF) # force dynamic linking for all libraries
+    ENDIF(WIN32)
+
+    FIND_PACKAGE(Boost 1.58 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+
+    if( NOT( Boost_VERSION LESS 106900 ) )
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
+    endif()
 endif()
+
 
 if( WIN32 )
 

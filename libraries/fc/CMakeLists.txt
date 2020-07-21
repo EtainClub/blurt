@@ -252,7 +252,6 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/git_revision.cpp.in" "${CMAKE_CU
 list(APPEND sources "${CMAKE_CURRENT_BINARY_DIR}/git_revision.cpp")
 list(APPEND sources ${fc_headers})
 
-add_subdirectory( vendor/websocketpp )
 add_subdirectory( vendor/equihash )
 
 setup_library( fc SOURCES ${sources} LIBRARY_TYPE STATIC DONT_INSTALL_LIBRARY )
@@ -361,7 +360,7 @@ target_include_directories(fc
     ${Boost_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
     "vendor/diff-match-patch-cpp-stl"
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/websocketpp
+    ${CONAN_INCLUDE_DIRS_WEBSOCKETPP}
     "${readline_includes}"
 
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
@@ -390,7 +389,6 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 ENDIF(MSVC)
 ENDIF()
 
-include_directories( vendor/websocketpp )
 include_directories( vendor/equihash )
 
 add_subdirectory(tests)

@@ -57,7 +57,7 @@ target_link_libraries( mira ${Boost_LIBRARIES} rocksdb fc )
 
 target_include_directories( mira
    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
-          "${CMAKE_CURRENT_SOURCE_DIR}/../vendor/rocksdb/include"
+          "${CONAN_INCLUDE_DIRS_ROCKSDB}/rocksdb/include"
           ${Boost_INCLUDE_DIR}
    )
 
