@@ -230,12 +230,25 @@ Success for voting for **gopher23** witness looks like:
 }
 ```
 
+**Updating Fees**
 
-**EVERYONE Should**
-If you're a witness, you're done now. 
+The Blurt blockchain has fees for every transaction, including voting, posting, power up, power down, transfers, reblurt etc witnesses set the fees according to network demand, ie higher fees when spam is prolific and lower fees when global user activity reduces. Free transactions are a myth, witnesses subsidise free transactions with every increasing server costs to keep up with chain bloat, fees help witnesses keep the bloat down to a minimum.
 
-**Full Nodes and Seed Nodes Should**
+Fees are calculated as a median of consensus witness fees. Have a look at what fees other witnesses have set on https://blocks.blurtwallet.com/#/witnesses
+
+Set the fees from your unlocked wallet using the below string, remembering to replace "jacobgadikian" with your witness account name and inserting your wallet Public Brain Key where specified. You can also adjust `account_creation_fee`, `operation_flat_fee` and `bandwidth_kbytes_fee` as desired. 
+
+```
+update_witness_properties "jacobgadikian" {"key":"BRAIN_KEY_PUB_KEY_GOES_HERE", "account_creation_fee":"10.000 BLURT","maximum_block_size":65536,"account_subsidy_budget": 797, "account_subsidy_decay": 347321, "operation_flat_fee":"0.001 BLURT","bandwidth_kbytes_fee":"0.100 BLURT"} true
+````
+
+**If you're a witness, you're done now.** 
+
+**Full Nodes and Seed Nodes should**
+
+```
 systemctl start ipfs-hardened
+```
 
 ## Common Cli Wallet Commands
 
