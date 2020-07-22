@@ -82,29 +82,31 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 
 ### Centralized Exchanges That Listed Steem at Block 43,526,969 and are in posession of airdrop funds
 
-| Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   |
-|---|---|---|---|---|---|
-| Ionomy      | 42731.888 BLURT  | In Progress  |  YES | NO |  Free Listing |
-| Upbit       |   |   |   |   |   |
-| Gopax       |   |   |   |   |   |
-| Bittrex     |   |   |   |   |   |
-| Binance     |   |   |   |   |   |
-| Huobi       |   |   |   |   |   |
+| Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   | Point of Contact |
+|---|---|---|---|---|---|---|
+| Ionomy      | 42731.888 BLURT  | In Progress  |  YES | NO |  Free Listing |  | 
+| Upbit       |   |   |   |   |   |.  |.  |
+| Gopax       |   |   |   |   |   |.  |.  |
+| Bittrex     |   |   |   |   |   |.  |.  |
+| Binance     |   |   |   |   |   |.  |.  |
+| Huobi       |   |   |   |   |   |.  |.  |
 | Probit      | YES  | HELD  | NO  | YES  | 1 BTC + 1 BTC of BLURT  |
-| Poloinex    |   |   |   |   |   |
-| Bitflyer    |   |   |   |   |   |
-| Daybit      |   |   |   |   |   |
-| Sistemkoin  |   |   |   |   |   |
-| Kraken      |   |   |   |   |   |
-| Okex        |   |   |   |   |   |
+| Poloinex    |   |   |   |   |   |.  |.  |
+| Bitflyer    |   |   |   |   |   |.  |.  |
+| Daybit      |   |   |   |   |   |.  |.  |
+| Sistemkoin  |   |   |   |   |   |.  |.  |
+| Kraken      |   |   |   |   |   |.  |.  |
+| Okex        |   |   |   |   |   |.  |.  |
 
 The Blurt community is deeply grateful to Ionomy for their intention to honor the Blurt airdrop on holders of STEEM from block 43,526,969.
 
 ### Centralized Exchanges that didn't list Steem at block 43,526,969 and are not in posession of airdrop funds
-| Exchange   |  Listed?  | Fee Requested?  | Fee Amount   |
-|---|---|---|---|
-| Cointiger   | NO  | YES  | 5 BTC + BLURT for giveaway  |
-| Coinbase    | NO | NO | N/A |
+| Exchange   |  Listed?  | Fee Requested?  | Fee Amount   | Requested By | Handling |
+|---|---|---|---|---|
+| Cointiger   | NO  | YES  | 5 BTC + BLURT for giveaway  |. empato365. | empato365 |
+| Coinbase    | NO | NO | N/A |. 
+| Indodax |   |.   |.    |.   
+| [rekenningku](https://www.rekeningku.com) |   |    | 
 
 ### Decentralized Exchanges
 
