@@ -1,5 +1,3 @@
-image: conanio/gcc8
-
 stages:
   - build
   - docker
@@ -13,18 +11,18 @@ cache:
     - ccache
 
 
-before_script:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq doxygen
-  - conan config set storage.path="${CI_PROJECT_DIR}/.cache/conan"
-  # Pull in submodules
-  - git submodule update --init --recursive
-  # ccache for acceleration
-  - mkdir -p ccache
-  - export CCACHE_BASEDIR=${PWD}
-  - export CCACHE_DIR=${PWD}/ccache
-
 low_memory:
+  image: conanio/gcc8
+  before_script:
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq doxygen
+    - conan config set storage.path="${CI_PROJECT_DIR}/.cache/conan"
+    # Pull in submodules
+    - git submodule update --init --recursive
+    # ccache for acceleration
+    - mkdir -p ccache
+    - export CCACHE_BASEDIR=${PWD}
+    - export CCACHE_DIR=${PWD}/ccache
   stage: build
   script:
     - mkdir build
@@ -40,11 +38,20 @@ low_memory:
     paths:
       - /builds/blurt/blurt/build/bin/blurtd
       - /builds/blurt/blurt/build/bin/cli_wallet
-#  except:
-#    changes:
-#        - doc/*
+
 
 rpc:
+  image: conanio/gcc8
+  before_script:
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq doxygen
+    - conan config set storage.path="${CI_PROJECT_DIR}/.cache/conan"
+    # Pull in submodules
+    - git submodule update --init --recursive
+    # ccache for acceleration
+    - mkdir -p ccache
+    - export CCACHE_BASEDIR=${PWD}
+    - export CCACHE_DIR=${PWD}/ccache
   stage: build
   script:
     - mkdir build
@@ -59,10 +66,6 @@ rpc:
     paths:
       - /builds/blurt/blurt/build/bin/blurtd
       - /builds/blurt/blurt/build/bin/cli_wallet
-
-#  except:
-#    changes:
-#        - doc/*
 
 pdfs:
   stage: build
@@ -102,6 +105,8 @@ docker-low_memory:
     - docker build -t registry.gitlab.com/blurt/docker/blurt_low_memory/$CI_COMMIT_BRANCH .
     - docker push registry.gitlab.com/blurt/docker/blurt_low_memory$CI_COMMIT_BRANCH
   needs: ["low_memory"]
+  tags:
+    - metal
 
 docker-rpc:
   image: docker:latest
@@ -116,6 +121,8 @@ docker-rpc:
     - docker build -t registry.gitlab.com/blurt/docker/rpc/$CI_COMMIT_BRANCH .
     - docker push registry.gitlab.com/blurt/docker/rpc/$CI_COMMIT_BRANCH
   needs: ["rpc"]
+  tags:
+    - metal
 
 rosetta:
     image: docker:latest
@@ -129,5 +136,7 @@ rosetta:
       - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
       - docker build -t registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH .
       - docker push registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
+    tags:
+      - metal
 
 
