@@ -24,29 +24,6 @@ before_script:
   - export CCACHE_BASEDIR=${PWD}
   - export CCACHE_DIR=${PWD}/ccache
 
-
-debug:
-  stage: build
-  script:
-    - mkdir build
-    - cd build
-    - conan install .. -s compiler=gcc -s compiler.libcxx=libstdc++11 -if=. -pr=default --build=missing
-    # Debug Build Config: (Note: DCMAKE_BUILD_TYPE=Debug)
-    - cmake -DBLURT_STATIC_BUILD=OFF -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Debug ..
-    - make -j$(nproc) blurtd
-    # Fix recovery of artifacts :/
-    - pwd
-  tags:
-    - metal
-  artifacts:
-    paths:
-      - /builds/blurt/blurt/build/bin/blurtd
-      - /builds/blurt/blurt/build/bin/cli_wallet
-#  except:
-#    changes:
-#        - doc/*
-
-
 low_memory:
   stage: build
   script:
