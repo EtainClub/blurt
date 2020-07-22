@@ -109,11 +109,6 @@ In that case, change the directories for `export` accordingly.
 
 ### Compile
 
-    export BOOST_ROOT=$(brew --prefix)/Cellar/boost@1.60/1.60.0/
-    export OPENSSL_ROOT_DIR=$(brew --prefix)/Cellar/openssl/1.0.2q/
-    export SNAPPY_ROOT_DIR=$(brew --prefix)/Cellar/snappy/1.1.7_1
-    export ZLIB_ROOT_DIR=$(brew --prefix)/Cellar/zlib/1.2.11
-    export BZIP2_ROOT_DIR=$(brew --prefix)/Cellar/bzip2/1.0.6_1
     git checkout stable
     git submodule update --init --recursive
     mkdir build && cd build
