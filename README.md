@@ -103,7 +103,7 @@ The Blurt community is deeply grateful to Ionomy for their intention to honor th
 
 ### Centralized Exchanges that didn't list Steem at block 43,526,969 and are not in posession of airdrop funds
 | Exchange   |  Listed?  | Fee Requested?  | Fee Amount   | Requested By | Handling |
-|---|---|---|---|---|
+|---|---|---|---|---|---|
 | Cointiger   | NO  | YES  | 5 BTC + BLURT for giveaway  |  empato365  | empato365 |
 | Coinbase    | NO | NO | N/A |  
 | Indodax |   |   |     |  
