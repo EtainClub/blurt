@@ -2,6 +2,7 @@ image: conanio/gcc8
 
 stages:
   - build
+  - docker
   - triggers
   - pdfs
 
@@ -111,20 +112,40 @@ pdfs:
     changes:
       - doc/witnesses.md
 
-trigger-rosetta:
-  stage: triggers
-  trigger: blurt/rosetta
-  needs: []
-#   except:
-#     changes:
-#       - doc/*
+docker-low_memory:
+  image: docker:latest
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:dind
+  stage: build
+  except:
+    - master
+  script:
+    - cd contrib/Dockerfiles/low_memory
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t registry.gitlab.com/blurt/docker/$CI_COMMIT_BRANCH/blurt_low_memory .
+    - docker push registry.gitlab.com/blurt/docker/$CI_COMMIT_BRANCH/blurt_low_memory
+  needs: ["low_memory"]
 
-trigger-docker:
-  stage: triggers
-  trigger: blurt/docker
-  needs: ["low_memory","rpc"]
-#    except:
-#      changes:
-#        - doc/*
+docker-rpc:
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  stage: build
+  except:
+    - master
+  script:
+    - cd contrib/Dockerfiles/rpc
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t registry.gitlab.com/blurt/docker/$CI_COMMIT_BRANCH/rpc .
+    - docker push registry.gitlab.com/blurt/docker/$CI_COMMIT_BRANCH/rpc
+  needs: ["rpc"]
+
+rosetta:
+  stage: build
+  trigger: blurt/rosetta
 
 
