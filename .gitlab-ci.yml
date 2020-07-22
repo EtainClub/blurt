@@ -39,8 +39,8 @@ debug:
     - metal
   artifacts:
     paths:
-      - /builds/blurt/blurt/build/programs/blurtd/blurtd
-      - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
+      - /builds/blurt/blurt/build/bin/blurtd
+      - /builds/blurt/blurt/build/bin/cli_wallet
 #  except:
 #    changes:
 #        - doc/*
@@ -60,8 +60,8 @@ low_memory:
     - metal
   artifacts:
     paths:
-      - /builds/blurt/blurt/build/programs/blurtd/blurtd
-      - /builds/blurt/blurt/build/programs/cli_wallet/cli_wallet
+      - /builds/blurt/blurt/build/bin/blurtd
+      - /builds/blurt/blurt/build/bin/cli_wallet
 #  except:
 #    changes:
 #        - doc/*
@@ -79,7 +79,9 @@ rpc:
     - metal
   artifacts:
     paths:
-      - /builds/blurt/blurt/build/programs/blurtd/blurtd
+      - /builds/blurt/blurt/build/bin/blurtd
+      - /builds/blurt/blurt/build/bin/cli_wallet
+
 #  except:
 #    changes:
 #        - doc/*
