@@ -114,6 +114,7 @@ pdfs:
 trigger-rosetta:
   stage: triggers
   trigger: blurt/rosetta
+  needs: []
 #   except:
 #     changes:
 #       - doc/*
@@ -121,6 +122,7 @@ trigger-rosetta:
 trigger-docker:
   stage: triggers
   trigger: blurt/docker
+  needs: ["low_memory","rpc"]
 #    except:
 #      changes:
 #        - doc/*
