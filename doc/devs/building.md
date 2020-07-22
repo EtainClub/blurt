@@ -71,8 +71,9 @@ Install Homebrew by following the instructions here: http://brew.sh/
     brew doctor
     brew update
 
-### Install steem dependencies:
+### Install Blurt dependencies:
 
+```bash
     brew install \
         autoconf \
         automake \
@@ -87,33 +88,28 @@ Install Homebrew by following the instructions here: http://brew.sh/
         python3
         
     pip3 install --user jinja2
-    
-Note: brew recently updated to boost 1.61.0, which is not yet supported by
-steem. Until then, this will allow you to install boost 1.60.0.
-You may also need to install zlib and bzip2 libraries manually.
-In that case, change the directories for `export` accordingly.
-
-*Optional.* To use TCMalloc in LevelDB:
-
-    brew install google-perftools
-
-*Optional.* To use cli_wallet and override macOS's default readline installation:
-
-    brew install --force readline
-    brew link --force readline
+```
 
 ### Clone the Repository
 
-    git clone https://github.com/steemit/steem.git
-    cd steem
+```bash
+    git clone https://gitlab.com/blurt/blurt
+    cd blurt
+```
 
 ### Compile
+This works on the very latest and most shiny Mac OSX 10.15.6.  
 
-    git checkout stable
+Your mileage may vary on other versions.  If you ever want to know if your code changes will build, probably a good idea to create a new branch and let CI do the work.  
+
+    git checkout dev
     git submodule update --init --recursive
     mkdir build && cd build
-    cmake -DBOOST_ROOT="$BOOST_ROOT" -DCMAKE_BUILD_TYPE=Release ..
+    conan install .. -s compiler=apple-clang -s compiler.version=11.0 -s compiler.libcxx=libc++ -if=. -pr=default --build=missing
+    cmake -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=OFF -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Release ..
     make -j$(sysctl -n hw.logicalcpu)
+    
+.....but this fails.  So, if you know how to make it not-fail, submit an MR right here please!
 
 Also, some useful build targets for `make` are:
 
@@ -129,7 +125,6 @@ This will only build `blurtd`.
 
 ## Building on Other Platforms
 
-- Windows build instructions do not yet exist, and likely never will.
 - The developers normally compile with gcc and clang. These compilers should
   be well-supported.
 - Community members occasionally attempt to compile the code with mingw,
