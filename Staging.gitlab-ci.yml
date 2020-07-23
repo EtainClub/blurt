@@ -2,9 +2,21 @@ staging low memory:
   stage: staging
   image: registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
   script:
-    - ""
+    - blurtd --data-dir /blurtd
   environment:
     name: review/$CI_COMMIT_REF_NAME
-    url: https://$CI_ENVIRONMENT_SLUG.example.com
+    url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
+  tags:
+    - kubernetes
+
+
+staging rpc:
+  stage: staging
+  image: registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
+  script:
+    - blurtd --data-dir /blurtd
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
   tags:
     - kubernetes

@@ -1,5 +1,7 @@
 FROM debian:10
 
+EXPOSE 8091
+
 # MAKE APT HAPPY
 RUN apt update
 RUN apt upgrade -y
