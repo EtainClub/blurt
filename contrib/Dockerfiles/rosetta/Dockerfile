@@ -11,6 +11,9 @@ RUN apt-get update && \
 RUN wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_27_1.deb && \
     apt install -y ./conan-ubuntu-64_1_27_1.deb
 
+# INSTALL TEST TOOLS
+RUN apt install -y curl jq
+
 
 # CLONE BLURT AND GET SUBMODULES, BUILD AS RPC NODE
 RUN git clone --recursive https://gitlab.com/blurt/blurt && \
