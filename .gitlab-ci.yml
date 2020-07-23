@@ -128,7 +128,7 @@ test docker low memory:
   stage: test
   script:
     - docker run -d registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
-    - bash contrib/healthcheck.sh
+    - sh contrib/healthcheck.sh
   needs: ["docker low memory"]
   tags:
     - metal
@@ -142,7 +142,7 @@ test docker rpc:
   stage: test
   script:
     - docker run -d registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH
-    - bash contrib/healthcheck.sh
+    - sh contrib/healthcheck.sh
   needs: ["docker rpc"]
   tags:
     - metal
@@ -171,7 +171,7 @@ test rosetta:
   stage: test
   script:
     - docker run registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
-    - bash contrib/healthcheck.sh
+    - sh contrib/healthcheck.sh
   tags:
     - metal
   needs: ["rosetta"]
