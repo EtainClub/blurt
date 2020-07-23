@@ -4,13 +4,6 @@ stages:
   - test
   - pdfs
 
-cache:
-  paths:
-    - .cache/conan
-    # ccache doesnt work
-    - ccache
-
-
 low_memory:
   image: conanio/gcc8
   before_script:
@@ -90,7 +83,7 @@ pdfs:
   tags:
       - metal
 
-docker-low_memory:
+docker low memory:
   image: docker:latest
   variables:
     DOCKER_TLS_CERTDIR: ""
@@ -108,7 +101,7 @@ docker-low_memory:
   tags:
     - metal
 
-docker-rpc:
+docker rpc:
   image: docker:latest
   services:
     - docker:dind
@@ -136,7 +129,7 @@ test docker low memory:
   script:
     - docker run -d registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
     - bash contrib/healthcheck.sh
-  needs: ["docker-low_memory"]
+  needs: ["docker low memory"]
   tags:
     - metal
 
@@ -150,7 +143,7 @@ test docker rpc:
   script:
     - docker run -d registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH
     - bash contrib/healthcheck.sh
-  needs: ["docker_rpc"]
+  needs: ["docker rpc"]
   tags:
     - metal
 
