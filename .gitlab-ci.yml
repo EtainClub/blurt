@@ -135,8 +135,9 @@ rosetta:
   tags:
     - metal
 
-# include: Tests.gitlab-ci.yml
-include: Staging.gitlab-ci.yml
+include:
+  - Tests.gitlab-ci.yml
+  - Staging.gitlab-ci.yml
 
 
 

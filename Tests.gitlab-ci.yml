@@ -1,12 +1,8 @@
 test docker rpc:
-  image: docker:latest
-  services:
-    - docker:dind
-  variables:
-    DOCKER_TLS_CERTDIR: ""
+  image: registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
   stage: test
   script:
-    - docker run -d registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH /bin/bash -c "nohup /blurt/build/bin/blurtd --data-dir /blurtd& && sleep 30 && sh contrib/healthcheck.sh"
+    - sh contrib/healthcheck.sh
   needs: ["docker rpc"]
   tags:
     - metal
