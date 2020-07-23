@@ -137,7 +137,7 @@ rosetta:
 
 include:
   - Tests.gitlab-ci.yml
-  - Staging.gitlab-ci.yml
+#  - Staging.gitlab-ci.yml
 
 
 
