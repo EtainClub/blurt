@@ -83,7 +83,7 @@ pdfs:
   tags:
       - metal
 
-docker_low_memory:
+docker low memory:
   image: docker:latest
   variables:
     DOCKER_TLS_CERTDIR: ""
