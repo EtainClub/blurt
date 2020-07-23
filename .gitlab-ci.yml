@@ -91,6 +91,8 @@ pdfs:
       - master
     changes:
       - doc/witnesses.md
+  tags:
+      - metal
 
 docker-low_memory:
   image: docker:latest
