@@ -1,6 +1,9 @@
+MAINTAINER Jacob Gadikian <jacob@blurt.foundation>
 FROM debian:10
-
+EXPOSE 8090
 EXPOSE 8091
+EXPOSE 1776
+
 
 # MAKE APT HAPPY
 RUN apt update
@@ -18,4 +21,5 @@ RUN mkdir /blurtd && \
 
 # RUN BLURT
 CMD /usr/bin/blurtd --data-dir /blurt
+
 

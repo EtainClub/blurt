@@ -1,8 +1,13 @@
 # This is a Rosetta-flavored dockerfile that complies with all Rosetta [recommendations}(https://www.rosetta-api.org/docs/node_deployment.html#dockerfile-expectations) for Dockerfiles
 # * Build Anywhere
 # * Compile exclusively from source
+MAINTAINER Jacob Gadikian <jacob@blurt.foundation>
 
 FROM debian:10
+
+EXPOSE 8090
+EXPOSE 8091
+EXPOSE 1776
 
 # FETCH DEPENDENCIES
 RUN apt-get update && \
@@ -32,3 +37,5 @@ RUN wget -O /blurtd/snapshot.json  https://cloudflare-ipfs.com/ipfs/QmPrwVpwe4Ya
 
 # RUN BLURT
 CMD /blurt/build/bin/blurtd --data-dir /blurtd
+
+

@@ -1,6 +1,10 @@
+MAINTAINER Jacob Gadikian <jacob@blurt.foundation>
+
 FROM debian:10
 
+EXPOSE 8090
 EXPOSE 8091
+EXPOSE 1776
 
 # FETCH DEPENDENCIES
 RUN apt update
