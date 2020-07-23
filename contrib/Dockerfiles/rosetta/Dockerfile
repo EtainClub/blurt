@@ -13,14 +13,14 @@ RUN wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_27_1.deb && \
 
 
 # CLONE BLURT AND GET SUBMODULES, BUILD AS RPC NODE
-RUN git clone https://gitlab.com/blurt/blurt && \
+RUN git clone --recursive https://gitlab.com/blurt/blurt && \
           cd blurt && \
-          git submodule update --init --recursive && \
           git checkout dev && \
           mkdir build && \
           cd build && \
           conan install .. -s compiler=gcc -s compiler.libcxx=libstdc++11 -if=. -pr=default --build=missing && \
-          cmake -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=OFF -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Release .. && \          make -j$(nproc) blurtd cli_wallet && \
+          cmake -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=OFF -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Release .. && \
+          make -j$(nproc) blurtd cli_wallet && \
           mkdir /blurtd
 
 
