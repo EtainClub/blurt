@@ -2,6 +2,7 @@ stages:
   - build
   - docker
   - triggers
+  - test
   - pdfs
 
 cache:
@@ -140,5 +141,16 @@ rosetta:
       - docker push registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
     tags:
       - metal
+
+test rosetta:
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  stage: test
+  script:
+    - docker run registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
+    - bash contrib/healthcheckk.sh
 
 
