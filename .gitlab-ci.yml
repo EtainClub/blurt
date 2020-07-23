@@ -83,7 +83,7 @@ pdfs:
   tags:
       - metal
 
-docker low memory:
+docker_low_memory:
   image: docker:latest
   variables:
     DOCKER_TLS_CERTDIR: ""
@@ -129,7 +129,7 @@ test docker low memory:
   script:
     - docker run -d registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
     - bash contrib/healthcheck.sh
-  needs: ["docker low memory"]
+  needs: ["docker_low_memory"]
   tags:
     - metal
 
