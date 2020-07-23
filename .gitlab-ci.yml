@@ -132,9 +132,7 @@ test docker low memory:
   tags:
     - metal
 
-include:
-  local:
-    - Tests.gitlab-ci.yml
+# include: Tests.gitlab-ci.yml
 
 
 
