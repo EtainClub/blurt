@@ -1,5 +1,7 @@
 FROM debian:10
 
+EXPOSE 8091
+
 # FETCH DEPENDENCIES
 RUN apt update
 RUN apt upgrade -y
@@ -15,5 +17,5 @@ RUN mkdir /blurtd && \
     wget --progress=bar:force:noscroll -O /blurtd/snapshot.json  https://cloudflare-ipfs.com/ipfs/QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
 
 # RUN BLURT
-CMD /usr/bin/blurtd --data-dir /blurt
+CMD /usr/bin/blurtd --data-dir /blurtd
 
