@@ -151,6 +151,8 @@ test rosetta:
   stage: test
   script:
     - docker run registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
-    - bash contrib/healthcheckk.sh
+    - bash contrib/healthcheck.sh
+  tags:
+    - metal
 
 
