@@ -154,5 +154,6 @@ test rosetta:
     - bash contrib/healthcheck.sh
   tags:
     - metal
+  needs: ["rosetta"]
 
 
