@@ -5,7 +5,7 @@ stages:
   - pdfs
 
 low_memory:
-  image: conanio/gcc8
+  image: conanio/clang10
   before_script:
     - sudo apt-get update -qq
     - sudo apt-get install -qq doxygen
@@ -34,7 +34,7 @@ low_memory:
 
 
 rpc:
-  image: conanio/gcc8
+  image: conanio/clang10
   before_script:
     - sudo apt-get update -qq
     - sudo apt-get install -qq doxygen
