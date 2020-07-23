@@ -28,4 +28,4 @@ RUN wget -O /blurtd/snapshot.json  https://cloudflare-ipfs.com/ipfs/QmPrwVpwe4Ya
 
 
 # RUN BLURT
-CMD /blurt/build/bin/blurtd/blurtd --data-dir /blurtd
+CMD /blurt/build/bin/blurtd --data-dir /blurtd
