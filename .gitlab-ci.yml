@@ -1,8 +1,10 @@
 stages:
   - build
   - docker
-  - staging
   - test
+  - review
+  - staging
+  - production
   - pdfs
 
 low_memory:
@@ -137,7 +139,7 @@ rosetta:
 
 include:
   - Tests.gitlab-ci.yml
-#  - Staging.gitlab-ci.yml
+  - Staging.gitlab-ci.yml
 
 
 
