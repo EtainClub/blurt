@@ -1,0 +1,40 @@
+test docker rpc:
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  stage: test
+  script:
+    - docker run -d registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH /bin/bash -c "nohup /blurt/build/bin/blurtd --data-dir /blurtd& && sleep 30 && sh contrib/healthcheck.sh"
+  needs: ["docker rpc"]
+  tags:
+    - metal
+
+rosetta:
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  stage: build
+  script:
+    - cd contrib/Dockerfiles/rosetta
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH .
+    - docker push registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
+  tags:
+    - metal
+
+test rosetta:
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  stage: test
+  script:
+    - docker run registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH /bin/bash -c "nohup /blurt/build/bin/blurtd --data-dir /blurtd& && sleep 30 && sh contrib/healthcheck.sh"
+  tags:
+    - metal
+  needs: ["rosetta"]
