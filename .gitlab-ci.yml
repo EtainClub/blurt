@@ -1,7 +1,6 @@
 stages:
   - build
   - docker
-  - triggers
   - test
   - pdfs
 
@@ -124,6 +123,34 @@ docker-rpc:
     - docker build -t registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH .
     - docker push registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH
   needs: ["rpc"]
+  tags:
+    - metal
+
+test docker low memory:
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  stage: docker
+  script:
+    - docker run -d registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
+    - bash contrib/healthcheck.sh
+  needs: ["docker-low_memory"]
+  tags:
+    - metal
+
+test docker rpc:
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  stage: docker
+  script:
+    - docker run -d registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH
+    - bash contrib/healthcheck.sh
+  needs: ["docker_rpc"]
   tags:
     - metal
 
