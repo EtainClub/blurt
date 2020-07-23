@@ -125,11 +125,11 @@ test docker low memory:
     - docker:dind
   variables:
     DOCKER_TLS_CERTDIR: ""
-  stage: docker
+  stage: test
   script:
     - docker run -d registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
     - bash contrib/healthcheck.sh
-  needs: ["docker_low_memory"]
+  needs: ["docker low memory"]
   tags:
     - metal
 
@@ -139,7 +139,7 @@ test docker rpc:
     - docker:dind
   variables:
     DOCKER_TLS_CERTDIR: ""
-  stage: docker
+  stage: test
   script:
     - docker run -d registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH
     - bash contrib/healthcheck.sh
