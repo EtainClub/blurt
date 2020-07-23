@@ -1,6 +1,7 @@
 stages:
   - build
   - docker
+  - staging
   - test
   - pdfs
 
@@ -135,6 +136,7 @@ rosetta:
     - metal
 
 # include: Tests.gitlab-ci.yml
+include: Staging.gitlab-ci.yml
 
 
 

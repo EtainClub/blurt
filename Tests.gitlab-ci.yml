@@ -19,9 +19,7 @@ test rosetta:
     DOCKER_TLS_CERTDIR: ""
   stage: test
   script:
-    - docker run registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH /bin/bash -c "nohup /blurt/build/bin/blurtd --data-dir /blurtd& && sleep 30 && sh contrib/healthcheck.sh"
-  tags:
-    - metal
+    - docker run registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
   needs: ["rosetta"]
 
 test docker low memory:
