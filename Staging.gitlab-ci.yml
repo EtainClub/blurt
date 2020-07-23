@@ -8,6 +8,7 @@ staging low memory:
     url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
   tags:
     - kubernetes
+  needs: ["docker low memory"]
 
 
 staging rpc:
@@ -20,3 +21,4 @@ staging rpc:
     url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
   tags:
     - kubernetes
+  needs: ["docker rpc"]
