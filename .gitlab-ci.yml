@@ -84,34 +84,6 @@ pdfs:
     changes:
       - doc/witnesses.md
 
-docker-low_memory:
-  image: docker:latest
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-  services:
-    - docker:dind
-  stage: docker
-  script:
-    - cd contrib/Dockerfiles/low_memory
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t registry.gitlab.com/blurt/docker/blurt_low_memory/$CI_COMMIT_BRANCH .
-    - docker push registry.gitlab.com/blurt/docker/blurt_low_memory$CI_COMMIT_BRANCH
-  needs: ["low_memory"]
-
-docker-rpc:
-  image: docker:latest
-  services:
-    - docker:dind
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-  stage: docker
-  script:
-    - cd contrib/Dockerfiles/rpc
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t registry.gitlab.com/blurt/docker/rpc/$CI_COMMIT_BRANCH .
-    - docker push registry.gitlab.com/blurt/docker/rpc/$CI_COMMIT_BRANCH
-  needs: ["rpc"]
-
 rosetta:
     image: docker:latest
     services:
