@@ -1,5 +1,7 @@
-MAINTAINER Jacob Gadikian <jacob@blurt.foundation>
 FROM debian:10
+
+MAINTAINER Jacob Gadikian <jacob@blurt.foundation>
+
 EXPOSE 8090
 EXPOSE 8091
 EXPOSE 1776
@@ -18,8 +20,8 @@ RUN apt install -y curl jq
 # GET LATEST JOB BINARIES
 RUN wget --progress=bar:force:noscroll -O download https://gitlab.com/blurt/blurt/-/jobs/artifacts/dev/download?job=rpc && \
             unzip download && \
-            mv build/programs/blurtd/blurtd /usr/bin/blurtd && \
-            mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet && \
+            mv build/bin/blurtd /usr/bin/blurtd && \
+            mv build/bin/cli_wallet /usr/bin/cli_wallet && \
             chmod +x /usr/bin/blurtd && \
             chmod +x /usr/bin/cli_wallet && \
             rm -rf build && \
