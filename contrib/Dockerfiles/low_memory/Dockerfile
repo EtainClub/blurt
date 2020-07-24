@@ -2,11 +2,6 @@ FROM debian:10
 
 MAINTAINER Jacob Gadikian <jacob@blurt.foundation>
 
-
-EXPOSE 8090
-EXPOSE 8091
-EXPOSE 1776
-
 # FETCH DEPENDENCIES
 RUN apt update
 RUN apt upgrade -y
@@ -20,8 +15,8 @@ RUN apt install -y curl jq
 # GET LATEST JOB BINARIES
 RUN wget --progress=bar:force:noscroll -O download https://gitlab.com/blurt/blurt/-/jobs/artifacts/dev/download?job=low_memory && \
         unzip download && \
-        mv build/programs/blurtd/blurtd /usr/bin/blurtd && \
-        mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet && \
+        mv blurt/build/bin/blurtd /usr/bin/blurtd && \
+        mv blurt/build/bin/cli_wallet /usr/bin/cli_wallet && \
         chmod +x /usr/bin/blurtd && \
         chmod +x /usr/bin/cli_wallet && \
         rm -rf build && \
@@ -32,3 +27,7 @@ RUN wget --progress=bar:force:noscroll -O download https://gitlab.com/blurt/blur
 # RUN BLURT
 CMD /usr/bin/blurtd --data-dir /blurt
 
+
+EXPOSE 8090
+EXPOSE 8091
+EXPOSE 1776
