@@ -1,11 +1,14 @@
 stages:
   - build
   - docker
-  - triggers
+  - test
+  - review
+  - staging
+  - production
   - pdfs
 
 low_memory:
-  image: conanio/gcc8
+  image: conanio/clang10
   before_script:
     - sudo apt-get update -qq
     - sudo apt-get install -qq doxygen
@@ -20,7 +23,7 @@ low_memory:
   script:
     - mkdir build
     - cd build
-    - conan install .. -s compiler=gcc -s compiler.libcxx=libstdc++11 -if=. -pr=default --build=missing
+    - conan install .. -s compiler=clang -s compiler.libcxx=libstdc++11 -if=. -pr=default --build=missing
     # Witness Build Config: -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON
     - cmake -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=ON -DCLEAR_VOTES=ON -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=ON -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=ON -DCMAKE_BUILD_TYPE=Release ..
     - make -j$(nproc) blurtd cli_wallet
@@ -34,7 +37,7 @@ low_memory:
 
 
 rpc:
-  image: conanio/gcc8
+  image: conanio/clang10
   before_script:
     - sudo apt-get update -qq
     - sudo apt-get install -qq doxygen
@@ -49,7 +52,7 @@ rpc:
   script:
     - mkdir build
     - cd build
-    - conan install .. -s compiler=gcc -s compiler.libcxx=libstdc++11 -if=. -pr=default --build=missing
+    - conan install .. -s compiler=clang -s compiler.libcxx=libstdc++11 -if=. -pr=default --build=missing
     - cmake -DBLURT_STATIC_BUILD=ON -DLOW_MEMORY_NODE=OFF -DCLEAR_VOTES=OFF -DBUILD_BLURT_TESTNET=OFF -DSKIP_BY_TX_ID=OFF -DBLURT_LINT_LEVEL=OFF -DENABLE_MIRA=OFF -DCMAKE_BUILD_TYPE=Release ..
     - make -j$(nproc) blurtd cli_wallet
   tags:
@@ -57,9 +60,11 @@ rpc:
   artifacts:
     paths:
       - /builds/blurt/blurt/build/bin/blurtd
-      - /builds/blurt/blurt/build/bin/cli_wallet
+      - /builds/blurt/blurt/build/bin/blurtd
+
 
 pdfs:
+  image: debian:10
   stage: build
   #makes sure that the document generator does not pick up the cache and do strange things.
   cache: {}
@@ -77,24 +82,65 @@ pdfs:
     # These are the files you then download after the job has finished.
     untracked: true
   only:
-    # Only run on the master branch
-    refs:
-      - dev
-      - master
     changes:
       - doc/witnesses.md
+  tags:
+      - metal
+
+docker low memory:
+  image: docker:latest
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:dind
+  stage: docker
+  script:
+    - pwd
+    - ls
+    - cd contrib/Dockerfiles/low_memory
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH .
+    - docker push registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
+  needs: ["low_memory"]
+  tags:
+    - metal
+
+docker rpc:
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  stage: docker
+  script:
+    - pwd
+    - ls
+    - cd contrib/Dockerfiles/rpc
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH .
+    - docker push registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH
+  needs: ["rpc"]
+  tags:
+    - metal
 
 rosetta:
-    image: docker:latest
-    services:
-      - docker:dind
-    variables:
-      DOCKER_TLS_CERTDIR: ""
-    stage: build
-    script:
-      - cd contrib/Dockerfiles/rosetta
-      - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
-      - docker build -t registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH .
-      - docker push registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  stage: build
+  script:
+    - cd contrib/Dockerfiles/rosetta
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH .
+    - docker push registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
+  tags:
+    - metal
+
+include:
+  - Tests.gitlab-ci.yml
+  - Staging.gitlab-ci.yml
+
 
 

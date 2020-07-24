@@ -65,6 +65,7 @@
 namespace blurt { namespace wallet {
 
 using blurt::plugins::condenser_api::legacy_asset;
+using blurt::plugins::condenser_api::extended_account;
 
 namespace detail {
 
@@ -583,9 +584,9 @@ public:
 
       FC_ASSERT( approving_account_objects.size() == v_approving_account_names.size(), "", ("aco.size:", approving_account_objects.size())("acn",v_approving_account_names.size()) );
 
-      flat_map< string, condenser_api::api_account_object > approving_account_lut;
+      flat_map< string, extended_account > approving_account_lut;
       size_t i = 0;
-      for( const optional< condenser_api::api_account_object >& approving_acct : approving_account_objects )
+      for( const optional< extended_account > approving_acct : approving_account_objects )
       {
          if( !approving_acct.valid() )
          {
@@ -597,9 +598,9 @@ public:
          approving_account_lut[ approving_acct->name ] =  *approving_acct;
          i++;
       }
-      auto get_account_from_lut = [&]( const std::string& name ) -> fc::optional< const condenser_api::api_account_object* >
+      auto get_account_from_lut = [&]( const std::string& name ) -> fc::optional< const extended_account* >
       {
-         fc::optional< const condenser_api::api_account_object* > result;
+         fc::optional< const extended_account* > result;
          auto it = approving_account_lut.find( name );
          if( it != approving_account_lut.end() )
          {
@@ -620,7 +621,7 @@ public:
          const auto it = approving_account_lut.find( acct_name );
          if( it == approving_account_lut.end() )
             continue;
-         const condenser_api::api_account_object& acct = it->second;
+         const extended_account& acct = it->second;
          vector<public_key_type> v_approving_keys = acct.active.get_keys();
          wdump((v_approving_keys));
          for( const public_key_type& approving_key : v_approving_keys )
@@ -635,7 +636,7 @@ public:
          const auto it = approving_account_lut.find( acct_name );
          if( it == approving_account_lut.end() )
             continue;
-         const condenser_api::api_account_object& acct = it->second;
+         const extended_account& acct = it->second;
          vector<public_key_type> v_approving_keys = acct.posting.get_keys();
          wdump((v_approving_keys));
          for( const public_key_type& approving_key : v_approving_keys )
@@ -650,7 +651,7 @@ public:
          const auto it = approving_account_lut.find( acct_name );
          if( it == approving_account_lut.end() )
             continue;
-         const condenser_api::api_account_object& acct = it->second;
+         const extended_account& acct = it->second;
          vector<public_key_type> v_approving_keys = acct.owner.get_keys();
          for( const public_key_type& approving_key : v_approving_keys )
          {
@@ -1029,7 +1030,7 @@ string wallet_api::help()const
 {
    std::vector<std::string> method_names = my->method_documentation.get_method_names();
    std::stringstream ss;
-   for (const std::string method_name : method_names)
+   for (const std::string& method_name : method_names)
    {
       try
       {
