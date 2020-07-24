@@ -139,7 +139,7 @@ rosetta:
     - metal
 
 include:
-  - Tests.gitlab-ci.yml
+ # - Tests.gitlab-ci.yml
   - Staging.gitlab-ci.yml
 
 
