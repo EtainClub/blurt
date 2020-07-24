@@ -30,10 +30,9 @@ staging rosetta:
   image: registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
   script:
     - /blurt/build/bin/blurtd --data-dir /blurtd
-  name: review/$CI_COMMIT_REF_NAME
-  url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
   environment:
-    name: rosetta_stagings
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
   tags:
     - kubernetes
   when: manual
