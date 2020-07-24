@@ -11,11 +11,15 @@ EXPOSE 1776
 RUN apt update
 RUN apt upgrade -y
 
-# Install Dependencies
+# INSTALL DEPENDENCIES
 RUN apt install -y ntp unzip wget libbz2-dev libsnappy-dev libncurses5-dev libreadline-dev
 
 # INSTALL TEST TOOLS
 RUN apt install -y curl jq
+
+# FETCH SNAPSHOT
+RUN mkdir /blurt && \
+    wget --progress=bar:force:noscroll -O /blurt/snapshot.json  https://cloudflare-ipfs.com/ipfs/QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
 
 # GET LATEST JOB BINARIES
 RUN wget --progress=bar:force:noscroll -O download https://gitlab.com/blurt/blurt/-/jobs/artifacts/dev/download?job=rpc && \
@@ -25,11 +29,9 @@ RUN wget --progress=bar:force:noscroll -O download https://gitlab.com/blurt/blur
             chmod +x /usr/bin/blurtd && \
             chmod +x /usr/bin/cli_wallet && \
             rm -rf build && \
-            rm download && \
-            mkdir /blurt && \
-            wget --progress=bar:force:noscroll -O /blurt/snapshot.json  https://cloudflare-ipfs.com/ipfs/QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
+            rm download
 
 # RUN BLURT
-CMD /usr/bin/blurtd --data-dir /blurt
+CMD ["/usr/bin/blurtd", "--data-dir /blurt"]
 
 
