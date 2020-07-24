@@ -1,6 +1,7 @@
+FROM debian:10
+
 MAINTAINER Jacob Gadikian <jacob@blurt.foundation>
 
-FROM debian:10
 
 EXPOSE 8090
 EXPOSE 8091

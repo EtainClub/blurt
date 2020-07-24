@@ -1,9 +1,10 @@
 # This is a Rosetta-flavored dockerfile that complies with all Rosetta [recommendations}(https://www.rosetta-api.org/docs/node_deployment.html#dockerfile-expectations) for Dockerfiles
 # * Build Anywhere
 # * Compile exclusively from source
+FROM debian:10
+
 MAINTAINER Jacob Gadikian <jacob@blurt.foundation>
 
-FROM debian:10
 
 EXPOSE 8090
 EXPOSE 8091
