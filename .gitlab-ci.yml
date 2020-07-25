@@ -65,7 +65,7 @@ rpc:
 
 pdfs:
   image: debian:10
-  stage: build
+  stage: pdfs
   #makes sure that the document generator does not pick up the cache and do strange things.
   cache: {}
   before_script:
@@ -86,6 +86,7 @@ pdfs:
       - doc/witnesses.md
   tags:
       - metal
+  needs: []
 
 docker low memory:
   image: docker:latest
