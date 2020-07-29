@@ -8,6 +8,8 @@
 // Every symbol defined here needs to be handled appropriately in get_config.cpp
 // This is checked by get_config_check.sh called from Dockerfile
 
+// https://developers.steem.io/tutorials-recipes/understanding-configuration-values
+
 #ifdef IS_TEST_NET
 #define BLURT_BLOCKCHAIN_VERSION              ( version(0, 1, 0) )
 
