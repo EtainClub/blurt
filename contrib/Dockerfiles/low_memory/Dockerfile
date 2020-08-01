@@ -3,8 +3,9 @@ FROM ubuntu:20.04
 MAINTAINER Jacob Gadikian <jacob@blurt.foundation>
 
 
-COPY build/bin/blurtd /usr/bin/blurtd
-COPY build/bin/cli_wallet /usr/bin/cli_wallet
+COPY /builds/blurt/blurt/build/bin/blurtd /usr/bin/blurtd
+
+COPY /builds/blurt/blurt/build/bin/cli_wallet /usr/bin/cli_wallet
 
 # FETCH DEPENDENCIES
 RUN apt update
