@@ -1,3 +1,7 @@
+# Blurt CI Dockerfile
+# Blurt Docker images now happen quickly, and from a single Dockerfile without messy variables and such.
+# If you'd like messy variables, check out the Rosetta Dockerfile!
+
 FROM ubuntu:20.04
 
 MAINTAINER Jacob Gadikian <jacob@blurt.foundation>
