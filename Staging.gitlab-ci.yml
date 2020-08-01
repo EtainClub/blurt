@@ -24,16 +24,3 @@ staging rpc:
     - kubernetes
   needs: ["docker rpc"]
   when: manual
-
-staging rosetta:
-  stage: staging
-  image: registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
-  script:
-    - /blurt/build/bin/blurtd --data-dir /blurtd
-  environment:
-    name: review/$CI_COMMIT_REF_NAME
-    url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
-  tags:
-    - kubernetes
-  when: manual
-  needs: ["rosetta"]
