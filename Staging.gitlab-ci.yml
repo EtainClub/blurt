@@ -1,6 +1,6 @@
 staging low memory:
   stage: staging
-  image: registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
+  image: $CI_REGISTRY_IMAGE/low_memory:$CI_COMMIT_BRANCH
   script:
     - /usr/bin/blurtd --data-dir /blurt
   environment:
@@ -14,7 +14,7 @@ staging low memory:
 
 staging rpc:
   stage: staging
-  image: registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
+  image: $CI_REGISTRY_IMAGE/rpc:$CI_COMMIT_BRANCH
   script:
     - /usr/bin/blurtd --data-dir /blurt
   environment:
