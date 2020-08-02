@@ -8,7 +8,7 @@ staging low memory:
     url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
   tags:
     - kubernetes
-  needs: ["docker low memory"]
+  needs: ["kaniko low memory"]
   when: manual
 
 
@@ -22,5 +22,5 @@ staging rpc:
     url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
   tags:
     - kubernetes
-  needs: ["docker rpc"]
+  needs: ["kaniko rpc"]
   when: manual
