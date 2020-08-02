@@ -32,9 +32,7 @@ low_memory:
     - metal
   artifacts:
     paths:
-      - /builds/blurt/blurt/build/bin/blurtd
-      - /builds/blurt/blurt/build/bin/cli_wallet
-
+      - /builds/blurt/blurt/build/bin/
 
 rpc:
   image: conanio/clang10
@@ -59,9 +57,7 @@ rpc:
     - metal
   artifacts:
     paths:
-      - /builds/blurt/blurt/build/bin/blurtd
-      - /builds/blurt/blurt/build/bin/cli_wallet
-
+      - /builds/blurt/blurt/build/bin/
 
 pdfs:
   image: debian:10
@@ -88,6 +84,17 @@ pdfs:
       - metal
   needs: []
 
+kaniko low memory:
+  stage: docker
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/contrib/low_memory/Dockerfile --destination $CI_REGISTRY_IMAGE/low_memory:$CI_COMMIT_BRANCH
+  dependencies:
+    - low_memory
+
 docker low memory:
   image: docker:latest
   variables:
@@ -101,7 +108,7 @@ docker low memory:
     - ls build/bin
     - cd build/bin
     - ls
-    - cd ..
+    - cd ../..
     - cd contrib/Dockerfiles/low_memory
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -t registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH .
