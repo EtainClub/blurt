@@ -2,7 +2,7 @@ staging low memory:
   stage: staging
   image: $CI_REGISTRY_IMAGE/low_memory:$CI_COMMIT_BRANCH
   script:
-    - /usr/bin/blurtd --data-dir /blurt
+    - blurtd --data-dir /blurt
   environment:
     name: review/$CI_COMMIT_REF_NAME
     url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
@@ -16,7 +16,7 @@ staging rpc:
   stage: staging
   image: $CI_REGISTRY_IMAGE/rpc:$CI_COMMIT_BRANCH
   script:
-    - /usr/bin/blurtd --data-dir /blurt
+    - blurtd --data-dir /blurt
   environment:
     name: review/$CI_COMMIT_REF_NAME
     url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
