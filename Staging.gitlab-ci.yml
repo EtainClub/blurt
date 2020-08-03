@@ -4,6 +4,8 @@ staging low memory:
   environment:
     name: review/$CI_COMMIT_REF_NAME
     url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
+  script:
+    - blurtd --data-dir /blurt
   tags:
     - kubernetes
   needs: ["kaniko low memory"]
@@ -16,6 +18,8 @@ staging rpc:
   environment:
     name: review/$CI_COMMIT_REF_NAME
     url: https://$CI_ENVIRONMENT_SLUG.blurtwallet.com
+  script:
+    - blurtd --data-dir /blurt
   tags:
     - kubernetes
   needs: ["kaniko rpc"]
