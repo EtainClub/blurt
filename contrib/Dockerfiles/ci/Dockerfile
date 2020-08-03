@@ -10,7 +10,7 @@ COPY ./build/bin/cli_wallet /usr/bin/cli_wallet
 # FETCH DEPENDENCIES
 RUN apt update
 RUN apt upgrade -y
-RUN apt install -y wget libncurses5
+RUN apt install -y wget libncurses5 libncurses5-dev
 
 RUN mkdir /blurt && \
             wget --progress=bar:force:noscroll -O /blurt/snapshot.json  https://cloudflare-ipfs.com/ipfs/QmPrwVpwe4Ya46CN9LXNnrUdWvaDLMwFetMUdpcdpjFbyu
