@@ -32,9 +32,7 @@ low_memory:
     - metal
   artifacts:
     paths:
-      - /builds/blurt/blurt/build/bin/blurtd
-      - /builds/blurt/blurt/build/bin/cli_wallet
-
+      - /builds/blurt/blurt/build/bin/
 
 rpc:
   image: conanio/clang10
@@ -59,9 +57,7 @@ rpc:
     - metal
   artifacts:
     paths:
-      - /builds/blurt/blurt/build/bin/blurtd
-      - /builds/blurt/blurt/build/bin/cli_wallet
-
+      - /builds/blurt/blurt/build/bin/
 
 pdfs:
   image: debian:10
@@ -88,60 +84,31 @@ pdfs:
       - metal
   needs: []
 
-docker low memory:
-  image: docker:latest
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-  services:
-    - docker:dind
+kaniko low memory:
   stage: docker
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
   script:
-    - pwd
-    - ls
-    - cd contrib/Dockerfiles/low_memory
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH .
-    - docker push registry.gitlab.com/blurt/blurt/low_memory/$CI_COMMIT_BRANCH
-  needs: ["low_memory"]
-  tags:
-    - metal
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/contrib/Dockerfiles/ci/Dockerfile --destination $CI_REGISTRY_IMAGE/low_memory:$CI_COMMIT_BRANCH
+  dependencies:
+    - low_memory
 
-docker rpc:
-  image: docker:latest
-  services:
-    - docker:dind
-  variables:
-    DOCKER_TLS_CERTDIR: ""
+kaniko rpc:
   stage: docker
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
   script:
-    - pwd
-    - ls
-    - cd contrib/Dockerfiles/rpc
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH .
-    - docker push registry.gitlab.com/blurt/blurt/rpc/$CI_COMMIT_BRANCH
-  needs: ["rpc"]
-  tags:
-    - metal
-
-rosetta:
-  image: docker:latest
-  services:
-    - docker:dind
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-  stage: build
-  script:
-    - cd contrib/Dockerfiles/rosetta
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH .
-    - docker push registry.gitlab.com/blurt/blurt/rosetta/$CI_COMMIT_BRANCH
-  tags:
-    - metal
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/contrib/Dockerfiles/ci/Dockerfile --destination $CI_REGISTRY_IMAGE/rpc:$CI_COMMIT_BRANCH
+  dependencies:
+    - rpc
 
 include:
  # - Tests.gitlab-ci.yml
-  - Staging.gitlab-ci.yml
+ # - Staging.gitlab-ci.yml
 
 
 
