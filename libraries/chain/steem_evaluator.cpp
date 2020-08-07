@@ -1411,6 +1411,8 @@ void custom_binary_evaluator::do_apply( const custom_binary_operation& o )
 
 void claim_account_evaluator::do_apply( const claim_account_operation& o )
 {
+   if (_db.has_hardfork(BLURT_HARDFORK_0_2)) FC_ASSERT(false, "This operation is disable since hard fork 2.");
+
    const auto& creator = _db.get_account( o.creator );
    const auto& wso = _db.get_witness_schedule_object();
 
@@ -1465,6 +1467,8 @@ void claim_account_evaluator::do_apply( const claim_account_operation& o )
 
 void create_claimed_account_evaluator::do_apply( const create_claimed_account_operation& o )
 {
+   if (_db.has_hardfork(BLURT_HARDFORK_0_2)) FC_ASSERT(false, "This operation is disable since hard fork 2.");
+
    const auto& creator = _db.get_account( o.creator );
    const auto& props = _db.get_dynamic_global_properties();
 

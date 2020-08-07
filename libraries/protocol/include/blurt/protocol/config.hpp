@@ -11,7 +11,7 @@
 // https://developers.steem.io/tutorials-recipes/understanding-configuration-values
 
 #ifdef IS_TEST_NET
-#define BLURT_BLOCKCHAIN_VERSION              ( version(0, 1, 0) )
+#define BLURT_BLOCKCHAIN_VERSION              ( version(0, 2, 0) )
 
 #define BLURT_INIT_PRIVATE_KEY                (fc::ecc::private_key::regenerate(fc::sha256::hash(std::string("init_key"))))
 #define BLURT_INIT_PUBLIC_KEY_STR             (std::string( blurt::protocol::public_key_type(BLURT_INIT_PRIVATE_KEY.get_public_key()) ))
@@ -38,7 +38,7 @@
 
 #else // IS LIVE BLURT NETWORK
 
-#define BLURT_BLOCKCHAIN_VERSION              ( version(0, 1, 0) )
+#define BLURT_BLOCKCHAIN_VERSION              ( version(0, 2, 0) )
 
 #define BLURT_INIT_PUBLIC_KEY_STR             "BLT5QRsKZp7TFNQdTj7VbpGHWxNL3Eq4zmfER4vJPBpK5VMbrprn8"
 #define BLURT_CHAIN_ID                        (fc::sha256::hash("blurt")) /// cd8d90f29ae273abec3eaa7731e25934c63eb654d55080caff2ebb7f5df6381f
@@ -158,7 +158,7 @@
 
 #define BLURT_MIN_PAYOUT                      (asset(20,BLURT_SYMBOL))
 
-#define BLURT_MIN_ACCOUNT_NAME_LENGTH          3
+#define BLURT_MIN_ACCOUNT_NAME_LENGTH         3
 #define BLURT_MAX_ACCOUNT_NAME_LENGTH         16
 
 #define BLURT_MIN_PERMLINK_LENGTH             0
@@ -254,7 +254,7 @@
 #define BLURT_ROOT_POST_PARENT                (account_name_type())
 /// Represents the account with NO authority which holds resources for payouts according to given proposals
 #define BLURT_TREASURY_ACCOUNT                "blurt.dao"
-/// This regent account controls the chain within 2 years
+/// This regent account is given vote weight to choose witnesses for the first two years, and loses weight each month for those two year
 #define BLURT_REGENT_ACCOUNT                  "blurt.regent"
 ///@}
 

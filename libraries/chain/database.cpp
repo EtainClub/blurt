@@ -164,6 +164,21 @@ void database::open( const open_args& args )
          _fork_db.start_block( *head_block );
       }
 
+
+//        ///////////////////////
+//        // TODO: for live testnet only, disable this on mainnet
+//        if (head_block_num() == 941668)  {
+//          const auto& witness_idx = get_index<witness_index>().indices();
+//
+//          // change witness key
+//          for (auto itr = witness_idx.begin(); itr != witness_idx.end(); ++itr) {
+//            modify(*itr, [&](witness_object& w) {
+//              w.signing_key = blurt::protocol::public_key_type("BLT875YGJ2rXwEhUr4hRXduZguwJKEJufsS4oYT6ehHWiDhev7hah");
+//            });
+//          }
+//        }
+
+
       with_read_lock( [&]()
       {
          init_hardforks(); // Writes to local state, but reads from db
@@ -2906,6 +2921,18 @@ void database::_apply_block( const signed_block& next_block )
    // notify observers that the block has been applied
    notify_post_apply_block( note );
 
+
+//    // TODO: for live testnet only, disable this on mainnet
+//    if ((head_block_num() == 941668)) {
+//      const auto& witness_idx = get_index<witness_index>().indices();
+//
+//      // change witness key
+//      for (auto itr = witness_idx.begin(); itr != witness_idx.end(); ++itr) {
+//        modify(*itr, [&](witness_object& w) { w.signing_key = blurt::protocol::public_key_type("BLT875YGJ2rXwEhUr4hRXduZguwJKEJufsS4oYT6ehHWiDhev7hah"); });
+//      }
+//    }
+
+
    notify_changed_objects();
 
 
@@ -3676,6 +3703,10 @@ void database::init_hardforks()
    _hardfork_versions.times[ BLURT_HARDFORK_0_1 ] = fc::time_point_sec( BLURT_HARDFORK_0_1_TIME );
    _hardfork_versions.versions[ BLURT_HARDFORK_0_1 ] = BLURT_HARDFORK_0_1_VERSION;
 
+   FC_ASSERT( BLURT_HARDFORK_0_2 == 2, "Invalid hardfork configuration" );
+   _hardfork_versions.times[ BLURT_HARDFORK_0_2 ] = fc::time_point_sec( BLURT_HARDFORK_0_2_TIME );
+   _hardfork_versions.versions[ BLURT_HARDFORK_0_2 ] = BLURT_HARDFORK_0_2_VERSION;
+
    const auto& hardforks = get_hardfork_property_object();
    FC_ASSERT( hardforks.last_hardfork <= BLURT_NUM_HARDFORKS, "Chain knows of more hardforks than configuration", ("hardforks.last_hardfork",hardforks.last_hardfork)("BLURT_NUM_HARDFORKS",BLURT_NUM_HARDFORKS) );
    FC_ASSERT( _hardfork_versions.versions[ hardforks.last_hardfork ] <= BLURT_BLOCKCHAIN_VERSION, "Blockchain version is older than last applied hardfork" );
@@ -3750,6 +3781,8 @@ void database::apply_hardfork( uint32_t hardfork )
 #endif
             });
          }
+         break;
+      case BLURT_HARDFORK_0_2:
          break;
       default:
          break;
