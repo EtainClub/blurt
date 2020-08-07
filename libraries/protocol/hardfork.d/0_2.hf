@@ -1,0 +1,7 @@
+#ifndef BLURT_HARDFORK_0_2
+#define BLURT_HARDFORK_0_2 2
+
+#define BLURT_HARDFORK_0_2_TIME (1596844800)  /// 2020-08-08T00:00:00.000Z
+#define BLURT_HARDFORK_0_2_VERSION hardfork_version(0, 2) /// Set hardfork Version
+
+#endif
