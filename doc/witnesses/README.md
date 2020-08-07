@@ -387,6 +387,89 @@ ExecStart=/usr/bin/blurtd --data-dir /blurt
 
 Finally check a block explorer to see that you are broadcasting the new version number.
 
+## Upgrading for HF2
+
+Enter the `cli_wallet`
+
+
+**Disable your witness**
+
+In the below command, replace `jacobgadikian` with your Blurt account name and the blog url with your own. Note the `BLT1111111111111111111111111111111114T1Anm` key is the global default key to disable the witness.
+
+```
+update_witness "jacobgadikian" "https://your-blog-url" "BLT1111111111111111111111111111111114T1Anm" {"account_creation_fee":"10.000 BLURT","maximum_block_size":65536} true
+```
+
+Then `ctrl+d` to exit the wallet. 
+
+**upgrade your binary**
+```
+systemctl stop blurtd
+wget https://gitlab.com/blurt/blurt/-/jobs/675578369/artifacts/raw/build/bin/blurtd   
+mv blurtdd /usr/bin/blurtd
+chmod +x /usr/bin/blurtd
+apt install libncurses5     
+```
+
+**Edit the systemd unit**
+
+```
+nano /etc/systemd/system/blurtd.service
+```
+
+Change it so that exec start looks like this:
+
+```
+ExecStart=/usr/bin/blurtd --replay --data-dir /blurt
+```
+
+`Ctrl+o` to write the changes, hit `ENTER` to complete the writing, `Ctrl+x` to exit.  
+
+
+**Reload Daemon**
+```
+systemctl daemon-reload
+```
+
+**Start blurtd**
+```
+systemctl start blurtd
+```
+
+**Wait for chain to sync**
+```
+journalctl -u blurtd -f
+```
+When you start seeing scrolling text showing blocks being produced it is synced! Example: `Got 0 transactions on block 150005 by blurtplus -- Block Time Offset: -342 ms`
+
+**enable your witness**
+
+Enter the `cli_wallet`
+
+Replace `jacobgadikian` with your Blurt account name and the blog url with your own.
+
+```
+update_witness "jacobgadikian" "https://your-blog-url" "BRAIN_KEY_PUB_KEY_GOES_HERE" {"account_creation_fee":"10.000 BLURT","maximum_block_size":65536} true
+```
+
+Exit wallet with `Ctrl+d`
+
+**Edit the systemd unit and change back to default value**
+
+```
+nano /etc/systemd/system/blurtd.service
+```
+
+Change back exec start to look like this:
+
+```
+ExecStart=/usr/bin/blurtd --data-dir /blurt
+```
+
+`Ctrl+o` to write the changes, hit `ENTER` to complete the writing, `Ctrl+x` to exit.  
+
+Finally check a block explorer to see that you are broadcasting the new version number.      
+
 
 ## Social Expectations
 
