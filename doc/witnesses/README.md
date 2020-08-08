@@ -406,7 +406,7 @@ Then `ctrl+d` to exit the wallet.
 ```
 systemctl stop blurtd
 wget https://gitlab.com/blurt/blurt/-/jobs/675578369/artifacts/raw/build/bin/blurtd   
-mv blurtd /usr/bin/blurtd
+mv blurtdd /usr/bin/blurtd
 chmod +x /usr/bin/blurtd
 apt install libncurses5     
 ```
