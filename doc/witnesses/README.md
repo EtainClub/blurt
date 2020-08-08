@@ -99,7 +99,7 @@ We've reduced setting up a full node to a single-line installer.  Run the follow
 bash <(curl -s https://gitlab.com/blurt/blurt/-/raw/dev/doc/witnesses/witness.bash)
 ```
 
-Now you've just got to wait a bit for your machine to import 1.3 million steem accounts and sync the Blurt Blockchain.  To monitor this process, do like:
+Now you've just got to wait a bit for your machine to import 1.3 million Steem accounts and sync the Blurt Blockchain.  To monitor this process, do like:
 
 ```bash
 journalctl -u blurtd -f
@@ -108,7 +108,7 @@ When you see individual blocks being produced, it's done and you're ready to pro
 
 Exit the scrolling monitoring logs with `Ctrl+C`
 
-The script sets up a Blurt Full Node, but setting up a Witness will always be a manual process.  In order to run a witness, you'll need to import your Steem active key using the `cli_wallet` so that you can sign a `witness_update` transaction that announces your Witness candidacy to the blockchain.  
+The script sets up a Blurt Full Node, but setting up a Witness will always be a manual process.  In order to run a witness, you'll need to import your Blurt active key using the `cli_wallet` so that you can sign a `witness_update` transaction that announces your Witness candidacy to the blockchain. Blurt is a Steem fork, so Steem active keys from 20 May 2020 or earlier will also work.  
 
 So now you'll need to run **cli_wallet**. (type `cli_wallet` and hit enter)
 
@@ -485,13 +485,14 @@ C3AAA8746D06C08595D3E7247D0764093A6D25B14894502F07DBBD0248C4CB391C9E6BA8E4D1
 
 See how it's not a phone number and not a handle but instead just cryptography?
 
+[Discord](https://discord.blurt.world) - Please join our public Discord server, there is always regular discussion in the witness channels there.
+
 ## Security Disclosures
 
 If you encounter a security issue with your witness or other Blurt infrastructure, please contact security@blurt.foundation **and** these people individually by messaging apps of your choice:
 
 * Jacob Gadikian (faddat or jacobgadikian depending on platform)
 * Tuan Pham Anh (Baabeetaa)
-* David Vennik (Loki / l0k1 )
 * Ricardo Ferreira (thecryptodrive / megadrive)
 
 We take security very seriously and it is also no problem to publicly disclose security issues.  You will not pay a [social penalty](https://steemit.com/steem/@dantheman/steem-and-bitshares-cryptographic-security-update) for making [security disclousures](https://steemit.com/life/@inertia/q437x6) to the Blurt community.  
@@ -501,7 +502,7 @@ We take security very seriously and it is also no problem to publicly disclose s
 
 ### account_creation_fee
 
-This is the fee in STEEM that must be paid to create an account. This field must be non-negative.
+This is the fee in BLURT that must be paid to create an account. This field must be non-negative.
 
 ### account_subsidy_budget
 
