@@ -38,6 +38,9 @@ mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet
 rm -rf build
 rm download
 
+# CONFIG.INI FOR SEAMLESS
+wget -O /etc/systemd/system/blurtd.service https://gitlab.com/blurt/blurt/-/raw/dev/doc/witnesses/config.ini
+
 # ENSURE THAT BLURTD AND CLI_WALLET ARE EXECUTABLE
 chmod +x /usr/bin/blurtd
 chmod +x /usr/bin/cli_wallet
