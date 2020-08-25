@@ -51,17 +51,7 @@ Blurt contains balances imported from Block 4352**6969**.
 ## Status
 Blurt enjoyed a smooth launch with large participation from witnesses on July 4, 2020.  
 
-Shortly after launch, two bugs were discovered: 
-
-**~~Resource Credits~~**
-
-The resource credit bug allowed for unrestricted writes to the Blurt blockchain, and this was exploited by the account `@social` to post hundreds of thousands prepared 64kb comments whose sole contents was a GIF of a penis or jpg of two men deeply enjoying one another's company. 
-After consulting with the community, HF1, which introduced [fees controlled by witnesses](https://blurt.world/blurt/@jacobgadikian/witnesses-control-fees-on-blurt) was released. 
-Witnesses have currently stabilized fees at 0.001 BLURT per operation and 0.1 BLURT per kilobyte.    We consider the Resource credit bug to be fully mitigated, and will remove resource credits from Blurt in [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/2). 
-
-**Rewards**
-
-The convergent linear reward curve currently used by BLURT is malfunctioning.  Rewards will be fixed in [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/2), which will be released ~August 1, 2020. 
+Work currently has over 50 witnesses and a healthy user population.
 
 ## Software Development
 Work is ongoing in the `dev` branch.  
@@ -77,50 +67,3 @@ Our next milestone is [Hard Fork 2](https://gitlab.com/blurt/blurt/-/milestones/
 [Exchanges](doc/exchanges/README.md)
 
 [Witnesses](doc/witnesses/README.md)
-
-## Exchange Tracker
-
-### Centralized Exchanges That Listed Steem at Block 43,526,969 and are in posession of airdrop funds
-
-| Exchange   | Airdrop Funds  | Airdrop Funds Status  | Listed?  | Fee Requested?  | Fee Amount   | Point of Contact | Conversation   |
-|---|---|---|---|---|---|---|---|
-| Ionomy      | 42731.888 BLURT  | In Progress  |  YES | NO |  0 | E-mail, Discord | Yes |
-| Bithumb       |   | HELD  |   |   |   |   |   |
-| Upbit       |   | HELD  |   |   |   |   |   |
-| Gopax       |   | HELD  |   |   |   |   |   |
-| Bittrex     |   | HELD  |   |   |   |   |   |
-| Binance     |   | HELD  |   |   |   |   |   |
-| Huobi       |   | HELD  |   |   |   |   |   |
-| Probit      | YES  | HELD  | NO  | YES  | 1 BTC + 1 BTC of BLURT  |    |
-| Poloinex    |   | HELD  |   |   |   |   |   |
-| Bitflyer    |   | HELD  |   |   |   |   |   |
-| Daybit      |   | HELD  |   |   |   |   |   |
-| Sistemkoin  |   | HELD  |   |   |   |   |   |
-| Kraken      |   | HELD  |   |   |   |   |   |
-| Okex        |   | HELD  |   |   |   |   |   |
-
-The Blurt community is deeply grateful to Ionomy for their intention to honor the Blurt airdrop on holders of STEEM from block 43,526,969.
-
-### Centralized Exchanges that didn't list Steem at block 43,526,969 and are not in posession of airdrop funds
-| Exchange   |  Listed?  | Fee Requested?  | Fee Amount   | Requested By | Handling |
-|---|---|---|---|---|---|
-| Cointiger   | NO  | YES  | 5 BTC + BLURT for giveaway  |  empato365  | empato365 |
-| Coinbase    | NO | NO | N/A |  
-| Indodax |   |   |     |  
-| [rekenningku](https://www.rekeningku.com) |   |    | 
-
-### Decentralized Exchanges
-
-| Exchange   | Listed?  | Fee  | Fee Amount   | Responsible Party |
-|---|---|---|---|---|
-| Binance DEX  | NO  | List tx fee  | 1000 BNB   |  N/A   |
-| Uniswap     |  NO | NO  | ERC20 Token Creation + Contract Creation   | N/A |
-| Hive Engine  | YES  | YES  | 100 HIVE for BLURT ticker  | @daking | 
-| Steem Engine  | NO  | YES  | 100 STEEM for BLURT ticker  | N/A | 
-| Incognito DEX  | NO  | N/A  | tiny  | N/A |
-| Poloni DEX | NO | ? | ? | N/A |
-| NewDEX | NO | ? | ? | N/A |
-| IDEX | NO | ? | ? | N/A |
-| Kyber | NO | ? | ? | N/A |
-
-The Blurt community is deeply grateful to @daking for maintaining the @blurtlink serrvice that connects Blurt to Hive Engine.
