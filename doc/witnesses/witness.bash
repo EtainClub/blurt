@@ -33,8 +33,8 @@ wget -O download https://gitlab.com/blurt/blurt/-/jobs/724631987/artifacts/downl
 unzip download
 
 # PUT BLURTD AND CLI_WALLET ON YOUR $PATH
-mv build/programs/blurtd/blurtd /usr/bin/blurtd
-mv build/programs/cli_wallet/cli_wallet /usr/bin/cli_wallet
+mv build/bin/blurtd /usr/bin/blurtd
+mv build/bin/cli_wallet /usr/bin/cli_wallet
 rm -rf build
 rm download
 
