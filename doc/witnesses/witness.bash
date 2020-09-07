@@ -27,7 +27,7 @@ sysctl -p
 
 # DOWNLOAD BUILD ARTIFACTS OF LATEST WITNESS JOB
 # TODO: make this actually get latest artifacts instead of fixing on a known-good build
-wget -O download https://gitlab.com/blurt/blurt/-/jobs/644121113/artifacts/download
+wget -O download https://gitlab.com/blurt/blurt/-/jobs/724631987/artifacts/download
 
 # UNZIP THE BUILD ARTIFACTS, BLURTD AND CLI_WALLET
 unzip download
