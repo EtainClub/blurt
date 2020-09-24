@@ -10,6 +10,7 @@ These are some of the currently known network nodes available in the Blurt ecosy
 
 | Node Url              | Operator  |  
 |-----------------------|-----------|
+| api.blurtworld.com    | @yehey    |
 | api.blurt.tools       | @blurtdev |
 | blurtd.privex.io      | privex.io |  
 | rpc.blurt.buzz        | @ericet   | 
